@@ -1,27 +1,60 @@
 import 'package:flutter/material.dart';
-class HomePage extends StatefulWidget {
 
+class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
+      appBar: AppBar(
+        title: Text('学源'),
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(child: Text('下一个界面'), onTap: ()=> Navigator.pushNamed(context, '/signup'),)
+        child: Table(
+          children: <TableRow>[
+            TableRow(
+              children: <Widget>[
+                Center(
+                  child: GestureDetector(
+                    child: Container(
+                      width: 150.0,
+                      height: 250.0,
+                      child: Text('成长记录'),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, '/signup'),
+                  ),
+                ),Center(
+                  child: GestureDetector(
+                    child: Container(
+                      child: Text('成长记录'),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, '/signup'),
+                  ),
+                )
+              ],
+            ),
+            TableRow(
+              children: <Widget>[
+                Center(
+                  child: GestureDetector(
+                    child: Container(
+                      child: Text('成长记录'),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, '/signup'),
+                  ),
+                ),Center(
+                  child: GestureDetector(
+                    child: Container(
+                      child: Text('成长记录'),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, '/signup'),
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),
