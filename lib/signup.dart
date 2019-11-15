@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class SignUpPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
