@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/group/new_record.dart';
 import './signup.dart';
 import './home.dart';
 import './group/index.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (BuildContext context) => HomePage(),
         '/group': (BuildContext context) => GroupPage(),
+        '/group/new': (BuildContext context) => NewRecord(),
         '/signup': (BuildContext context) => SignUpPage(),
       },
     );

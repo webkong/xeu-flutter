@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/group/sub_head_chart.dart';
+import 'package:flutter_app/group/sub_record_list.dart';
+import 'package:flutter_app/group/sub_weight_chart.dart';
 import '../utils/toast.dart';
-
 
 class GroupPage extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class GroupPage extends StatefulWidget {
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   _save() {
     Toast.show('保存成功', context);
+    Navigator.pushNamed(context, '/group/new');
   }
 
   TabController _tabController;
@@ -33,7 +36,12 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         title: Text('成长记录'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.add, size: 30.0,), onPressed: () => this._save()),
+          IconButton(
+              icon: Icon(
+                Icons.add,
+                size: 30.0,
+              ),
+              onPressed: () => this._save()),
         ],
         bottom: new TabBar(
           controller: _tabController,
@@ -49,49 +57,40 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
         controller: _tabController,
         children: choices.map((Choice choice) {
           return new Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: new ChoiceCard(choice: choice),
-          );
+              padding: const EdgeInsets.all(8.0), child: choicePage(choice));
         }).toList(),
       ),
     );
   }
 }
 
-
 class Choice {
-  const Choice({this.title, this.icon});
+  const Choice({this.title, this.icon, this.view});
   final String title;
   final IconData icon;
+  final String view;
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: '记录', icon: Icons.event_note),
-  const Choice(title: '身高曲线', icon: Icons.straighten),
-  const Choice(title: '体重曲线', icon: Icons.trending_up),
-  const Choice(title: '头围曲线', icon: Icons.face),
+  const Choice(title: '记录', icon: Icons.event_note, view: 'recordList'),
+  const Choice(title: '身高曲线', icon: Icons.straighten, view: 'height'),
+  const Choice(title: '体重曲线', icon: Icons.trending_up, view: 'weight'),
+  const Choice(title: '头围曲线', icon: Icons.face, view: 'head'),
 ];
 
-class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
-
-  final Choice choice;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.display1;
-    return new Card(
-      color: Colors.white,
-      child: new Center(
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new Icon(choice.icon, size: 128.0, color: textStyle.color),
-            new Text(choice.title, style: textStyle),
-          ],
-        ),
-      ),
-    );
+choicePage(Choice choice) {
+  switch (choice.view) {
+    case 'recordList':
+      return SubRecordList();
+      break;
+    case 'height':
+      return SubHeadChart();
+      break;
+    case 'weight':
+      return SubWeightChart();
+      break;
+    case 'head':
+      return SubHeadChart();
+      break;
   }
 }
