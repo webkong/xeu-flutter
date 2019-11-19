@@ -16,7 +16,6 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
     Toast.show('保存成功', context);
     Navigator.pushNamed(context, '/group/new');
   }
-
   TabController _tabController;
   @override
   void initState() {
