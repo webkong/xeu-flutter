@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../utils/toast.dart';
 
-class SubHeightChart extends StatefulWidget {
+class SubMemorabilia extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _SubHeightChart();
+    return _SubMemorabilia();
   }
 }
 
-class _SubHeightChart extends State<SubHeightChart> {
+class _SubMemorabilia extends State<SubMemorabilia> {
   @override
   void initState() {
     super.initState();
@@ -17,7 +17,7 @@ class _SubHeightChart extends State<SubHeightChart> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('height'),
+      child: Text('head'),
     );
   }
 }

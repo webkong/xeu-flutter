@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/group/sub_head_chart.dart';
+import 'package:flutter_app/group/sub_memorabilia.dart';
 import 'package:flutter_app/group/sub_record_list.dart';
-import 'package:flutter_app/group/sub_weight_chart.dart';
 import '../utils/toast.dart';
 
 class GroupPage extends StatefulWidget {
@@ -71,10 +70,8 @@ class Choice {
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: '记录', icon: Icons.event_note, view: 'recordList'),
-  const Choice(title: '身高曲线', icon: Icons.straighten, view: 'height'),
-  const Choice(title: '体重曲线', icon: Icons.trending_up, view: 'weight'),
-  const Choice(title: '头围曲线', icon: Icons.face, view: 'head'),
+  const Choice(title: '大事记', icon: Icons.straighten, view: 'memorabilia'),
+    const Choice(title: '生长记录', icon: Icons.event_note, view: 'recordList'),
 ];
 
 choicePage(Choice choice) {
@@ -82,14 +79,8 @@ choicePage(Choice choice) {
     case 'recordList':
       return SubRecordList();
       break;
-    case 'height':
-      return SubHeadChart();
-      break;
-    case 'weight':
-      return SubWeightChart();
-      break;
-    case 'head':
-      return SubHeadChart();
+    case 'memorabilia':
+      return SubMemorabilia();
       break;
   }
 }
