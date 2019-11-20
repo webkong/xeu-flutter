@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import '../utils/tools.dart';
 import '../dao/modules/group/memorabilia.dart';
 import 'package:dio/dio.dart';
 
@@ -16,12 +16,14 @@ class _SubMemorabilia extends State<SubMemorabilia> {
 
   Response response;
   Dio dio = Dio();
+  bool showLoading = true;
 
   _getList() async {
     response = await dio
         .get("http://rap2api.taobao.org/app/mock/236857/memorabilia/list");
     setState(() {
       memorabiliaList = generateItems(response.data['data']['list']);
+      showLoading = false;
     });
   }
 
@@ -33,7 +35,19 @@ class _SubMemorabilia extends State<SubMemorabilia> {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
+    if (showLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return _memorabiliaList(memorabiliaList);
+    }
+
+  }
+}
+
+Widget _memorabiliaList(memorabiliaList){
+ return new ListView.builder(
       itemCount: memorabiliaList.length,
       itemBuilder: (BuildContext context, int index) {
         return new Stack(
@@ -71,20 +85,20 @@ class _SubMemorabilia extends State<SubMemorabilia> {
               child: Column(
                   children: <Widget>[
                     Text(
-                      _formatDate(memorabiliaList[index].date, 'yyyy'),
+                      Tools.formatDate(memorabiliaList[index].date, format: 'yyyy'),
                       style: TextStyle(
                         fontSize: 10,
                       ),
                     ),
                     Text(
-                      _formatDate(memorabiliaList[index].date, 'MM'),
+                      Tools.formatDate(memorabiliaList[index].date, format: 'MM'),
                       style: TextStyle(
                         fontSize: 10,
                       ),
                     ),
                   ],
                 ),
-//                Text(_formatDate(memorabiliaList[index].date, 'yyyy') + ' ' + _formatDate(memorabiliaList[index].date, 'MM'),
+//                Text(Tools.formatDate(memorabiliaList[index].date, 'yyyy') + ' ' + Tools.formatDate(memorabiliaList[index].date, 'MM'),
 //                  style: TextStyle(
 //                    fontSize: 10,
 //                  ),
@@ -120,7 +134,7 @@ class _SubMemorabilia extends State<SubMemorabilia> {
                     color: Theme.of(context).accentColor,
                   ),
                   child: Center(
-                    child: Text(_formatDate(memorabiliaList[index].date, 'dd')),
+                    child: Text(Tools.formatDate(memorabiliaList[index].date, format: 'dd')),
                   ),
                 ),
               ),
@@ -129,12 +143,6 @@ class _SubMemorabilia extends State<SubMemorabilia> {
         );
       },
     );
-  }
-}
-
-_formatDate(num timestamp, String format) {
-  var formatExp = new DateFormat(format);
-  return formatExp.format(new DateTime.fromMillisecondsSinceEpoch(timestamp));
 }
 
 // 构建Memorabilia List数据

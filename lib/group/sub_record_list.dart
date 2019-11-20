@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../utils/adapt.dart';
 import 'package:dio/dio.dart';
+import '../utils/tools.dart';
+import '../dao/modules/group/record.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class SubRecordList extends StatefulWidget {
   @override
@@ -14,11 +16,29 @@ class _SubRecordList extends State<SubRecordList> {
   List recordList = <Map>[];
   Response response;
   Dio dio = Dio();
+  bool showLoading = true;
   _getList() async {
-    response = await dio.get("http://rap2api.taobao.org/app/mock/236857/record/list");
+    response =
+        await dio.get("http://rap2api.taobao.org/app/mock/236857/record/list");
     setState(() {
-      recordList = response.data['data']['list'];
+      recordList = _generateList(response.data['data']['list']);
+      showLoading = false;
     });
+  }
+
+  // 构建Memorabilia List数据
+  List<Record> _generateList(List array) {
+    List<Record> list = [];
+    if (array.length == 0) return list;
+    print(array);
+    array.forEach((elem) {
+      list.add(Record(
+          date: int.parse(elem['date']),
+          weight: elem['weight'],
+          height: elem['height'],
+          head: elem['head']));
+    });
+    return list;
   }
 
   @override
@@ -27,86 +47,127 @@ class _SubRecordList extends State<SubRecordList> {
     _getList();
   }
 
-  Widget _list() {
-    return Container(
-      child: RecordItemList(
-        list: this.recordList,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return _list();
+    if (showLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return _content(recordList);
+    }
   }
 }
 
-class RecordItemList extends StatelessWidget {
-  RecordItemList({this.list = const []}) : super();
-  final List list;
-  final format = new DateFormat('yyyy-MM-dd');
+Widget _content(list) {
+  return Container(
+    child: ListView(
+      children: <Widget>[
+        _generateChart(list),
+        ..._generateRecordList(list),
+      ],
+    ),
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
+//图表
+Widget _generateChart(List list) {
+  List<charts.Series> seriesList = _createSampleData(list) ?? [];
+  bool animate = true;
+  return Container(
+    height: 100,
+    child: new charts.LineChart(
+      seriesList,
+      animate: animate,
+      defaultRenderer: new charts.LineRendererConfig(includePoints: true),
+    ),
+  );
+}
+
+/// Create one series with sample hard coded data.
+List<charts.Series<LinearSales, int>> _createSampleData(List list) {
+  List<LinearSales> data = [];
+  list.forEach((point) {
+    print(point);
+    data.add(new LinearSales(
+        int.parse(Tools.formatDate(point.date, format: 'dd')), point.weight));
+  });
+  return [
+    new charts.Series<LinearSales, int>(
+      id: 'Sales',
+      colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+      domainFn: (LinearSales sales, _) => sales.day,
+      measureFn: (LinearSales sales, _) => sales.sales,
+      data: data,
+    )
+  ];
+}
+
+/// Sample linear data type.
+class LinearSales {
+  final int day;
+  final double sales;
+
+  LinearSales(this.day, this.sales);
+}
+
+// 记录列表
+List<Widget> _generateRecordList(List list) {
+  List<Widget> recordList = [];
+  list.forEach((elem) {
+    recordList.add(Container(
 //          margin: EdgeInsets.only(top: index == 0 ? Adapt.px(20) : 0),
-          height: Adapt.px(180.0),
-          child: Card(
-            child: Container(
-              padding: EdgeInsets.all(Adapt.px(20)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    format.format(new DateTime.fromMillisecondsSinceEpoch(
-                        this.list[index]['date'])),
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: Adapt.px(30)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      height: Adapt.px(180.0),
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.all(Adapt.px(20)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                Tools.formatDate(elem.date),
+                style: TextStyle(color: Colors.black54),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: Adapt.px(30)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text('体重：'),
-                            Text(
-                              this.list[index]['weight'].toString(),
-                              style: TextStyle(fontSize: Adapt.px(36)),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text('身高：'),
-                            Text(
-                              this.list[index]['height'].toString(),
-                              style: TextStyle(fontSize: Adapt.px(36)),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text('头围：'),
-                            Text(
-                              this.list[index]['head'].toString(),
-                              style: TextStyle(fontSize: Adapt.px(36)),
-                            ),
-                          ],
+                        Text('体重：'),
+                        Text(
+                          elem.weight.toString(),
+                          style: TextStyle(fontSize: Adapt.px(36)),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    Row(
+                      children: <Widget>[
+                        Text('身高：'),
+                        Text(
+                          elem.height.toString(),
+                          style: TextStyle(fontSize: Adapt.px(36)),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text('头围：'),
+                        Text(
+                          elem.head.toString(),
+                          style: TextStyle(fontSize: Adapt.px(36)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-        );
-      },
-      scrollDirection: Axis.vertical,
-      itemCount: this.list.length,
-    );
-  }
+        ),
+      ),
+    ));
+  });
+  return recordList;
 }
