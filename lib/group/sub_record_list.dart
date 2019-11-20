@@ -15,7 +15,7 @@ class _SubRecordList extends State<SubRecordList> {
   Response response;
   Dio dio = Dio();
   _getList() async {
-    response = await dio.get("http://rap2api.taobao.org/app/mock/236857/list");
+    response = await dio.get("http://rap2api.taobao.org/app/mock/236857/record/list");
     setState(() {
       recordList = response.data['data']['list'];
     });

@@ -8,10 +8,10 @@ part of 'record.dart';
 
 Record _$RecordFromJson(Map<String, dynamic> json) {
   return Record(
-    json['date'] as num,
-    json['height'] as num,
-    json['weight'] as num,
-    json['head'] as num,
+    date: json['date'] as num,
+    height: json['height'] as num,
+    weight: json['weight'] as num,
+    head: json['head'] as num,
   );
 }
 
