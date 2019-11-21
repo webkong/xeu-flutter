@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../utils/adapt.dart';
 import 'package:dio/dio.dart';
 import '../utils/tools.dart';
@@ -60,13 +61,11 @@ class _SubRecordList extends State<SubRecordList> {
 }
 
 Widget _content(list) {
-  return Container(
-    child: ListView(
-      children: <Widget>[
-        _generateChart(list),
-        ..._generateRecordList(list),
-      ],
-    ),
+  return Column(
+    children: <Widget>[
+       _generateChart(list),
+
+    ],
   );
 }
 
@@ -74,12 +73,21 @@ Widget _content(list) {
 Widget _generateChart(List list) {
   List<charts.Series> seriesList = _createSampleData(list) ?? [];
   bool animate = true;
+
   return Container(
     height: 100,
+    width: 1000,
     child: new charts.LineChart(
       seriesList,
       animate: animate,
-      defaultRenderer: new charts.LineRendererConfig(includePoints: true),
+      defaultRenderer: new charts.LineRendererConfig(
+        includeArea: true,
+        stacked: true,
+      ),
+      customSeriesRenderers: [
+        new charts.LineRendererConfig(
+            customRendererId: 'customPoint', includePoints: true),
+      ],
     ),
   );
 }
@@ -87,19 +95,68 @@ Widget _generateChart(List list) {
 /// Create one series with sample hard coded data.
 List<charts.Series<LinearSales, int>> _createSampleData(List list) {
   List<LinearSales> data = [];
-  list.forEach((point) {
-    print(point);
-    data.add(new LinearSales(
-        int.parse(Tools.formatDate(point.date, format: 'dd')), point.weight));
-  });
+  var middleData = [
+    new LinearSales(0, 6),
+    new LinearSales(1, 7),
+    new LinearSales(2, 8),
+    new LinearSales(3, 9),
+    new LinearSales(4, 9.2),
+    new LinearSales(5, 9.4),
+    new LinearSales(6, 9.5),
+  ];
+  var lowData = [
+    new LinearSales(0, 4),
+    new LinearSales(1, 6),
+    new LinearSales(2, 6.5),
+    new LinearSales(3, 7),
+    new LinearSales(4, 7.5),
+    new LinearSales(5, 8),
+    new LinearSales(6, 8.5),
+  ];
+
+  var highData = [
+    new LinearSales(0, 7),
+    new LinearSales(1, 8),
+    new LinearSales(2, 9),
+    new LinearSales(3, 10),
+    new LinearSales(4, 10.5),
+    new LinearSales(5, 10.8),
+    new LinearSales(6, 11),
+  ];
+//  for (int i = 0; i < 8; i++) {
+//    data.add(new LinearSales(
+//        int.parse(Tools.formatDate(list[i].date, format: 'dd')),
+//        list[i].weight));
+//  }
   return [
     new charts.Series<LinearSales, int>(
-      id: 'Sales',
-      colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+      id: 'highWeight',
+      colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault.lighter,
+      strokeWidthPxFn: (_, __) => 1.0,
+      dashPatternFn: (_, __) => [2, 2],
+      areaColorFn: (_, __) => charts.MaterialPalette.white,
       domainFn: (LinearSales sales, _) => sales.day,
       measureFn: (LinearSales sales, _) => sales.sales,
-      data: data,
-    )
+      data: lowData,
+    ),
+    new charts.Series<LinearSales, int>(
+      id: 'weight',
+      colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+      areaColorFn: (_, __) => charts.MaterialPalette.gray.shadeDefault.lighter,
+      domainFn: (LinearSales sales, _) => sales.day,
+      measureFn: (LinearSales sales, _) => sales.sales,
+      data: middleData,
+    )..setAttribute(charts.rendererIdKey, 'customPoint'),
+    new charts.Series<LinearSales, int>(
+      id: 'lowWeight',
+      colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault.lighter,
+      strokeWidthPxFn: (_, __) => 1.0,
+      dashPatternFn: (_, __) => [2, 2],
+      areaColorFn: (_, __) => charts.MaterialPalette.gray.shadeDefault.lighter,
+      domainFn: (LinearSales sales, _) => sales.day,
+      measureFn: (LinearSales sales, _) => sales.sales,
+      data: highData,
+    ),
   ];
 }
 
@@ -109,65 +166,4 @@ class LinearSales {
   final double sales;
 
   LinearSales(this.day, this.sales);
-}
-
-// 记录列表
-List<Widget> _generateRecordList(List list) {
-  List<Widget> recordList = [];
-  list.forEach((elem) {
-    recordList.add(Container(
-//          margin: EdgeInsets.only(top: index == 0 ? Adapt.px(20) : 0),
-      height: Adapt.px(180.0),
-      child: Card(
-        child: Container(
-          padding: EdgeInsets.all(Adapt.px(20)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                Tools.formatDate(elem.date),
-                style: TextStyle(color: Colors.black54),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: Adapt.px(30)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text('体重：'),
-                        Text(
-                          elem.weight.toString(),
-                          style: TextStyle(fontSize: Adapt.px(36)),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text('身高：'),
-                        Text(
-                          elem.height.toString(),
-                          style: TextStyle(fontSize: Adapt.px(36)),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text('头围：'),
-                        Text(
-                          elem.head.toString(),
-                          style: TextStyle(fontSize: Adapt.px(36)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ));
-  });
-  return recordList;
 }

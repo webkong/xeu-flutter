@@ -98,6 +98,12 @@ Widget _memorabiliaList(memorabiliaList){
                     ),
                   ],
                 ),
+//                Text(Tools.formatDate(memorabiliaList[index].date, 'yyyy') + ' ' + Tools.formatDate(memorabiliaList[index].date, 'MM'),
+//                  style: TextStyle(
+//                    fontSize: 10,
+//                  ),
+//                ),
+
             ),
             new Positioned(
               top: 0.0,
