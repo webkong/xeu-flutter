@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../utils/adapt.dart';
+import '../../utils/adapt.dart';
 import 'package:dio/dio.dart';
-import '../utils/tools.dart';
-import '../dao/modules/group/record.dart';
+import '../../utils/tools.dart';
+import '../../models/group/record.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class SubRecordList extends StatefulWidget {

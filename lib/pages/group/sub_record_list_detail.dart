@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../utils/adapt.dart';
+import '../../utils/adapt.dart';
 import 'package:dio/dio.dart';
-import '../utils/tools.dart';
-import '../dao/modules/group/record.dart';
+import '../../utils/tools.dart';
+import '../../models/group/record.dart';
 
 class SubRecordListDetail extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/group/sub_memorabilia.dart';
-import 'package:flutter_app/group/sub_record_list.dart';
-import '../utils/toast.dart';
+import 'package:flutter_app/pages/group/sub_memorabilia.dart';
+import 'package:flutter_app/pages/group/sub_record_list.dart';
+import '../../utils/toast.dart';
 
 class GroupPage extends StatefulWidget {
   @override

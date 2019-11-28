@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import '../utils/tools.dart';
-import '../dao/modules/group/memorabilia.dart';
+import '../../utils/tools.dart';
+import '../../models/group/memorabilia.dart';
 import 'package:dio/dio.dart';
 
 class SubMemorabilia extends StatefulWidget {

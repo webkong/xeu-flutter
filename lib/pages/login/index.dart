@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
-
+import '../../models/device/deviceInfo.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -17,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
       "icon": GroovinMaterialIcons.wechat,
     }
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

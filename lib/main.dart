@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/group/new_record.dart';
+import 'package:flutter_app/pages/group/new_record.dart';
 import './UIOverlay/index.dart';
 import './signup.dart';
 import './home.dart';
-import './group/index.dart';
-import './login/index.dart';
-import './login/register.dart';
+import 'pages/group/index.dart';
+import 'pages/login/index.dart';
+import 'pages/login/register.dart';
 
 void main(){
   runApp(MyApp());
