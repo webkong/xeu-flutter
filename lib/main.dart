@@ -8,7 +8,7 @@ import 'pages/group/index.dart';
 import 'pages/login/index.dart';
 import 'pages/login/register.dart';
 
-void main(){
+void main() {
   runApp(MyApp());
   SystemChrome.setSystemUIOverlayStyle(CustomSystemUiOverlayStyle.dark);
 }
@@ -23,11 +23,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
       ),
       // MaterialApp contains our top-level Navigator
-      initialRoute: '/',
+      initialRoute: '/home',
       routes: {
         '/register': (BuildContext context) => RegisterPage(),
-        '/forget': (BuildContext context) => RegisterPage(type: 'forget',),
-        '/': (BuildContext context) => LoginPage(),
+        '/forget': (BuildContext context) => RegisterPage(
+              type: 'forget',
+            ),
+        '/login': (BuildContext context) => LoginPage(),
         '/home': (BuildContext context) => HomePage(),
         '/group': (BuildContext context) => GroupPage(),
         '/group/new': (BuildContext context) => NewRecord(),
@@ -36,4 +38,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

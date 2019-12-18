@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/device/deviceInfo.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -8,7 +11,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String _userName, _password;
+  String _phone, _password;
   bool _isObscure = true;
   Color _eyeColor;
   List _loginMethod = [
@@ -17,6 +20,19 @@ class _LoginPageState extends State<LoginPage> {
       "icon": GroovinMaterialIcons.wechat,
     }
   ];
+
+  _getInfo() async {
+    var k = await DeviceInfo.get();
+    print('Running on ${k.model}');
+    print(k);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,14 +46,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             buildTitle(),
             buildTitleLine(),
-            SizedBox(height: 70.0),
-            buildEmailTextField(),
+            SizedBox(height: 60.0),
+            buildPhoneTextField(),
             SizedBox(height: 30.0),
             buildPasswordTextField(context),
             buildForgetPasswordText(context),
-            SizedBox(height: 60.0),
+            SizedBox(height: 40.0),
             buildLoginButton(context),
-            SizedBox(height: 30.0),
+            SizedBox(height: 20.0),
             buildOtherLoginText(),
             buildOtherMethod(context),
             buildRegisterText(context),
@@ -62,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(color: Theme.of(context).accentColor),
               ),
               onTap: () {
-                //TODO 跳转到注册页面
+                //:TODO 跳转到注册页面
                 Navigator.pushNamed(context, '/register');
               },
             ),
@@ -127,12 +143,19 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           color: Theme.of(context).accentColor,
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState.validate()) {
               ///只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
               //TODO 执行登录方法
-              print('email:$_userName , assword:$_password');
+              var res = await Http.post(
+                  '/login', {"phone": _phone, "password": _password});
+              if (res.code == 200) {
+                SharedPreferences pres = await SharedPreferences.getInstance();
+                await pres.setString("token", res.data['token']);
+                Navigator.pushReplacementNamed(context, '/home');
+              }
+              print(res);
             }
           },
           shape: StadiumBorder(
@@ -153,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(fontSize: 14.0, color: Colors.grey),
           ),
           onPressed: () {
-            Navigator.pushNamed(context,'/forget');
+            Navigator.pushNamed(context, '/forget');
           },
         ),
       ),
@@ -164,6 +187,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextFormField(
       onSaved: (String value) => _password = value,
       keyboardType: TextInputType.visiblePassword,
+      initialValue: '123456',
       obscureText: _isObscure,
       validator: (String value) {
         if (value.isEmpty) {
@@ -191,10 +215,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  TextFormField buildEmailTextField() {
+  TextFormField buildPhoneTextField() {
     return TextFormField(
-      autofocus: true,
+//      autofocus: true,
       keyboardType: TextInputType.phone,
+      initialValue: '18610714908', //:TODO
       decoration: InputDecoration(
         labelText: '手机号',
         icon: Icon(Icons.person),
@@ -207,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
           return null;
         }
       },
-      onSaved: (String value) => _userName = value,
+      onSaved: (String value) => _phone = value,
     );
   }
 

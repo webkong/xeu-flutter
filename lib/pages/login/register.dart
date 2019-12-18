@@ -102,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
   //手机号
   TextFormField buildPhoneTextField() {
     return TextFormField(
-      autofocus: true,
+//      autofocus: true,
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         labelText: '手机号',
