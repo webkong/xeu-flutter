@@ -22,6 +22,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Code Sample for Navigator',
       theme: ThemeData(
         primarySwatch: Colors.amber,
+        pageTransitionsTheme: PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS:CupertinoPageTransitionsBuilder()
+        }),
       ),
       // MaterialApp contains our top-level Navigator
       initialRoute: '/home',
