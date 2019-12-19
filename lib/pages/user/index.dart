@@ -76,7 +76,7 @@ class _UserPageState extends State<UserPage> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 400),
+            margin: EdgeInsets.only(top: 300),
             child: buildLoginButton(context),
           )
         ],

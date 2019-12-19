@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   _RegisterPageState({this.type}) : super();
   final String type;
   final _formKey = GlobalKey<FormState>();
-  String _userName, _password, _code;
+  String _phone, _password, _code;
   String _title, _buttonText;
   bool _isObscure = true;
   Color _eyeColor;
@@ -84,13 +85,17 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
           color: Theme.of(context).accentColor,
-          onPressed: () {
+          onPressed: () async{
             if (_formKey.currentState.validate()) {
               ///只有输入的内容符合要求通过才会到达此处
               print(_formKey);
               _formKey.currentState.save();
               //TODO 执行注册方法
-              print('email:$_userName , assword:$_password, code: $_code');
+              var res = await Http.post('/register', {"phone": _phone, "password": _password, "code":_code});
+              if(res.code == 200){
+                Navigator.pop(context);
+              }
+              print('email:$_phone , assword:$_password, code: $_code');
             }
           },
           shape: StadiumBorder(
@@ -134,7 +139,7 @@ class _RegisterPageState extends State<RegisterPage> {
           return null;
         }
       },
-      onSaved: (String value) => _userName = value,
+      onSaved: (String value) => _phone = value,
     );
   }
 
