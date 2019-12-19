@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import './common/global.dart';
+import './pages/user/index.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,11 +10,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     Global(context).check();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('学源'),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.account_circle,
+                size: 26,
+              ),
+              onPressed: () {
+//            Navigator.pushNamed(context, '/user');
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => UserPage()));
+              })
+        ],
       ),
       body: Container(
         padding: EdgeInsets.only(top: 30.0),

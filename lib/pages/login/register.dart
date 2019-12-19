@@ -34,6 +34,9 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('注册'),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -42,8 +45,6 @@ class _RegisterPageState extends State<RegisterPage> {
             SizedBox(
               height: kToolbarHeight,
             ),
-            buildTitle(),
-            SizedBox(height: 70.0),
             buildPhoneTextField(),
             SizedBox(height: 30.0),
             buildPasswordTextField(context),

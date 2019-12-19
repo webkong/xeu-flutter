@@ -7,6 +7,7 @@ import './home.dart';
 import 'pages/group/index.dart';
 import 'pages/login/index.dart';
 import 'pages/login/register.dart';
+import 'pages/user/index.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
               type: 'forget',
             ),
         '/login': (BuildContext context) => LoginPage(),
+        '/user': (BuildContext context) => UserPage(),
+
         '/home': (BuildContext context) => HomePage(),
         '/group': (BuildContext context) => GroupPage(),
         '/group/new': (BuildContext context) => NewRecord(),
