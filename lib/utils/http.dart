@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
 import 'dart:collection';
-import '../config.dart';
+import '../common/config.dart';
 
 ///http请求管理类，可单独抽取出来
 class Http {

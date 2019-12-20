@@ -8,7 +8,6 @@ import 'pages/group/index.dart';
 import 'pages/login/index.dart';
 import 'pages/login/register.dart';
 import 'pages/user/index.dart';
-
 void main() {
   runApp(MyApp());
   SystemChrome.setSystemUIOverlayStyle(CustomSystemUiOverlayStyle.dark);

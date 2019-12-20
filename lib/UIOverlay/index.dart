@@ -17,6 +17,6 @@ class CustomSystemUiOverlayStyle {
     statusBarColor: Colors.transparent, // 状态栏背景颜色透明
 //    systemNavigationBarIconBrightness: Brightness.light,
     statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
   );
 }
