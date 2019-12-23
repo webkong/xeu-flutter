@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import './common/global.dart';
 import './pages/user/index.dart';
+import './utils/adapt.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,6 +15,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     Global(context).check();
   }
+
+  List<CardData> cardMap = [
+    new CardData('assets/images/01.png', '成长记录', '/group'),
+    new CardData('assets/images/02.png', '益智游戏', '/game'),
+    new CardData('assets/images/01.png', '成长记录', '/group'),
+    new CardData('assets/images/01.png', '成长记录', '/group'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,34 +43,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Container(
         padding: EdgeInsets.only(top: 30.0),
-        height: 400.0,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                new Item(
-                  ui: {'bg': 'assets/images/01.png', 'text': '成长记录'},
-                  route: '/group',
-                ),
-                new Item(
-                  ui: {'bg': 'assets/images/02.png', 'text': '益智游戏'},
-                  route: '/game',
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                new Item(
-                  ui: {'bg': 'assets/images/01.png', 'text': '成长记录'},
-                  route: '/signup',
-                ),
-                new Item(
-                  ui: {'bg': 'assets/images/02.png', 'text': '益智游戏'},
-                  route: '/signup',
-                ),
-              ],
-            ),
+            _createCard(context, cardMap[0]),
+            _createCard(context, cardMap[1]),
           ],
         ),
       ),
@@ -70,29 +55,73 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class Item extends StatelessWidget {
-  Item({Key key, this.ui = const {'bg': '', 'text': ''}, this.route})
-      : super(key: key);
-  final Map ui;
-  final String route;
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, this.route),
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: 150.0,
-              height: 150.0,
-              decoration: BoxDecoration(
-                  image:
-                      DecorationImage(image: ExactAssetImage(this.ui['bg']))),
+Widget _createCard(BuildContext context, CardData data) {
+  return Container(
+//    elevation: 10.0,
+    margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 20.0),
+    child: GestureDetector(
+      onTap: () => Navigator.pushNamed(context, data.route),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+//          Stack(
+//            alignment: FractionalOffset(0.5, 0.5),
+//            children: <Widget>[
+//              Container(
+//                height: Adapt.px(300),
+//                width: Adapt.px(660),
+//                child: Opacity(
+//                  opacity: 0.8,
+//                  child: Image.asset(
+//                    data.image,
+//                    fit: BoxFit.cover,
+//                  ),
+//                ),
+//              ),
+//              Text(
+//                data.text,
+//                style: TextStyle(
+//                  fontSize: 28.0,
+//                  color: Theme.of(context).accentColor,
+//                  fontWeight: FontWeight.bold,
+//                ),
+//              ),
+//            ],
+//          ),
+          Container(
+            height: Adapt.px(300),
+            width: Adapt.px(660),
+            child: Center(
+              child: Text(
+                data.text,
+                style: TextStyle(
+                  fontSize: 30.0,
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            Text(this.ui['text']),
-          ],
-        ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+//              color: const Color(0xff7c94b6),
+              image: DecorationImage(
+                  fit: BoxFit.cover,
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black38.withOpacity(0.3), BlendMode.srcOver),
+                  image: ExactAssetImage(data.image)),
+            ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+class CardData {
+  final String image;
+  final String text;
+  final String route;
+
+  CardData(this.image, this.text, this.route);
 }
