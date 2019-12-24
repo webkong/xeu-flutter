@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/group/sub_memorabilia.dart';
-import 'package:flutter_app/pages/group/sub_record_list.dart';
+import 'package:xeu/pages/group/new_record.dart';
+import 'package:xeu/pages/group/sub_memorabilia.dart';
+import 'package:xeu/pages/group/sub_record_list.dart';
 import '../../utils/toast.dart';
+import '../../UIOverlay/slideTopRoute.dart';
 
 class GroupPage extends StatefulWidget {
   @override
@@ -13,7 +15,7 @@ class GroupPage extends StatefulWidget {
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   _save() {
     Toast.show('保存成功', context);
-    Navigator.pushNamed(context, '/group/new');
+    Navigator.push(context, SlideTopRoute(page: NewRecord()));
   }
   TabController _tabController;
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/pages/group/new_record.dart';
+import 'package:xeu/pages/group/new_record.dart';
 import './UIOverlay/index.dart';
 import './signup.dart';
 import './home.dart';
@@ -18,9 +18,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Code Sample for Navigator',
+      title: 'xeu',
       theme: ThemeData(
         primarySwatch: Colors.amber,
+        appBarTheme: AppBarTheme(),
         pageTransitionsTheme: PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
           TargetPlatform.iOS:CupertinoPageTransitionsBuilder()

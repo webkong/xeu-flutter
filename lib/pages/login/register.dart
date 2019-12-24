@@ -13,7 +13,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   _RegisterPageState({this.type}) : super();
   final String type;
-  final _formKey = GlobalKey<FormState>();
+  final _formKeyRegister = GlobalKey<FormState>();
   String _phone, _password, _code;
   String _title, _buttonText;
   bool _isObscure = true;
@@ -39,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
         title: Text('注册'),
       ),
       body: Form(
-        key: _formKey,
+        key: _formKeyRegister,
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: 22.0),
           children: <Widget>[
@@ -86,10 +86,10 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           color: Theme.of(context).accentColor,
           onPressed: () async{
-            if (_formKey.currentState.validate()) {
+            if (_formKeyRegister.currentState.validate()) {
               ///只有输入的内容符合要求通过才会到达此处
-              print(_formKey);
-              _formKey.currentState.save();
+              print(_formKeyRegister);
+              _formKeyRegister.currentState.save();
               //TODO 执行注册方法
               var res = await Http.post('/register', {"phone": _phone, "password": _password, "code":_code});
               if(res.code == 200){

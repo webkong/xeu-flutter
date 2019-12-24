@@ -1,4 +1,4 @@
-package com.example.flutter_app
+package com.example.xeu
 
 import android.os.Bundle
 

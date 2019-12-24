@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/utils/adapt.dart';
+import 'package:xeu/utils/adapt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/tools.dart';
 import '../../models/group/memorabilia.dart';

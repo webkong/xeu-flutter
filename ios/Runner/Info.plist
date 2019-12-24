@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>flutter_app</string>
+	<string>xeu</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -40,6 +40,12 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Use for get photo to upload</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Use for get photo to upload</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Use for get photo to upload</string>
 	<false/>
 </dict>
 </plist>

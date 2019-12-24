@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/utils/http.dart';
+import 'package:xeu/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/device/deviceInfo.dart';
