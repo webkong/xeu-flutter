@@ -43,12 +43,14 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Container(
         padding: EdgeInsets.only(top: 30.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            _createCard(context, cardMap[0]),
-            _createCard(context, cardMap[1]),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              _createCard(context, cardMap[0]),
+              _createCard(context, cardMap[1]),
+            ],
+          ),
         ),
       ),
     );

@@ -151,8 +151,11 @@ class _LoginPageState extends State<LoginPage> {
               var res = await Http.post(
                   '/login', {"phone": _phone, "password": _password});
               if (res.code == 200) {
+                var data = res.data['data'];
+
                 SharedPreferences pres = await SharedPreferences.getInstance();
-                await pres.setString("token", res.data['token']);
+                await pres.setString("token", data['token']);
+                await pres.setString("u_id", data["u_id"]);
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);

@@ -11,9 +11,10 @@ Memorabilia _$MemorabiliaFromJson(Map<String, dynamic> json) {
     date: json['date'] as num,
     title: json['title'] as String,
     description: json['description'] as String,
-    photo: json['photo'] as String,
-    tag: json['tag'] as String,
-    isExpanded: json['isExpanded'] as bool,
+    images: json['images'] as List,
+    video: json['video'] as String,
+    scope: json['scope'] as List,
+    location: json['location'] as String,
   );
 }
 
@@ -22,7 +23,8 @@ Map<String, dynamic> _$MemorabiliaToJson(Memorabilia instance) =>
       'date': instance.date,
       'title': instance.title,
       'description': instance.description,
-      'photo': instance.photo,
-      'tag': instance.tag,
-      'isExpanded': instance.isExpanded,
+      'images': instance.images,
+      'video': instance.video,
+      'scope': instance.scope,
+      'location': instance.location,
     };

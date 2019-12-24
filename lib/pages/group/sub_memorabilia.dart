@@ -1,8 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/utils/adapt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/tools.dart';
 import '../../models/group/memorabilia.dart';
-import 'package:dio/dio.dart';
+import '../../utils/http.dart';
 
 class SubMemorabilia extends StatefulWidget {
   @override
@@ -13,14 +14,11 @@ class SubMemorabilia extends StatefulWidget {
 
 class _SubMemorabilia extends State<SubMemorabilia> {
   List<Memorabilia> memorabiliaList = <Memorabilia>[];
-
-  Response response;
-  Dio dio = Dio();
   bool showLoading = true;
-
   _getList() async {
-    response = await dio
-        .get("http://rap2api.taobao.org/app/mock/236857/memorabilia/list");
+    SharedPreferences pres = await SharedPreferences.getInstance();
+    String uid = pres.getString("u_id");
+    var response = await Http.get('/record/list', {"u_id": uid});
     setState(() {
       memorabiliaList = generateItems(response.data['data']['list']);
       showLoading = false;
@@ -37,106 +35,120 @@ class _SubMemorabilia extends State<SubMemorabilia> {
   Widget build(BuildContext context) {
     if (showLoading) {
       return Center(
-        child: CircularProgressIndicator(),
+        child: Container(
+          child: CircularProgressIndicator(),
+          height: Adapt.px(60),
+          width: Adapt.px(60),
+        ),
       );
     } else {
       return _memorabiliaList(memorabiliaList);
     }
-
   }
 }
 
-Widget _memorabiliaList(memorabiliaList){
- return new ListView.builder(
-      itemCount: memorabiliaList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return new Stack(
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.only(left: 45.0),
-              child: new Card(
-                margin: new EdgeInsets.all(5.0),
-                child: new Container(
-                  width: double.infinity,
-                  height: 80.0,
-                  child: Center(
-                    child: ListTile(
-                      leading: Image.network(memorabiliaList[index].photo),
-                      title: Text(
-                        memorabiliaList[index].title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+Widget _memorabiliaList(memorabiliaList) {
+  return new ListView.builder(
+    itemCount: memorabiliaList.length,
+    itemBuilder: (BuildContext context, int index) {
+      return Stack(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: Adapt.px(20.0), top: Adapt.px(60.0)),
+            child: Card(
+              margin: EdgeInsets.all(Adapt.px(10.0)),
+              child: Container(
+                width: double.infinity,
+                height: Adapt.px(300.0),
+                child: Center(
+                  child: Row(
+                    children: <Widget>[
+                      Image(
+                        image: NetworkImage(memorabiliaList[index].images[0]['url']),
+                        height: Adapt.px(300),
+                        width: Adapt.px(450),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              memorabiliaList[index].title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: Adapt.px(10), right: Adapt.px(10)),
+                              child: Text(
+                              memorabiliaList[index].description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+
+                            ),
+                            ),
+                          ],
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                         ),
-                      ),
-                      subtitle: Text(
-                        memorabiliaList[index].description,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                      )
+                    ],
                   ),
                 ),
               ),
             ),
-            new Positioned(
-              top: 3.0,
-              bottom: 0.0,
-              left: 0.0,
-              child: Column(
-                  children: <Widget>[
-                    Text(
-                      Tools.formatDate(memorabiliaList[index].date, format: 'yyyy'),
-                      style: TextStyle(
-                        fontSize: 10,
-                      ),
-                    ),
-                    Text(
-                      Tools.formatDate(memorabiliaList[index].date, format: 'MM'),
-                      style: TextStyle(
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
+          ),
+          Positioned(
+            top: Adapt.px(14.0),
+            bottom: 0.0,
+            left: Adapt.px(30.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  Tools.formatDate(memorabiliaList[index].date,
+                      format: 'yyyy-MM-dd'),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
                 ),
+              ],
             ),
-            new Positioned(
-              top: 0.0,
-              bottom: 0.0,
-              left: 25.0,
-              child: new Container(
-                height: double.infinity,
-                width: 1.0,
-                color: Theme.of(context).accentColor,
+          ),
+          Positioned(
+            top: 0.0,
+            bottom: 0.0,
+            left: Adapt.px(10.0),
+            child: Container(
+              height: double.infinity,
+              width: 1.0,
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          Positioned(
+            top: Adapt.px(20.0),
+            left: 0.0,
+            child: Container(
+              height: Adapt.px(20.0),
+              width: Adapt.px(20.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
               ),
-            ),
-            new Positioned(
-              top: 30.0,
-              left: 7.0,
-              child: new Container(
-                height: 36.0,
-                width: 36.0,
+              child: Container(
+//                  margin: new EdgeInsets.all(5.0),
+                height: Adapt.px(20.0),
+                width: Adapt.px(20.0),
                 decoration: new BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: new Container(
-                  margin: new EdgeInsets.all(5.0),
-                  height: 30.0,
-                  width: 30.0,
-                  decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).accentColor,
-                  ),
-                  child: Center(
-                    child: Text(Tools.formatDate(memorabiliaList[index].date, format: 'dd')),
-                  ),
+                  color: Theme.of(context).accentColor,
                 ),
               ),
-            )
-          ],
-        );
-      },
-    );
+            ),
+          )
+        ],
+      );
+    },
+  );
 }
 
 // 构建Memorabilia List数据
@@ -145,48 +157,16 @@ List<Memorabilia> generateItems(List array) {
   if (array.length == 0) return list;
   print(array);
   array.forEach((elem) {
-    list.add(Memorabilia(
-        date: int.parse(elem['date']),
-        title: elem['title'],
-        description: elem['description'],
-        photo: elem['photo'],
-        tag: elem['tag'],
-        isExpanded: false));
+    list.add(
+      Memorabilia(
+          date: DateTime.parse(elem['create_at']).millisecondsSinceEpoch,
+          title: elem['title'],
+          description: elem['description'],
+          images: elem['images'],
+          scope: elem['scope'],
+          location: elem['location']),
+    );
   });
+  print(list);
   return list;
 }
-/*
-*
-*
-*
-* */
-
-/*
-* SingleChildScrollView(
-      child: ExpansionPanelList(
-        expansionCallback: (int index, bool isExpanded) {
-          setState(() {
-            memorabiliaList[index].isExpanded = !isExpanded;
-          });
-        },
-        children: memorabiliaList.map<ExpansionPanel>((item) {
-          return ExpansionPanel(
-            headerBuilder: (BuildContext context, bool isExpanded) {
-              return ListTile(
-                title: Text(item.description),
-              );
-            },
-            body: ListTile(
-                title: Text(item.tag),
-                onTap: () {
-                  setState(() {
-                    memorabiliaList
-                        .removeWhere((currentItem) => item == currentItem);
-                  });
-                }),
-            isExpanded: item.isExpanded,
-          );
-        }).toList(),
-      ),
-    );
-* */

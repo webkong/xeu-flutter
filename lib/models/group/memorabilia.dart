@@ -4,13 +4,14 @@ part 'memorabilia.g.dart';
 
 @JsonSerializable()
 class Memorabilia {
-  Memorabilia({this.date, this.title, this.description, this.photo, this.tag, this.isExpanded = false});
+  Memorabilia({this.date, this.title, this.description, this.images, this.video = '', this.scope = const [], this.location = ''});
   num date;
   String title;
   String description;
-  String photo;
-  String tag;
-  bool isExpanded;
+  List images;
+  String video;
+  List scope;
+  String location;
   factory Memorabilia.fromJson(Map<String, dynamic> json) => _$MemorabiliaFromJson(json);
   Map<String, dynamic> toJson() => _$MemorabiliaToJson(this);
 }

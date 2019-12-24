@@ -105,6 +105,7 @@ class Http {
         print("url = ${options.uri.toString()}");
         print("headers = ${options.headers}");
         print("params = ${options.data}");
+        print("query = ${options.queryParameters}");
       }, onResponse: (Response response) {
         print("\n================== 响应数据 ==========================");
         print(response);
@@ -121,7 +122,12 @@ class Http {
 
     Response response;
     try {
-      response = await dio.request(url, data: params, options: option);
+      if (option.method == 'GET') {
+        response =
+            await dio.request(url, queryParameters: params, options: option);
+      } else {
+        response = await dio.request(url, data: params, options: option);
+      }
     } on DioError catch (e) {
       // 请求错误处理
       Response errorResponse;
