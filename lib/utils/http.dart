@@ -128,6 +128,7 @@ class Http {
       } else {
         response = await dio.request(url, data: params, options: option);
       }
+      print('response $response');
     } on DioError catch (e) {
       // 请求错误处理
       Response errorResponse;

@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/models/group/memorabilia.dart';
+import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/utils/adapt.dart';
 import 'package:xeu/utils/toast.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:xeu/utils/http.dart';
 
-class NewRecord extends StatefulWidget {
+class NewMemorabilia extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _NewRecord();
+    return _NewMemorabilia();
   }
 }
 
-class _NewRecord extends State<NewRecord> {
+class _NewMemorabilia extends State<NewMemorabilia> {
   final _formRecord = GlobalKey<FormState>();
   String _description, _title, _tag;
-  String prefix = '身高';
+  String prefix = '第一次';
   List<Asset> _photoList = List<Asset>();
   @override
   void initState() {
@@ -28,17 +33,34 @@ class _NewRecord extends State<NewRecord> {
           leading: CloseButton(),
           centerTitle: true,
           actions: <Widget>[
-            MaterialButton(
-              onPressed: () {
-                Toast.show('保存成功', context);
-                _formRecord.currentState.save();
-                save();
-                //TODO 保存到全局上传任务中，并给上一个页面传递本次record的内容作为临时展示。
+            Consumer(
+              builder: (BuildContext context, MemorabiliaModel memorabiliaModel,
+                  child) {
+                return MaterialButton(
+                  onPressed: () async{
+                    Toast.show('保存成功', context);
+                    _formRecord.currentState.save();
+                   SharedPreferences pres = await SharedPreferences.getInstance();
+                   String uid = pres.getString('u_id');
+                    //TODO 先存储record记录，然后再更新images字段。
+                    var res = await Http.post('/record/new',
+                        {"u_id":uid,"title": _title, "description": _description});
+                    print('020202020202020202');
+                    print(res.data);
+                    if (res.code == 200) {
+                      var data = res.data['data'];
+                      var item = save(uid, data['_id']);
+                      memorabiliaModel.add(item);
+                    }
+//                    Navigator.of(context).pop();
+                    //TODO 保存到全局上传任务中，并给上一个页面传递本次record的内容作为临时展示。
+                  },
+                  child: Text(
+                    '添加',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                );
               },
-              child: Text(
-                '添加',
-                style: TextStyle(color: Colors.black),
-              ),
             ),
           ],
         ),
@@ -52,7 +74,7 @@ class _NewRecord extends State<NewRecord> {
             child: Center(
               child: Form(
                 key: _formRecord,
-                child: buildNewRecord(),
+                child: buildNewMemorabilia(),
               ),
             ),
           ),
@@ -80,13 +102,12 @@ class _NewRecord extends State<NewRecord> {
                       ],
                     ),
                 barrierDismissible: false);
-            print(_flag);
             return _flag;
           }),
     );
   }
 
-  Widget buildNewRecord() {
+  Widget buildNewMemorabilia() {
     return Column(
       children: <Widget>[
         Container(
@@ -174,7 +195,6 @@ class _NewRecord extends State<NewRecord> {
         selectionLimitReachedText: "You can't select any more.",
       ),
     );
-    print(images);
     if (!mounted) return;
     setState(() {
       _photoList = images;
@@ -207,9 +227,10 @@ class _NewRecord extends State<NewRecord> {
     );
   }
 
-  save() {
+  save(uid, mid) {
     print("tiltle: $_title, description: $_description, ");
     print("images: $_photoList");
-    Navigator.of(context).pop({"title": _title, "description": _description, "photo": _photoList});
+    return new Memorabilia(
+        uid: uid, mid: mid, title: _title, description: _description, images: _photoList);
   }
 }

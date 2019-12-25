@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
 import 'package:xeu/pages/group/sub_record_list.dart';
@@ -13,10 +14,20 @@ class GroupPage extends StatefulWidget {
 }
 
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
-  _save() {
-    Toast.show('保存成功', context);
-    Navigator.push(context, SlideTopRoute(page: NewRecord()));
+
+    int _index=0;
+    var page ;
+
+  _new() async{
+    if(_index == 0){
+       page = NewMemorabilia();
+    }else{
+      page = NewRecord(); //身体参数
+    }
+    await Navigator.push(context, SlideTopRoute(page: page));
   }
+
+
   TabController _tabController;
   @override
   void initState() {
@@ -41,7 +52,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
                 Icons.add,
                 size: 30.0,
               ),
-              onPressed: () => this._save()),
+              onPressed: () => this._new()),
         ],
         bottom: new TabBar(
           controller: _tabController,
@@ -51,6 +62,9 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
               icon: new Icon(choice.icon),
             );
           }).toList(),
+          onTap: (index){
+            _index = index;
+          },
         ),
       ),
       body: new TabBarView(
@@ -73,7 +87,7 @@ class Choice {
 
 const List<Choice> choices = const <Choice>[
   const Choice(title: '大事记', icon: Icons.straighten, view: 'memorabilia'),
-    const Choice(title: '生长记录', icon: Icons.event_note, view: 'recordList'),
+  const Choice(title: '生长记录', icon: Icons.event_note, view: 'recordList'),
 ];
 
 choicePage(Choice choice) {

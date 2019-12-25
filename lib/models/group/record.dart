@@ -4,7 +4,8 @@ part 'record.g.dart';
 
 @JsonSerializable()
 class Record {
-  Record({this.date, this.height, this.weight, this.head});
+  Record({this.rid, this.date, this.height, this.weight, this.head});
+  String rid;
   num date;
   num height;
   num weight;

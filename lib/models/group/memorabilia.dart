@@ -4,7 +4,9 @@ part 'memorabilia.g.dart';
 
 @JsonSerializable()
 class Memorabilia {
-  Memorabilia({this.date, this.title, this.description, this.images, this.video = '', this.scope = const [], this.location = ''});
+  Memorabilia({this.uid,this.mid, this.date, this.title, this.description, this.images, this.video = '', this.scope = const [], this.location = ''});
+  String uid;
+  String mid;
   num date;
   String title;
   String description;

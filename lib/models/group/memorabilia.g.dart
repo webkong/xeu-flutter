@@ -8,6 +8,8 @@ part of 'memorabilia.dart';
 
 Memorabilia _$MemorabiliaFromJson(Map<String, dynamic> json) {
   return Memorabilia(
+    uid: json['uid'] as String,
+    mid: json['mid'] as String,
     date: json['date'] as num,
     title: json['title'] as String,
     description: json['description'] as String,
@@ -20,6 +22,8 @@ Memorabilia _$MemorabiliaFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$MemorabiliaToJson(Memorabilia instance) =>
     <String, dynamic>{
+      'uid': instance.uid,
+      'mid': instance.mid,
       'date': instance.date,
       'title': instance.title,
       'description': instance.description,
