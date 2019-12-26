@@ -37,9 +37,6 @@ class Http {
   }
 
   static post(url, param) async {
-    print(url);
-    print(param);
-    print(baseUrl);
     return await request(
         baseUrl + url,
         param,
@@ -128,7 +125,6 @@ class Http {
       } else {
         response = await dio.request(url, data: params, options: option);
       }
-      print('response $response');
     } on DioError catch (e) {
       // 请求错误处理
       Response errorResponse;
@@ -163,7 +159,6 @@ class Http {
             headers: response.headers);
       }
     } catch (e) {
-      print(e.toString() + url);
       return ResultData(response.data, false, response.statusCode,
           headers: response.headers);
     }

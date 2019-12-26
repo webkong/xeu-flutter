@@ -33,35 +33,32 @@ class _NewMemorabilia extends State<NewMemorabilia> {
           leading: CloseButton(),
           centerTitle: true,
           actions: <Widget>[
-            Consumer(
-              builder: (BuildContext context, MemorabiliaModel memorabiliaModel,
-                  child) {
-                return MaterialButton(
-                  onPressed: () async{
-                    Toast.show('保存成功', context);
-                    _formRecord.currentState.save();
-                   SharedPreferences pres = await SharedPreferences.getInstance();
-                   String uid = pres.getString('u_id');
-                    //TODO 先存储record记录，然后再更新images字段。
-                    var res = await Http.post('/record/new',
-                        {"u_id":uid,"title": _title, "description": _description});
-                    print('020202020202020202');
-                    print(res.data);
-                    if (res.code == 200) {
-                      var data = res.data['data'];
-                      var item = save(uid, data['_id']);
-                      memorabiliaModel.add(item);
-                    }
-//                    Navigator.of(context).pop();
-                    //TODO 保存到全局上传任务中，并给上一个页面传递本次record的内容作为临时展示。
-                  },
-                  child: Text(
-                    '添加',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                );
+            MaterialButton(
+              onPressed: () async {
+                _formRecord.currentState.save();
+                SharedPreferences pres = await SharedPreferences.getInstance();
+                String uid = pres.getString('u_id');
+                //TODO 先存储record记录，然后再更新images字段。
+                var res = await Http.post('/record/new', {
+                  "u_id": uid,
+                  "title": _title,
+                  "description": _description
+                });
+                print('020202020202020202');
+                if (res.code == 200) {
+                  var data = res.data['data'];
+                  var item = save(uid, data['_id']);
+                  Toast.show('保存成功,等待文件上传', context);
+                  Provider.of<MemorabiliaModel>(context, listen: false)
+                      .add(item);
+                  Navigator.of(context).pop();
+                }
               },
-            ),
+              child: Text(
+                '添加',
+                style: TextStyle(color: Colors.black),
+              ),
+            )
           ],
         ),
         preferredSize:
@@ -231,6 +228,11 @@ class _NewMemorabilia extends State<NewMemorabilia> {
     print("tiltle: $_title, description: $_description, ");
     print("images: $_photoList");
     return new Memorabilia(
-        uid: uid, mid: mid, title: _title, description: _description, images: _photoList);
+        uid: uid,
+        mid: mid,
+        title: _title,
+        description: _description,
+        images: _photoList,
+        date: DateTime.now().millisecondsSinceEpoch);
   }
 }

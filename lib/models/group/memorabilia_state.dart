@@ -8,23 +8,35 @@ import '../../utils/http.dart';
 import 'package:http_parser/http_parser.dart';
 
 class MemorabiliaModel with ChangeNotifier {
-  int _index = -1;
+  int _taskStatus = 0; // 0 没有任务 2 任务进行中 3 任务结束  -1 任务存在失败情况
   List<Task> _tasks = [];
-  List<Memorabilia> _memorabiliaUploadList = [];
-  List get() => _memorabiliaUploadList;
+  List<Task> _succeedTasks = [];
+  List<Task> _failTasks = [];
+  Map get() => {"tasks": _tasks, "fail": _failTasks};
+  void init(){
+    _tasks.clear();
+//    _taskStatus = 0;
+//    _succeedTasks.clear();
+//    _failTasks.clear();
+  }
+  int isDone() {
+    return _taskStatus;
+  }
 
   void add(item) {
     print(' into add ...............`');
     print(item);
+    //添加数组
     _tasks.add(new Task(memorabilia: item, status: 0));
+    //设置任务状态
+    _taskStatus = 2;
     _upload();
     notifyListeners();
   }
 
   _upload() async {
-    if (_index != -1) return null;
+    if (_tasks.length == 0) return;
     var item = _tasks[0].memorabilia;
-    var status = _tasks[0].status;
     print(' into upload ...............`');
     print(item.images);
     // TODO有多图，批次上传
@@ -40,23 +52,36 @@ class MemorabiliaModel with ChangeNotifier {
     try {
       var list = await Future.wait(files);
       await _updateMemorabilia(list, item);
-      // 删除数组中的上传完毕的内容
-      _memorabiliaUploadList.removeAt(0);
-      _upload();
+      // 删除数组中的上传完毕的内容,并添加success list
+      _succeedTasks.add(_tasks.removeAt(0));
+      // 根据任务情况查看
+      if (_tasks.length == 0) {
+        print('set _stat');
+        _taskStatus = 3;
+        print('notify start');
+        notifyListeners();
+        print('notify end');
+        init();
+        print('init ');
+      } else {
+        _upload();
+      }
     } catch (e) {
-      //设置状态
-      _tasks[0].status = -1;
+      Task failTask = _tasks.removeAt(0);
+      failTask.status = -1;
+      _failTasks.add(failTask);
+      if(_tasks.length > 0){
+        _upload();
+      }
     }
-
-//    notifyListeners();
   }
 
   _updateMemorabilia(List list, item) async {
     print('更新记录');
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
-    return Http.post(
-        '/record/update', {"u_id": item.uid, "_id": item.mid, "images": images});
+    return Http.post('/record/update',
+        {"u_id": item.uid, "_id": item.mid, "images": images});
   }
 
   Future convertAssetToHttp(asset) async {
