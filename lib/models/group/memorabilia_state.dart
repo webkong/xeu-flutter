@@ -15,9 +15,9 @@ class MemorabiliaModel with ChangeNotifier {
   Map get() => {"tasks": _tasks, "fail": _failTasks};
   void init(){
     _tasks.clear();
-//    _taskStatus = 0;
-//    _succeedTasks.clear();
-//    _failTasks.clear();
+    _taskStatus = 0;
+    _succeedTasks.clear();
+    _failTasks.clear();
   }
   int isDone() {
     return _taskStatus;
@@ -61,7 +61,7 @@ class MemorabiliaModel with ChangeNotifier {
         print('notify start');
         notifyListeners();
         print('notify end');
-        init();
+//        init();
         print('init ');
       } else {
         _upload();

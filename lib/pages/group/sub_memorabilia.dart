@@ -60,7 +60,8 @@ class _SubMemorabilia extends State<SubMemorabilia> {
                 prefixWidget = Container();
                 if (memorabiliaModel.isDone() == 3) {
                   print('拉取');
-//                  this._getList();
+                  memorabiliaModel.init();
+                  this._getList();
                 }
               }
               return prefixWidget;
@@ -145,6 +146,7 @@ class _SubMemorabilia extends State<SubMemorabilia> {
                               image: NetworkImage(imageUrl),
                               height: Adapt.px(300),
                               width: Adapt.px(450),
+                              fit: BoxFit.cover,
                             );
                           }),
                           Expanded(
