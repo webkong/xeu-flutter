@@ -81,7 +81,7 @@ class MemorabiliaModel with ChangeNotifier {
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
     return Http.post('/record/update',
-        {"u_id": item.uid, "_id": item.mid, "images": images});
+        {"u_id": item.uid, "m_id": item.mid, "images": images});
   }
 
   Future convertAssetToHttp(asset) async {

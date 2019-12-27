@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/pages/group/new_memorabilia.dart';
+import 'package:xeu/pages/group/sub_memorabilia_detail.dart';
 import './UIOverlay/index.dart';
 import './signup.dart';
 import './home.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
               '/user': (BuildContext context) => UserPage(),
               '/home': (BuildContext context) => HomePage(),
               '/group': (BuildContext context) => GroupPage(),
+              '/memorabiliaDetail': (BuildContext context) => MemorabiliaDetail(),
               '/signup': (BuildContext context) => SignUpPage(),
             },
           );

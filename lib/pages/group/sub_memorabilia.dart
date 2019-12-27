@@ -120,65 +120,71 @@ class _SubMemorabilia extends State<SubMemorabilia> {
   }
 
 // 创建 List 的item card
-  Widget _buildItemWidget(item, {isLoading = false}) {
+  Widget _buildItemWidget(Memorabilia item, {isLoading = false}) {
     return Stack(
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(left: Adapt.px(20.0), top: Adapt.px(60.0)),
           child: isLoading
               ? _buildUploadingCard(item)
-              : Card(
-                  margin: EdgeInsets.all(Adapt.px(10.0)),
-                  child: Container(
-                    width: double.infinity,
-                    height: Adapt.px(300.0),
-                    child: Center(
-                      child: Row(
-                        children: <Widget>[
-                          Builder(builder: (BuildContext context) {
-                            String imageUrl;
-                            if (item.images.isNotEmpty) {
-                              imageUrl = item.images[0]['url'];
-                            } else {
-                              imageUrl = 'https://dummyimage.com/600x400';
-                            }
-                            return Image(
-                              image: NetworkImage(imageUrl),
-                              height: Adapt.px(300),
-                              width: Adapt.px(450),
-                              fit: BoxFit.cover,
-                            );
-                          }),
-                          Expanded(
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                  item.title,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+              : GestureDetector(
+                  child: Card(
+                    margin: EdgeInsets.all(Adapt.px(10.0)),
+                    child: Container(
+                      width: double.infinity,
+                      height: Adapt.px(300.0),
+                      child: Center(
+                        child: Row(
+                          children: <Widget>[
+                            Builder(builder: (BuildContext context) {
+                              String imageUrl;
+                              if (item.images.isNotEmpty) {
+                                imageUrl = item.images[0]['url'];
+                              } else {
+                                imageUrl = 'https://dummyimage.com/600x400';
+                              }
+                              return Image(
+                                image: NetworkImage(imageUrl),
+                                height: Adapt.px(300),
+                                width: Adapt.px(450),
+                                fit: BoxFit.cover,
+                              );
+                            }),
+                            Expanded(
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    item.title,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                item.description != null
-                                    ? Container(
-                                        margin: EdgeInsets.only(
-                                            left: Adapt.px(10),
-                                            right: Adapt.px(10)),
-                                        child: Text(
-                                          item.description,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                            ),
-                          )
-                        ],
+                                  item.description != null
+                                      ? Container(
+                                          margin: EdgeInsets.only(
+                                              left: Adapt.px(10),
+                                              right: Adapt.px(10)),
+                                          child: Text(
+                                            item.description,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        )
+                                      : Container(),
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/memorabiliaDetail',
+                        arguments: {"mid": item.mid});
+                  },
                 ),
         ),
         Positioned(
@@ -239,18 +245,9 @@ class _SubMemorabilia extends State<SubMemorabilia> {
     List<Memorabilia> list = [];
     if (array.length == 0) return list;
     array.forEach((elem) {
-      list.add(
-        Memorabilia(
-            uid: elem['u_id'],
-            mid: elem['_id'],
-            date: DateTime.parse(elem['create_at']).millisecondsSinceEpoch,
-            title: elem['title'],
-            description: elem['description'],
-            images: elem['images'],
-            scope: elem['scope'],
-            location: elem['location']),
-      );
+      list.add(Memorabilia.fromJson(elem));
     });
     return list;
   }
 }
+// date: DateTime.parse(elem['create_at']).millisecondsSinceEpoch,
