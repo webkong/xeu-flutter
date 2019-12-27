@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/models/group/record_state.dart';
 import '../../utils/adapt.dart';
-import 'package:dio/dio.dart';
 import '../../utils/tools.dart';
 import '../../models/group/record.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:xeu/utils/http.dart';
 
 class SubRecordList extends StatefulWidget {
   @override
@@ -15,14 +18,15 @@ class SubRecordList extends StatefulWidget {
 
 class _SubRecordList extends State<SubRecordList> {
   List recordList = <Map>[];
-  Response response;
-  Dio dio = Dio();
+  String uid;
   bool showLoading = true;
+
   _getList() async {
-    response =
-        await dio.get("http://rap2api.taobao.org/app/mock/236857/record/list");
+    SharedPreferences pres = await SharedPreferences.getInstance();
+    uid = pres.getString('u_id');
+    var res = await Http.get("/record/list", {"u_id": uid});
     setState(() {
-      recordList = _generateList(response.data['data']['list']);
+      recordList = _generateList(res.data['data']['list']);
       showLoading = false;
     });
   }
@@ -34,7 +38,7 @@ class _SubRecordList extends State<SubRecordList> {
     print(array);
     array.forEach((elem) {
       list.add(Record(
-          date: int.parse(elem['date']),
+          date: DateTime.parse(elem['create_at']).millisecondsSinceEpoch,
           weight: elem['weight'],
           height: elem['height'],
           head: elem['head']));
@@ -55,7 +59,15 @@ class _SubRecordList extends State<SubRecordList> {
         child: CircularProgressIndicator(),
       );
     } else {
-      return _content(recordList);
+      return Consumer(
+          builder: (BuildContext context, RecordModel record, child) {
+        if (record.get()) {
+          print('舒心');
+          record.init();
+          this._getList();
+        }
+        return _content(recordList);
+      });
     }
   }
 }
@@ -63,8 +75,7 @@ class _SubRecordList extends State<SubRecordList> {
 Widget _content(list) {
   return Column(
     children: <Widget>[
-       _generateChart(list),
-
+      _generateChart(list),
     ],
   );
 }

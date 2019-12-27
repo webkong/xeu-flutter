@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/utils/adapt.dart';
 import 'package:xeu/utils/toast.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:xeu/utils/http.dart';
 
 class NewRecord extends StatefulWidget {
   @override
@@ -12,9 +15,28 @@ class NewRecord extends StatefulWidget {
 
 class _NewRecord extends State<NewRecord> {
   final _formRecord = GlobalKey<FormState>();
-  String _description, _title, _tag;
-  String prefix = '身高';
-  List<Asset> _photoList = List<Asset>();
+  Map<String, num> data = {"height": 0, "weight": 0, "head": 0};
+  Map<String, Map> config = {
+    "height": {
+      "label": "身高",
+      "unit": "CM",
+      "icon": Icon(Icons.straighten),
+      "hint": "宝宝长高啦"
+    },
+    "weight": {
+      "label": "体重",
+      "unit": "Kg",
+      "icon": Icon(Icons.trending_up),
+      "hint": "宝宝长大啦"
+    },
+    "head": {
+      "label": "头围",
+      "unit": "CM",
+      "icon": Icon(Icons.face),
+      "hint": "宝宝头围"
+    },
+  };
+
   @override
   void initState() {
     super.initState();
@@ -29,11 +51,22 @@ class _NewRecord extends State<NewRecord> {
           centerTitle: true,
           actions: <Widget>[
             MaterialButton(
-              onPressed: () {
-                Toast.show('保存成功', context);
-                _formRecord.currentState.save();
-                save();
-                //TODO 保存到全局上传任务中，并给上一个页面传递本次record的内容作为临时展示。
+              onPressed: () async {
+                if (_formRecord.currentState.validate()) {
+                  Toast.show('保存成功', context);
+                  _formRecord.currentState.save();
+                  SharedPreferences pres =
+                      await SharedPreferences.getInstance();
+                  String uid = pres.getString('u_id');
+                  Map<String, dynamic> params =  Map.from(data);
+                  params['u_id'] = uid;
+                  var res = await Http.post('/record/new', params);
+                  if (res.code == 200) {
+                    Provider.of<RecordModel>(context, listen: false).add(params);
+                    Navigator.of(context).pop();
+                  }
+                  print(data);
+                }
               },
               child: Text(
                 '添加',
@@ -47,40 +80,44 @@ class _NewRecord extends State<NewRecord> {
       ),
       body: WillPopScope(
           child: Container(
-            margin: EdgeInsets.only(
-                left: Adapt.px(40), right: Adapt.px(40), top: Adapt.px(20)),
-            child: Center(
-              child: Form(
-                key: _formRecord,
-                child: buildNewRecord(),
-              ),
+            width: Adapt.px(500),
+            margin: EdgeInsets.only(left: Adapt.px(80), top: Adapt.px(30)),
+            child: Form(
+              key: _formRecord,
+              child: buildNewRecord(),
             ),
           ),
           onWillPop: () async {
             var _flag;
-            await showDialog(
+            if (data['height'] != 0 ||
+                data['weight'] != 0 ||
+                data['head'] != 0) {
+              await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                      title: Text('保留此次编辑？'),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text('保留'),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            _flag = false;
-                          },
-                        ),
-                        FlatButton(
-                          child: Text('不保留'),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            _flag = true;
-                          },
-                        ),
-                      ],
+                  title: Text('保留此次编辑？'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('保留'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        _flag = false;
+                      },
                     ),
-                barrierDismissible: false);
-            print(_flag);
+                    FlatButton(
+                      child: Text('不保留'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        _flag = true;
+                      },
+                    ),
+                  ],
+                ),
+                barrierDismissible: false,
+              );
+            } else {
+              _flag = true;
+            }
             return _flag;
           }),
     );
@@ -89,127 +126,52 @@ class _NewRecord extends State<NewRecord> {
   Widget buildNewRecord() {
     return Column(
       children: <Widget>[
-        Container(
-          child: buildTitle(),
-        ),
-        Container(
-          margin: EdgeInsets.only(bottom: Adapt.px(10)),
-          child: TextFormField(
-            maxLength: 200,
-            maxLines: 4,
-            decoration: InputDecoration(
-                hintText: '宝宝在笑、在跑，还是在发呆...', border: InputBorder.none),
-            onSaved: (String value) => _description = value,
-          ),
-        ),
-        Expanded(
-          child: buildPhoto(),
-        ),
-//        Container(
-//          child: ListTile(
-//            leading: FlutterLogo(),
-//            title: Text('所在位置'),
-//            trailing: Icon(Icons.arrow_forward),
-//          ),
-//        )
+        buildInputItem('height'),
+        buildInputItem('weight'),
+        buildInputItem('head'),
       ],
     );
   }
 
-// 构建 图片
-  Widget buildPhoto() {
-    return GridView.count(
-      crossAxisSpacing: Adapt.px(10),
-      mainAxisSpacing: Adapt.px(10),
-      crossAxisCount: 5,
-      children: <Widget>[
-        _addPhotoButton(),
-        ...List.generate(_photoList.length, (index) {
-          Asset asset = _photoList[index];
-          return _buildPhotoItem(asset);
-        }).toList(),
-      ],
-    );
-  }
-
-  Widget _buildPhotoItem(Asset photo) {
-    return Container(
-      height: Adapt.px(80),
-      width: Adapt.px(80),
-      child: AssetThumb(
-        asset: photo,
-        width: 80,
-        height: 80,
-      ),
-      decoration: BoxDecoration(color: Colors.black12),
-    );
-  }
-
-  Widget _addPhotoButton() {
-    return GestureDetector(
-        child: Container(
-          height: Adapt.px(80),
-          width: Adapt.px(80),
-          child: Icon(Icons.camera_alt),
-          decoration: BoxDecoration(color: Colors.black12),
-        ),
-        onTap: getImage);
-  }
-
-  Future<void> getImage() async {
-    List<Asset> images;
-    images = await MultiImagePicker.pickImages(
-      maxImages: 8,
-      enableCamera: true,
-      selectedAssets: _photoList,
-      materialOptions: MaterialOptions(
-        actionBarTitle: "Action bar",
-        allViewTitle: "All view title",
-        actionBarColor: "#FFBF00",
-        actionBarTitleColor: "#FFFFFF",
-        lightStatusBar: false,
-        statusBarColor: '#FFBF00',
-        startInAllView: true,
-        selectCircleStrokeColor: "#FFFFFF",
-        selectionLimitReachedText: "You can't select any more.",
-      ),
-    );
-    print(images);
-    if (!mounted) return;
-    setState(() {
-      _photoList = images;
-    });
-  }
-
-  Widget buildTitle() {
+  Widget buildInputItem(key) {
     return Row(
       children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(right: 10),
-          child: Text(
-            prefix,
-            style: TextStyle(fontSize: 16),
-          ),
-        ),
         Expanded(
           child: TextFormField(
+//            initialValue: data[key].toString(),
+            keyboardType: TextInputType.number,
             style: TextStyle(fontSize: 16),
-            decoration: InputDecoration(),
+            decoration: InputDecoration(
+              labelText: config[key]['label'],
+              prefixIcon: config[key]['icon'],
+              suffixText: config[key]['unit'],
+              hintText: config[key]['hint'],
+//              helperText: config[key]['hint'],
+            ),
             onSaved: (value) {
               setState(() {
-                _tag = value;
-                _title = prefix + value;
+                print('onsaev');
+                print(value);
+                if (value != '') {
+                  data[key] = double.parse(value);
+                } else {
+                  data[key] = 0;
+                }
               });
+            },
+            validator: (String value) {
+              print('value $value');
+              if (value == '') return null;
+              RegExp input = new RegExp(r"\d+$");
+              if (!input.hasMatch(value)) {
+                return '必须是数字哦';
+              } else {
+                return null;
+              }
             },
           ),
         ),
       ],
     );
-  }
-
-  save() {
-    print("tiltle: $_title, description: $_description, ");
-    print("images: $_photoList");
-    Navigator.of(context).pop({"title": _title, "description": _description, "photo": _photoList});
   }
 }

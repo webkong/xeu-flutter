@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
+import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/pages/group/new_memorabilia.dart';
 import './UIOverlay/index.dart';
 import './signup.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MemorabiliaModel()),
+        ChangeNotifierProvider(create: (_) => RecordModel()),
       ],
       child: Consumer(
         builder: (BuildContext context, MemorabiliaModel memorabiliaUploadList, _) {

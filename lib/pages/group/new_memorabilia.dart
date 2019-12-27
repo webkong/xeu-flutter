@@ -16,7 +16,7 @@ class NewMemorabilia extends StatefulWidget {
 }
 
 class _NewMemorabilia extends State<NewMemorabilia> {
-  final _formRecord = GlobalKey<FormState>();
+  final _formMemorabilia = GlobalKey<FormState>();
   String _description, _title, _tag;
   String prefix = '第一次';
   List<Asset> _photoList = List<Asset>();
@@ -35,23 +35,45 @@ class _NewMemorabilia extends State<NewMemorabilia> {
           actions: <Widget>[
             MaterialButton(
               onPressed: () async {
-                _formRecord.currentState.save();
-                SharedPreferences pres = await SharedPreferences.getInstance();
-                String uid = pres.getString('u_id');
-                //TODO 先存储record记录，然后再更新images字段。
-                var res = await Http.post('/record/new', {
-                  "u_id": uid,
-                  "title": _title,
-                  "description": _description
-                });
-                print('020202020202020202');
-                if (res.code == 200) {
-                  var data = res.data['data'];
-                  var item = save(uid, data['_id']);
-                  Toast.show('保存成功,等待文件上传', context);
-                  Provider.of<MemorabiliaModel>(context, listen: false)
-                      .add(item);
-                  Navigator.of(context).pop();
+                if (_formMemorabilia.currentState.validate()) {
+                  _formMemorabilia.currentState.save();
+
+                  if (_photoList.isNotEmpty) {
+                    SharedPreferences pres =
+                        await SharedPreferences.getInstance();
+                    String uid = pres.getString('u_id');
+                    //TODO 先存储record记录，然后再更新images字段。
+                    var res = await Http.post('/memorabilia/new', {
+                      "u_id": uid,
+                      "title": _title,
+                      "description": _description
+                    });
+                    print('020202020202020202');
+                    if (res.code == 200) {
+                      var data = res.data['data'];
+                      var item = save(uid, data['_id']);
+                      Toast.show('保存成功,等待文件上传', context);
+                      Provider.of<MemorabiliaModel>(context, listen: false)
+                          .add(item);
+                      Navigator.of(context).pop();
+                    }
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: Text('图片不能为空'),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('确定'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  }
                 }
               },
               child: Text(
@@ -70,35 +92,43 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                 left: Adapt.px(40), right: Adapt.px(40), top: Adapt.px(20)),
             child: Center(
               child: Form(
-                key: _formRecord,
+                key: _formMemorabilia,
                 child: buildNewMemorabilia(),
               ),
             ),
           ),
           onWillPop: () async {
             var _flag;
-            await showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                      title: Text('保留此次编辑？'),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text('保留'),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            _flag = false;
-                          },
-                        ),
-                        FlatButton(
-                          child: Text('不保留'),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            _flag = true;
-                          },
-                        ),
-                      ],
-                    ),
-                barrierDismissible: false);
+            _formMemorabilia.currentState.save();
+            print(
+                'title $_title , tag $_flag, description $_description , images : $_photoList');
+            if (_tag != '' || _photoList.isNotEmpty) {
+              await showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: Text('保留此次编辑？'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('保留'),
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              _flag = false;
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('不保留'),
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              _flag = true;
+                            },
+                          ),
+                        ],
+                      ),
+                  barrierDismissible: false);
+            } else {
+//               Navigator.of(context).pop();
+              _flag = true;
+            }
             return _flag;
           }),
     );
@@ -217,6 +247,13 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                 _tag = value;
                 _title = prefix + value;
               });
+            },
+            validator: (String value) {
+              if (value == "") {
+                return '不能为空';
+              } else {
+                return null;
+              }
             },
           ),
         ),

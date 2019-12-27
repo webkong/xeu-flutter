@@ -21,7 +21,7 @@ class _SubMemorabilia extends State<SubMemorabilia> {
   _getList() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
-    var response = await Http.get('/record/list', {"u_id": uid});
+    var response = await Http.get('/memorabilia/list', {"u_id": uid});
     setState(() {
       _memorabiliaList = generateItems(response.data['data']['list']);
       showLoading = false;

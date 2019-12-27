@@ -3,7 +3,6 @@ import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
 import 'package:xeu/pages/group/sub_record_list.dart';
-import '../../utils/toast.dart';
 import '../../UIOverlay/slideTopRoute.dart';
 
 class GroupPage extends StatefulWidget {
@@ -24,7 +23,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
     }else{
       page = NewRecord(); //身体参数
     }
-    await Navigator.push(context, SlideTopRoute(page: page));
+     await Navigator.push(context, SlideTopRoute(page: page));
   }
 
 
