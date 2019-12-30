@@ -72,12 +72,13 @@ List _photoList(images) {
         Container(
           height: 5,
         ),
-        Container(
-          child: FadeInImage(
-            placeholder: MemoryImage(kTransparentImage),
-            image: CachedNetworkImageProvider(images[index]['url']),
-            fit: BoxFit.cover,
-          ),
+        CachedNetworkImage(
+          imageUrl: images[index]['url'],
+          placeholder: (context, url) => Image.memory(kTransparentImage),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          fit: BoxFit.cover,
+          fadeInCurve: Curves.easeIn,
+          filterQuality: FilterQuality.low,
         ),
         Container(
           height: 5,

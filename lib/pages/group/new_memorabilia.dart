@@ -188,6 +188,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
         asset: photo,
         width: 80,
         height: 80,
+        quality: 50,
       ),
       decoration: BoxDecoration(color: Colors.black12),
     );
@@ -221,6 +222,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
         selectCircleStrokeColor: "#FFFFFF",
         selectionLimitReachedText: "You can't select any more.",
       ),
+
     );
     if (!mounted) return;
     setState(() {

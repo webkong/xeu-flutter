@@ -114,11 +114,17 @@ class _SubMemorabilia extends State<SubMemorabilia> {
 
 // 循环创建列表
   Widget _buildMemorabiliaList() {
-    return ListView.builder(
-      itemCount: _memorabiliaList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildItemWidget(_memorabiliaList[index]);
+    return RefreshIndicator(
+      onRefresh: () async {
+        _memorabiliaList.clear();
+        _getList();
       },
+      child: ListView.builder(
+        itemCount: _memorabiliaList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildItemWidget(_memorabiliaList[index]);
+        },
+      ),
     );
   }
 
@@ -149,6 +155,10 @@ class _SubMemorabilia extends State<SubMemorabilia> {
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),
                                 fit: BoxFit.cover,
+                                fadeInCurve: Curves.easeIn,
+                                filterQuality: FilterQuality.low,
+                                height: Adapt.px(300),
+                                width: Adapt.px(450),
                               ),
                             ),
                             Expanded(
