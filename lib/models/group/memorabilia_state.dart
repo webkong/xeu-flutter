@@ -51,7 +51,9 @@ class MemorabiliaModel with ChangeNotifier {
     }
     try {
       var list = await Future.wait(files);
-      await _updateMemorabilia(list, item);
+      var res = await _updateMemorabilia(list, item);
+      print(res);
+      //TODO：上传失败
       // 删除数组中的上传完毕的内容,并添加success list
       _succeedTasks.add(_tasks.removeAt(0));
       // 根据任务情况查看
@@ -80,7 +82,7 @@ class MemorabiliaModel with ChangeNotifier {
     print('更新记录');
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
-    return Http.post('/record/update',
+    return Http.post('/memorabilia/update',
         {"u_id": item.uid, "m_id": item.mid, "images": images});
   }
 

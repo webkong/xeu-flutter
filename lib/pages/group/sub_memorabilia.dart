@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/utils/adapt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,7 +80,9 @@ class _SubMemorabilia extends State<SubMemorabilia> {
 
   Widget _buildNoContent() {
     return Center(
-      child: Text('没有记录，快去添加吧..'),
+      child: Container(
+        child: Text('没有记录，快去添加吧..'),
+      ),
     );
   }
 
@@ -136,20 +139,18 @@ class _SubMemorabilia extends State<SubMemorabilia> {
                       child: Center(
                         child: Row(
                           children: <Widget>[
-                            Builder(builder: (BuildContext context) {
-                              String imageUrl;
-                              if (item.images.isNotEmpty) {
-                                imageUrl = item.images[0]['url'];
-                              } else {
-                                imageUrl = 'https://dummyimage.com/600x400';
-                              }
-                              return Image(
-                                image: NetworkImage(imageUrl),
-                                height: Adapt.px(300),
-                                width: Adapt.px(450),
+                            Container(
+                              height: Adapt.px(300),
+                              width: Adapt.px(450),
+                              child: CachedNetworkImage(
+                                imageUrl: item.images[0]['url'],
+                                placeholder: (context, url) =>
+                                    Image.memory(kTransparentImage),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                                 fit: BoxFit.cover,
-                              );
-                            }),
+                              ),
+                            ),
                             Expanded(
                               child: Column(
                                 children: <Widget>[
@@ -183,7 +184,7 @@ class _SubMemorabilia extends State<SubMemorabilia> {
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, '/memorabiliaDetail',
-                        arguments: {"mid": item.mid});
+                        arguments: {"mid": item.mid, "item": item});
                   },
                 ),
         ),

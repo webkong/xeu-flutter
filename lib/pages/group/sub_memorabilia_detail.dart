@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:xeu/models/group/memorabilia.dart';
-import 'package:xeu/utils/http.dart';
+import 'package:xeu/utils/adapt.dart';
+import 'package:xeu/utils/tools.dart';
 
 class MemorabiliaDetail extends StatefulWidget {
   @override
@@ -11,48 +13,76 @@ class MemorabiliaDetail extends StatefulWidget {
 }
 
 class _MemorabiliaDetail extends State<MemorabiliaDetail> {
-  Memorabilia _memorabilia;
-  bool showLoading = false;
-  _getList() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    String uid = pres.getString("u_id");
-    Map routeParams = ModalRoute.of(context).settings.arguments;
-    print(routeParams);
-    var response =
-        await Http.get('/memorabilia/getOne', {"u_id": uid, "m_id": routeParams['mid']});
-    setState(() {
-      _memorabilia = Memorabilia.fromJson(response.data['data']);
-      showLoading = false;
-    });
-  }
+  Memorabilia _memorabilia =
+      new Memorabilia(images: [], title: '', description: '');
 
   @override
   void initState() {
     super.initState();
-//     print( ModalRoute.of(context));
-    _getList();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (showLoading) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      return Scaffold(
-        appBar: AppBar(),
-        body: _photoList(_memorabilia),
-      );
-    }
+    Map routeParams = ModalRoute.of(context).settings.arguments;
+    print(routeParams);
+    _memorabilia = routeParams['item'];
+    return Scaffold(
+      appBar: AppBar(),
+      backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+      body: Container(
+//        margin: EdgeInsets.all(Adapt.px(30)),
+        child: ListView(
+          children: <Widget>[
+            Container(
+                margin: EdgeInsets.only(
+                    left: Adapt.px(20),
+                    top: Adapt.px(20),
+                    bottom: Adapt.px(30)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      _memorabilia.title,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: Adapt.px(20)),
+                      child: Text(
+                        Tools.formatDate(_memorabilia.date),
+                        style: TextStyle(fontSize: 14, color: Colors.black54),
+                      ),
+                    ),
+                  ],
+                )),
+            ..._photoList(_memorabilia.images),
+            _memorabilia.description != null
+                ? Text(_memorabilia.description)
+                : null
+          ],
+        ),
+      ),
+    );
   }
 }
 
-Widget _photoList(memorabilia) {
-  return new ListView.builder(
-    itemCount: memorabilia.images.length,
-    itemBuilder: (BuildContext context, int index) {
-      return Image.network(memorabilia.images[index]['url']);
-    },
-  );
+List _photoList(images) {
+  return List.generate(images.length, (index) {
+    return Column(
+      children: <Widget>[
+        Container(
+          height: 5,
+        ),
+        Container(
+          child: FadeInImage(
+            placeholder: MemoryImage(kTransparentImage),
+            image: CachedNetworkImageProvider(images[index]['url']),
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          height: 5,
+        ),
+      ],
+    );
+  }).toList();
 }
