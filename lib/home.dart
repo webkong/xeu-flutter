@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import './common/global.dart';
-import './pages/user/index.dart';
-import './utils/adapt.dart';
+import 'package:xeu/common/global.dart';
+import 'package:xeu/pages/user/index.dart';
+import 'common/utils/adapt.dart';
 
 class HomePage extends StatefulWidget {
   @override

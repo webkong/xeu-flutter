@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/models/group/record_state.dart';
-import '../../utils/adapt.dart';
-import '../../utils/tools.dart';
-import '../../models/group/record.dart';
+import 'package:xeu/common/utils/adapt.dart';
+import 'package:xeu/common/utils/tools.dart';
+import 'package:xeu/models/group/record.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:xeu/utils/http.dart';
+import 'package:xeu/common/utils/http.dart';
 
 class SubRecordList extends StatefulWidget {
   @override

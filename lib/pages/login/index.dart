@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:xeu/utils/http.dart';
+import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../models/device/deviceInfo.dart';
+import 'package:xeu/models/device/deviceInfo.dart';
 
 class LoginPage extends StatefulWidget {
   @override

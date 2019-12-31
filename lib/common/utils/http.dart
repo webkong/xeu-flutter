@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
 import 'dart:collection';
-import '../common/config.dart';
+import 'package:xeu/common/config/config.dart';
 
 ///http请求管理类，可单独抽取出来
 class Http {
@@ -64,7 +64,7 @@ class Http {
     //没有网络
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      return 'NETWORK_ERROR';
+      return NETWORK_ERROR;
     }
 
     Map<String, String> headers = new HashMap();

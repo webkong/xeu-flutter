@@ -3,7 +3,7 @@ import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
 import 'package:xeu/pages/group/sub_record.dart';
-import '../../UIOverlay/slideTopRoute.dart';
+import 'package:xeu/UIOverlay/slideTopRoute.dart';
 
 class GroupPage extends StatefulWidget {
   @override

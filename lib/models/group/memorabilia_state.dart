@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xeu/common/config.dart';
+import 'package:xeu/common/config/config.dart';
 import 'package:xeu/models/group/memorabilia.dart';
-import '../../utils/http.dart';
+import '../../common/utils/http.dart';
 import 'package:http_parser/http_parser.dart';
 
 class MemorabiliaModel with ChangeNotifier {

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../utils/http.dart';
+import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 
 class RegisterPage extends StatefulWidget {

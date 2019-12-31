@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/models/group/record_state.dart';
-import 'package:xeu/utils/adapt.dart';
-import 'package:xeu/utils/toast.dart';
-import 'package:xeu/utils/http.dart';
+import 'package:xeu/common/utils/adapt.dart';
+import 'package:xeu/common/widget/toast.dart';
+import 'package:xeu/common/utils/http.dart';
 
 class NewRecord extends StatefulWidget {
   @override

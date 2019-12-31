@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
-import 'package:xeu/utils/adapt.dart';
+import 'package:xeu/common/utils/adapt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../utils/tools.dart';
-import '../../models/group/memorabilia.dart';
-import '../../utils/http.dart';
+import 'package:xeu/common/utils/tools.dart';
+import 'package:xeu/models/group/memorabilia.dart';
+import 'package:xeu/common/utils/http.dart';
 
 class SubMemorabilia extends StatefulWidget {
   @override
@@ -23,6 +23,10 @@ class _SubMemorabilia extends State<SubMemorabilia> {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
     var response = await Http.get('/memorabilia/list', {"u_id": uid});
+    if(response == -1){
+
+    }
+    print('response for memorabilia $response');
     setState(() {
       _memorabiliaList = generateItems(response.data['data']['list']);
       showLoading = false;

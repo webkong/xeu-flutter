@@ -3,15 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/models/group/record_state.dart';
-import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/sub_memorabilia_detail.dart';
-import './UIOverlay/index.dart';
-import './signup.dart';
-import './home.dart';
-import 'pages/group/index.dart';
-import 'pages/login/index.dart';
-import 'pages/login/register.dart';
-import 'pages/user/index.dart';
+import 'package:xeu/UIOverlay/index.dart';
+import 'package:xeu/signup.dart';
+import 'package:xeu/home.dart';
+import 'package:xeu/pages/group/index.dart';
+import 'package:xeu/pages/login/index.dart';
+import 'package:xeu/pages/login/register.dart';
+import 'package:xeu/pages/user/index.dart';
 
 void main() {
   runApp(MyApp());

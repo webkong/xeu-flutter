@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:xeu/models/group/memorabilia.dart';
-import 'package:xeu/utils/adapt.dart';
-import 'package:xeu/utils/tools.dart';
+import 'package:xeu/common/utils/adapt.dart';
+import 'package:xeu/common/utils/tools.dart';
 
 class MemorabiliaDetail extends StatefulWidget {
   @override
