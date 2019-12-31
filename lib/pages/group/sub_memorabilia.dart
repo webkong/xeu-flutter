@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:xeu/common/widget/ContentLoadStatus.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,19 +19,36 @@ class SubMemorabilia extends StatefulWidget {
 
 class _SubMemorabilia extends State<SubMemorabilia> {
   List<Memorabilia> _memorabiliaList = <Memorabilia>[];
-  bool showLoading = true;
+  Widget _contentLoad = ContentLoadStatus(
+    flag: 'loading',
+  );
+  bool _pullData = false;
   _getList() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
     var response = await Http.get('/memorabilia/list', {"u_id": uid});
-    if(response == -1){
 
+    if (response == -1) {
+      print(response);
+      setState(() {
+        _contentLoad = ContentLoadStatus(
+          flag: 'noNetwork',
+        );
+      });
+    } else {
+      print('response for memorabilia $response');
+      setState(() {
+        var list = generateItems(response.data['data']['list']);
+        if (list.length == 0) {
+          _contentLoad = ContentLoadStatus(
+            flag: 'noContent',
+          );
+        } else {
+          _memorabiliaList = list;
+          _pullData = true;
+        }
+      });
     }
-    print('response for memorabilia $response');
-    setState(() {
-      _memorabiliaList = generateItems(response.data['data']['list']);
-      showLoading = false;
-    });
   }
 
   @override
@@ -41,14 +59,9 @@ class _SubMemorabilia extends State<SubMemorabilia> {
 
   @override
   Widget build(BuildContext context) {
-    if (showLoading) {
-      return Center(
-        child: Container(
-          child: CircularProgressIndicator(),
-          height: Adapt.px(60),
-          width: Adapt.px(60),
-        ),
-      );
+    print('_contentLoad $_contentLoad');
+    if (!_pullData) {
+      return _contentLoad;
     } else {
       return Column(
         children: <Widget>[
@@ -70,23 +83,12 @@ class _SubMemorabilia extends State<SubMemorabilia> {
               return prefixWidget;
             },
           ),
-          _memorabiliaList.length == 0
-              ? _buildNoContent()
-              : Expanded(
-                  child: _buildMemorabiliaList(),
-                ),
+          Expanded(
+            child: _buildMemorabiliaList(),
+          ),
         ],
       );
     }
-  }
-
-  Widget _buildNoContent() {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.only(top: Adapt.px(40)),
-        child: Text('没有记录，快去添加吧..'),
-      ),
-    );
   }
 
   Widget _buildUploadingWidget(tasks) {
