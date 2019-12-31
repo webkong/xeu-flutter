@@ -67,23 +67,20 @@ class _MemorabiliaDetail extends State<MemorabiliaDetail> {
 
 List _photoList(images) {
   return List.generate(images.length, (index) {
-    return Column(
-      children: <Widget>[
-        Container(
-          height: 5,
-        ),
-        CachedNetworkImage(
-          imageUrl: images[index]['url'],
-          placeholder: (context, url) => Image.memory(kTransparentImage),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.cover,
-          fadeInCurve: Curves.easeIn,
-          filterQuality: FilterQuality.low,
-        ),
-        Container(
-          height: 5,
-        ),
-      ],
+    return Container(
+      margin: EdgeInsets.only(
+          left: Adapt.px(20),
+          right: Adapt.px(20),
+          top: Adapt.px(10),
+          bottom: Adapt.px(10)),
+      child: CachedNetworkImage(
+        imageUrl: images[index]['url'],
+        placeholder: (context, url) => Image.memory(kTransparentImage),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+        fit: BoxFit.cover,
+        fadeInCurve: Curves.easeIn,
+        filterQuality: FilterQuality.low,
+      ),
     );
   }).toList();
 }

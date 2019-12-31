@@ -17,7 +17,7 @@ class SubMemorabilia extends StatefulWidget {
   }
 }
 
-class _SubMemorabilia extends State<SubMemorabilia> {
+class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClientMixin {
   List<Memorabilia> _memorabiliaList = <Memorabilia>[];
   Widget _contentLoad = ContentLoadStatus(
     flag: 'loading',
@@ -52,6 +52,10 @@ class _SubMemorabilia extends State<SubMemorabilia> {
   }
 
   @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
     _getList();
@@ -59,6 +63,7 @@ class _SubMemorabilia extends State<SubMemorabilia> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print('_contentLoad $_contentLoad');
     if (!_pullData) {
       return _contentLoad;

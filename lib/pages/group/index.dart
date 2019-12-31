@@ -68,10 +68,12 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
       ),
       body: new TabBarView(
         controller: _tabController,
+        physics: NeverScrollableScrollPhysics(), //禁止左右滑动
         children: choices.map((Choice choice) {
           return new Padding(
               padding: const EdgeInsets.all(8.0), child: choicePage(choice));
-        }).toList(),
+        },
+        ).toList(),
       ),
     );
   }

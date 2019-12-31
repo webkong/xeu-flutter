@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:xeu/common/utils/adapt.dart';
 
 class ContentLoadStatus extends StatelessWidget {
-  ContentLoadStatus({Key key, this.flag = 'loading', this.onUpdate})
-      : super(key: key);
+  ContentLoadStatus({Key key, this.flag = 'loading'}) : super(key: key);
   final String flag; // loading noContent noNetwork
-  final onUpdate;
-  Widget _child = _buildLoading();
+
   @override
   Widget build(BuildContext context) {
+    Widget _child = _buildLoading();
     switch (flag) {
       case 'loading':
         _child = _buildLoading();

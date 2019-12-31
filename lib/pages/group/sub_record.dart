@@ -16,7 +16,7 @@ class SubRecordList extends StatefulWidget {
   }
 }
 
-class _SubRecordList extends State<SubRecordList> {
+class _SubRecordList extends State<SubRecordList> with AutomaticKeepAliveClientMixin{
   List recordList = <Map>[];
   String uid;
   bool showLoading = true;
@@ -47,6 +47,10 @@ class _SubRecordList extends State<SubRecordList> {
   }
 
   @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
     _getList();
@@ -54,6 +58,7 @@ class _SubRecordList extends State<SubRecordList> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (showLoading) {
       return Center(
         child: CircularProgressIndicator(),
@@ -62,7 +67,6 @@ class _SubRecordList extends State<SubRecordList> {
       return Consumer(
           builder: (BuildContext context, RecordModel record, child) {
         if (record.get()) {
-          print('舒心');
           record.init();
           this._getList();
         }
