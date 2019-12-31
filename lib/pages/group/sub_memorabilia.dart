@@ -53,8 +53,6 @@ class _SubMemorabilia extends State<SubMemorabilia> {
                 child) {
               Widget prefixWidget;
               Map queue = memorabiliaModel.get();
-              print('list List<dynamic> listName');
-              print(queue);
               if (queue['tasks'].length > 0) {
                 prefixWidget = _buildUploadingWidget(queue['tasks']);
               } else {
@@ -81,6 +79,7 @@ class _SubMemorabilia extends State<SubMemorabilia> {
   Widget _buildNoContent() {
     return Center(
       child: Container(
+        padding: EdgeInsets.only(top: Adapt.px(40)),
         child: Text('没有记录，快去添加吧..'),
       ),
     );
