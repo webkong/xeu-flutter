@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,9 +49,12 @@ class _UserPageState extends State<UserPage> {
 buildItemBar(BuildContext context) {
   return Card(
     child: ListTile(
-      leading: FlutterLogo(),
-      title: Text('One-line with both widgets'),
+      leading: Icon(Icons.tag_faces, color: Colors.grey,),
+      title: Text('我的宝宝'),
       trailing: Icon(Icons.arrow_forward),
+      onTap: (){
+        Navigator.pushNamed(context, '/baby');
+      },
     ),
   );
 }
@@ -69,9 +73,7 @@ buildUserBar(BuildContext context) {
             height: 80,
             width: 80,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                'https://blog.webkong.cn/uploads/avatar.jpg',
-              ),
+              backgroundImage: CachedNetworkImageProvider('https://blog.webkong.cn/uploads/avatar.jpg'),
             ),
           ),
         ),

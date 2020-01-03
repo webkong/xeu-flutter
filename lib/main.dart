@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/models/group/record_state.dart';
+import 'package:xeu/pages/baby/detail.dart';
+import 'package:xeu/pages/baby/index.dart';
 import 'package:xeu/pages/group/sub_memorabilia_detail.dart';
 import 'package:xeu/UIOverlay/index.dart';
 import 'package:xeu/signup.dart';
@@ -47,10 +49,17 @@ class MyApp extends StatelessWidget {
                     type: 'forget',
                   ),
               '/login': (BuildContext context) => LoginPage(),
+              //用户页面
               '/user': (BuildContext context) => UserPage(),
+               //宝宝
+              '/baby':(BuildContext context) => BabyPage(),
+              '/babyDetail':(BuildContext context) => BabyDetailPage(),
+              //首页
               '/home': (BuildContext context) => HomePage(),
+              //成长记录
               '/group': (BuildContext context) => GroupPage(),
               '/memorabiliaDetail': (BuildContext context) => MemorabiliaDetail(),
+
               '/signup': (BuildContext context) => SignUpPage(),
             },
           );
