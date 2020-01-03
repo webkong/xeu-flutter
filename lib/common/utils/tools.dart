@@ -7,8 +7,8 @@ class Tools {
   }
 
   static double getMouth(num startTimestamp, num timestamp){
-    var t = DateTime(startTimestamp).difference(new DateTime.fromMillisecondsSinceEpoch(timestamp));
-    print(t);
-    return 10;
+    var d = DateTime.fromMillisecondsSinceEpoch(timestamp).difference(new DateTime.fromMillisecondsSinceEpoch(startTimestamp)).inDays;
+
+    return d/30;
   }
 }

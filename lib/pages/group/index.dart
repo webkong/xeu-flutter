@@ -1,3 +1,4 @@
+import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
@@ -66,6 +67,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
           },
         ),
       ),
+      backgroundColor: Colors.white,
       body: new TabBarView(
         controller: _tabController,
         physics: NeverScrollableScrollPhysics(), //TODO:禁止左右滑动

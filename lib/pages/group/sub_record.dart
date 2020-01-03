@@ -90,18 +90,23 @@ class _SubRecordList extends State<SubRecordList>
         TrendChart(
           tag: 'boyHeight',
           data: chartsMapData['height'],
-          displayName: '身高（单位：CM）',
+          displayName: '身高曲线',
+          yAxis: '（单位：CM）',
         ),
         TrendChart(
           tag: 'boyWeight',
           data: chartsMapData['weight'],
-          displayName: '体重（单位：Kg）',
+          displayName: '体重曲线',
+          yAxis: '（单位：Kg）',
         ),
-        TrendChart(
-          tag: 'boyHead',
-          data: chartsMapData['head'],
-          displayName: '头围（单位：CM）',
-        ),
+//TODO: 头围相关
+      //TODO：删除， 列表，record
+//        TrendChart(
+//          tag: 'boyHead',
+//          data: chartsMapData['head'],
+//          displayName: '头围曲线',
+//          yAxis: '（单位：CM）',
+//        ),
       ],
     );
   }
@@ -123,10 +128,9 @@ class _SubRecordList extends State<SubRecordList>
 
       print(r.toJson());
       _list.add(r);
-      _map['height'].add([Tools.getMouth(r.date, 1578038344000), r.height]);
-      _map['weight'].add([Tools.getMouth(r.date, 1578038344000), r.weight]);
-      _map['head'].add([Tools.getMouth(r.date, 1578038344000), r.head]);
-
+      _map['height'].add([Tools.getMouth( 1554817018000,r.date), r.height]);
+      _map['weight'].add([Tools.getMouth(1554817018000,r.date), r.weight]);
+      _map['head'].add([Tools.getMouth( 1554817018000,r.date), r.head]);
     });
     setState(() {
       print(_map);

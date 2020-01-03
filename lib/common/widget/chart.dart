@@ -6,25 +6,33 @@ import 'package:xeu/common/constant/index.dart';
 import 'package:xeu/common/utils/adapt.dart';
 
 class TrendChart extends StatelessWidget {
-  TrendChart({Key key, this.tag, this.data, this.displayName = ''})
+  TrendChart({Key key, this.tag, this.data, this.displayName = '', this.xAxis = '(单位：月)', this.yAxis=''})
       : super(key: key);
 
   final List data;
   final String tag;
   final String displayName;
+  final String xAxis;
+  final String yAxis;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        _generateChart(tag, data),
-        Positioned(
+        Container(
+          padding: EdgeInsets.all(20),
+          child: _generateChart(tag, data),
+        ),
+        Center(
           child: Text(this.displayName),
+        ),
+        Positioned(
+          child: Text(this.yAxis, style: TextStyle(color: Colors.lightBlue, fontSize: 12),),
           top: 0,
           left: 0,
         ),
         Positioned(
-          child: Text(this.displayName),
-          bottom: -10,
+          child: Text(this.xAxis,style: TextStyle(color: Colors.lightBlue, fontSize: 12),),
+          bottom: 0,
           right: 0,
         ),
       ],
@@ -82,12 +90,21 @@ Widget _generateChart(String tag, List list) {
       seriesList,
       animate: false,
       defaultRenderer: new charts.LineRendererConfig(
-        includeArea: true,
-        stacked: true,
+//        includeArea: true,
+//        stacked: true,
       ),
       customSeriesRenderers: [
         new charts.LineRendererConfig(
           customRendererId: 'customPoint',
+          includeArea: false,
+        ),
+        new charts.LineRendererConfig(
+          customRendererId: 'low',
+          includeArea: true,
+          stacked: false,
+        ), new charts.LineRendererConfig(
+          customRendererId: 'high',
+          includeArea: true
         ),
       ],
       behaviors: [
@@ -124,7 +141,7 @@ List<charts.Series<LinearSales, double>> _createSampleData(
       },
       measureFn: (LinearSales sales, int index) => sales.sales,
       data: seriesMap['min'],
-    ),
+    )..setAttribute(charts.rendererIdKey, 'low'),
     new charts.Series<LinearSales, double>(
       id: 'data',
       colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
@@ -142,7 +159,7 @@ List<charts.Series<LinearSales, double>> _createSampleData(
       domainFn: (LinearSales sales, _) => sales.mouth,
       measureFn: (LinearSales sales, _) => sales.sales,
       data: seriesMap['max'],
-    ),
+    )..setAttribute(charts.rendererIdKey, 'high'),
   ];
 }
 
