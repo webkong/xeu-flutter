@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/ContentLoadStatus.dart';
 import 'package:xeu/common/widget/chart.dart';
 import 'package:xeu/models/group/record_state.dart';
@@ -17,6 +18,11 @@ class SubRecordList extends StatefulWidget {
 class _SubRecordList extends State<SubRecordList>
     with AutomaticKeepAliveClientMixin {
   List recordList = <Map>[];
+  Map<String, List> chartsMapData = {
+    "height": [],
+    "weight": [],
+    "head": [],
+  };
   String uid;
   bool showLoading = true;
   Widget _contentLoad = ContentLoadStatus(
@@ -51,17 +57,6 @@ class _SubRecordList extends State<SubRecordList>
     }
   }
 
-  // 构建Memorabilia List数据
-  List<Record> _generateList(List array) {
-    List<Record> list = [];
-    if (array.length == 0) return list;
-    print(array);
-    array.forEach((elem) {
-      list.add(Record.fromJson(elem));
-    });
-    return list;
-  }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -88,15 +83,55 @@ class _SubRecordList extends State<SubRecordList>
       return _content(recordList);
     }
   }
-}
 
-Widget _content(list) {
-  return Column(
-    children: <Widget>[
-      TrendChart(
-        tag: 'boyHeight',
-        data: list,
-      ),
-    ],
-  );
+  Widget _content(list) {
+    return ListView(
+      children: <Widget>[
+        TrendChart(
+          tag: 'boyHeight',
+          data: chartsMapData['height'],
+          displayName: '身高（单位：CM）',
+        ),
+        TrendChart(
+          tag: 'boyWeight',
+          data: chartsMapData['weight'],
+          displayName: '体重（单位：Kg）',
+        ),
+        TrendChart(
+          tag: 'boyHead',
+          data: chartsMapData['head'],
+          displayName: '头围（单位：CM）',
+        ),
+      ],
+    );
+  }
+
+  // 构建Record List数据
+  List<Record> _generateList(List array) {
+    List<Record> _list = [];
+    Map<String, List> _map = {
+      "height": [],
+      "weight": [],
+      "head": [],
+    };
+    if (array.length == 0) return _list;
+    print(array);
+    array.forEach((elem) {
+
+      print(elem);
+      Record r = Record.fromJson(elem);
+
+      print(r.toJson());
+      _list.add(r);
+      _map['height'].add([Tools.getMouth(r.date, 1578038344000), r.height]);
+      _map['weight'].add([Tools.getMouth(r.date, 1578038344000), r.weight]);
+      _map['head'].add([Tools.getMouth(r.date, 1578038344000), r.head]);
+
+    });
+    setState(() {
+      print(_map);
+      chartsMapData.addAll(_map);
+    });
+    return _list;
+  }
 }

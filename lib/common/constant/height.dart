@@ -36,7 +36,7 @@ const List<double> boyHeightMin = [
   106.5,
   107.9
 ];
-const List boyHeightMax = [
+const List<double>  boyHeightMax = [
   55.8,
   61.2,
   65.7,
@@ -75,7 +75,7 @@ const List boyHeightMax = [
   137.6
 ];
 
-List<double> girlHeightMin = [
+const List<double> girlHeightMin = [
   44.7,
   47.9,
   51.1,
@@ -114,7 +114,7 @@ List<double> girlHeightMin = [
   106.7
 ];
 
-List<double> girlHeightMax = [
+const List<double> girlHeightMax = [
   55,
   59.9,
   64.1,

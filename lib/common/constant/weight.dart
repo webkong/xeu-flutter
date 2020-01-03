@@ -36,7 +36,7 @@ const List<double> boyWeightMin = [
   15.3,
   15.6,
 ];
-const List boyWeightMax = [
+const List<double>  boyWeightMax = [
   4.66,
   6.33,
   7.97,
@@ -75,7 +75,7 @@ const List boyWeightMax = [
   37.39
 ];
 
-List<double> girlWeightMin = [
+const List<double> girlWeightMin = [
   2.26,
   2.98,
   3.72,
@@ -114,7 +114,7 @@ List<double> girlWeightMin = [
   14.96,
 ];
 
-List<double> girlWeightMax = [
+const List<double> girlWeightMax = [
   4.65,
   6.05,
   7.46,

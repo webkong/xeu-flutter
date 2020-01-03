@@ -18,16 +18,16 @@ class BodyConstants {
     // tag : boyHeight boyWeight boyHead girlHeight girlWeight girlHead
     Map<String, List> _t;
     switch (tag) {
-      case 'boyHeight':
+      case 'boyWeight':
         _t = {"max": boyWMax, "min": boyWMix};
         break;
-      case 'girlHeight':
+      case 'girlWeight':
         _t = {"max": girlWMax, "min": girlWMix};
         break;
-      case 'boyWeight':
+      case 'boyHeight':
         _t = {"max": boyHMax, "min": boyHMix};
         break;
-      case 'girlWeight':
+      case 'girlHeight':
         _t = {"max": girlHMax, "min": girlHMix};
         break;
       case 'boyHead':

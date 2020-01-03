@@ -1,29 +1,38 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:xeu/common/constant/index.dart';
+import 'package:xeu/common/utils/adapt.dart';
 
 class TrendChart extends StatelessWidget {
-  TrendChart({Key key, this.tag, this.data}) : super(key: key);
+  TrendChart({Key key, this.tag, this.data, this.displayName = ''})
+      : super(key: key);
 
   final List data;
   final String tag;
-
+  final String displayName;
   @override
   Widget build(BuildContext context) {
-     var middleData = [
-    new LinearSales(0, 6),
-    new LinearSales(1, 7),
-    new LinearSales(2, 8),
-    new LinearSales(3, 9),
-    new LinearSales(4, 9.3),
-    new LinearSales(5, 9.4),
-    new LinearSales(6, 9.7),
-  ];
-    return _generateChart(tag, middleData);
+    return Stack(
+      children: <Widget>[
+        _generateChart(tag, data),
+        Positioned(
+          child: Text(this.displayName),
+          top: 0,
+          left: 0,
+        ),
+        Positioned(
+          child: Text(this.displayName),
+          bottom: -10,
+          right: 0,
+        ),
+      ],
+    );
   }
 }
 
-List<num> defaultX = [
+List<double> defaultX = [
   0,
   1,
   2,
@@ -69,7 +78,7 @@ Widget _generateChart(String tag, List list) {
   return Container(
     height: 300,
     width: 400,
-    child: new charts.LineChart(
+    child: charts.LineChart(
       seriesList,
       animate: false,
       defaultRenderer: new charts.LineRendererConfig(
@@ -78,25 +87,34 @@ Widget _generateChart(String tag, List list) {
       ),
       customSeriesRenderers: [
         new charts.LineRendererConfig(
-            customRendererId: 'customPoint', includePoints: true),
+          customRendererId: 'customPoint',
+        ),
       ],
       behaviors: [
         new charts.PanBehavior(),
+      ],
+      selectionModels: [
+        new charts.SelectionModelConfig(
+          type: charts.SelectionModelType.info,
+          updatedListener: (charts.SelectionModel model) {
+            print(model.selectedSeries);
+          },
+        ),
       ],
     ),
   );
 }
 
 /// Create one series with sample hard coded data.
-List<charts.Series<LinearSales, int>> _createSampleData(String tag, List list) {
-
+List<charts.Series<LinearSales, double>> _createSampleData(
+    String tag, List list) {
   Map defaultData = BodyConstants.getByTag(tag);
 
   Map seriesMap = generateLine(list, defaultData);
 
   return [
-    new charts.Series<LinearSales, int>(
-      id: 'lowWeight',
+    new charts.Series<LinearSales, double>(
+      id: 'low',
       colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault.lighter,
       strokeWidthPxFn: (_, __) => 1.0,
       dashPatternFn: (_, __) => [2, 2],
@@ -107,16 +125,16 @@ List<charts.Series<LinearSales, int>> _createSampleData(String tag, List list) {
       measureFn: (LinearSales sales, int index) => sales.sales,
       data: seriesMap['min'],
     ),
-    new charts.Series<LinearSales, int>(
-      id: 'weight',
+    new charts.Series<LinearSales, double>(
+      id: 'data',
       colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
       areaColorFn: (_, __) => charts.MaterialPalette.gray.shadeDefault.lighter,
       domainFn: (LinearSales sales, _) => sales.mouth,
       measureFn: (LinearSales sales, _) => sales.sales,
       data: seriesMap['data'],
     )..setAttribute(charts.rendererIdKey, 'customPoint'),
-    new charts.Series<LinearSales, int>(
-      id: 'highWeight',
+    new charts.Series<LinearSales, double>(
+      id: 'high',
       colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault.lighter,
       strokeWidthPxFn: (_, __) => 1.0,
       dashPatternFn: (_, __) => [2, 2],
@@ -133,18 +151,19 @@ Map generateLine(List list, Map defaultMap) {
   List<LinearSales> _list = [];
   List<LinearSales> _minList = [];
   List<LinearSales> _maxList = [];
-  for (int i = 0; i < list.length; i++) {
+  for (int i = 0; i < min(list.length, 35); i++) {
 //    _list.add(LinearSales(defaultX[i], list[i]));
-    _list.add( list[i]);
+    _list.add(LinearSales(double.parse(list[i][0].toString()),
+        double.parse(list[i][1].toString())));
     _minList.add(LinearSales(defaultX[i], defaultMap['min'][i]));
     _maxList.add(LinearSales(defaultX[i], defaultMap['max'][i]));
   }
-  return {"max": _maxList, "min": _minList, "data":_list};
+  return {"max": _maxList, "min": _minList, "data": _list};
 }
 
 /// Sample linear data type.
 class LinearSales {
-  final int mouth;
+  final double mouth;
   final double sales;
 
   LinearSales(this.mouth, this.sales);
