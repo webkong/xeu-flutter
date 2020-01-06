@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/widget/datePicker.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/widget/toast.dart';
@@ -15,7 +16,7 @@ class NewRecord extends StatefulWidget {
 
 class _NewRecord extends State<NewRecord> {
   final _formRecord = GlobalKey<FormState>();
-  Map<String, num> data = {"height": 0, "weight": 0, "head": 0};
+  Map<String, num> data = {"height": 0, "weight": 0, "head": 0, "date": 0};
   Map<String, Map> config = {
     "height": {
       "label": "身高",
@@ -129,9 +130,14 @@ class _NewRecord extends State<NewRecord> {
         buildInputItem('height'),
         buildInputItem('weight'),
         buildInputItem('head'),
+        DatePickerField(onSave: (value){
+            data['date'] = DateTime.parse(value).millisecondsSinceEpoch;
+        },),
       ],
     );
   }
+
+
 
   Widget buildInputItem(key) {
     return Row(

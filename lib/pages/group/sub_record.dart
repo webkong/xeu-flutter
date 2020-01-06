@@ -72,15 +72,15 @@ class _SubRecordList extends State<SubRecordList>
     if (!_pullData) {
       return _contentLoad;
     } else {
-//      return Consumer(
-//          builder: (BuildContext context, RecordModel record, child) {
-//        if (record.get()) {
-//          record.init();
-//          this._getList();
-//        }
-//        return _content(recordList);
-//      });
-      return _content(recordList);
+      return Consumer(
+          builder: (BuildContext context, RecordModel record, child) {
+        if (record.get()) {
+          record.init();
+          this._getList();
+        }
+        return _content(recordList);
+      });
+//      return _content(recordList);
     }
   }
 

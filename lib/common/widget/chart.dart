@@ -97,6 +97,7 @@ Widget _generateChart(String tag, List list) {
         new charts.LineRendererConfig(
           customRendererId: 'customPoint',
           includeArea: false,
+          includePoints: true
         ),
         new charts.LineRendererConfig(
           customRendererId: 'low',
