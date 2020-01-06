@@ -1,8 +1,3 @@
-//import 'package:json_annotation/json_annotation.dart';
-//
-//part 'record.g.dart';
-//
-//@JsonSerializable()
 class Record {
   Record({this.rid, this.uid, this.date, this.height, this.weight, this.head});
   String rid;

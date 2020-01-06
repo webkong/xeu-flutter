@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/models/device/deviceInfo.dart';
+import 'package:xeu/models/user/user.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -151,11 +153,12 @@ class _LoginPageState extends State<LoginPage> {
               var res = await Http.post(
                   '/login', {"phone": _phone, "password": _password});
               if (res.code == 200) {
-                var data = res.data['data'];
-
+                User data = User.fromJson(res.data['data']);
                 SharedPreferences pres = await SharedPreferences.getInstance();
-                await pres.setString("token", data['token']);
-                await pres.setString("u_id", data["u_id"]);
+                await pres.setString("token", data.token);
+                await pres.setString("u_id", data.uid);
+                await pres.setString('user', json.encode(data));
+                print( json.encode(data));
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);
