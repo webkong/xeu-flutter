@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/widget/toast.dart';
+import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/pages/baby/detail.dart';
 
@@ -122,6 +123,9 @@ class _BabyPageState extends State<BabyPage> {
   }
 
   Widget _buildItem(baby) {
+    print(baby);
+    Baby _baby = Baby.fromJson(baby);
+    print(_baby);
     return ListTile(
       leading: Container(
 //            margin: EdgeInsets.fromLTRB(40, 20, 40, 20),
@@ -132,7 +136,7 @@ class _BabyPageState extends State<BabyPage> {
         width: 60,
         child: CircleAvatar(
           backgroundImage: CachedNetworkImageProvider(
-              baby?.avatar ??'https://blog.webkong.cn/uploads/avatar.jpg'),
+              _baby?.avatar ??'https://blog.webkong.cn/uploads/avatar.jpg'),
         ),
       ),
     );

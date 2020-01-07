@@ -81,8 +81,7 @@ class _NewRecord extends State<NewRecord> {
       ),
       body: WillPopScope(
           child: Container(
-            width: Adapt.px(500),
-            margin: EdgeInsets.only(left: Adapt.px(80), top: Adapt.px(30)),
+            margin: EdgeInsets.all(Adapt.px(60)),
             child: Form(
               key: _formRecord,
               child: buildNewRecord(),
