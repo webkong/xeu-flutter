@@ -38,6 +38,8 @@ class _NewRecord extends State<NewRecord> {
     },
   };
 
+  TextEditingController _dateEditing = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -59,11 +61,12 @@ class _NewRecord extends State<NewRecord> {
                   SharedPreferences pres =
                       await SharedPreferences.getInstance();
                   String uid = pres.getString('u_id');
-                  Map<String, dynamic> params =  Map.from(data);
+                  Map<String, dynamic> params = Map.from(data);
                   params['u_id'] = uid;
                   var res = await Http.post('/record/new', params);
                   if (res.code == 200) {
-                    Provider.of<RecordModel>(context, listen: false).add(params);
+                    Provider.of<RecordModel>(context, listen: false)
+                        .add(params);
                     Navigator.of(context).pop();
                   }
                   print(data);
@@ -129,14 +132,24 @@ class _NewRecord extends State<NewRecord> {
         buildInputItem('height'),
         buildInputItem('weight'),
         buildInputItem('head'),
-        DatePickerField(onSave: (value){
-            data['date'] = DateTime.parse(value).millisecondsSinceEpoch;
-        },),
+        TextFormField(
+          controller: _dateEditing,
+          decoration: InputDecoration(
+            labelText: '日期',
+            prefixIcon: Icon(Icons.date_range),
+          ),
+          onTap: () async {
+            String _time = await DatePickerCustom.show(context);
+            String _date = _time.split(' ')[0];
+            setState(() {
+              _dateEditing.text = _date;
+              data['date'] = DateTime.parse(_time).millisecondsSinceEpoch;
+            });
+          },
+        ),
       ],
     );
   }
-
-
 
   Widget buildInputItem(key) {
     return Row(

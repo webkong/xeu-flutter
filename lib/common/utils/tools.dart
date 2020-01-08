@@ -6,9 +6,20 @@ class Tools {
     return formatExp.format(new DateTime.fromMillisecondsSinceEpoch(timestamp));
   }
 
-  static double getMouth(num startTimestamp, num timestamp){
-    var d = DateTime.fromMillisecondsSinceEpoch(timestamp).difference(new DateTime.fromMillisecondsSinceEpoch(startTimestamp)).inDays;
+  static int formatToUtt(String str) {
+    return DateTime.parse(str).millisecondsSinceEpoch;
+  }
 
-    return d/30;
+  static String nowFormat({String format = 'yyyy-MM-dd'}) {
+    var formatExp = new DateFormat(format);
+    return formatExp.format(new DateTime.now());
+  }
+
+  static double getMouth(num startTimestamp, num timestamp) {
+    var d = DateTime.fromMillisecondsSinceEpoch(timestamp)
+        .difference(new DateTime.fromMillisecondsSinceEpoch(startTimestamp))
+        .inDays;
+
+    return d / 30;
   }
 }
