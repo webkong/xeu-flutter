@@ -1,16 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/constant/avatar.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/datePicker.dart';
-import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/common/utils/http.dart';
-import 'package:xeu/models/user/baby.dart';
 
 class BabyDetailPage extends StatefulWidget {
   @override
@@ -133,7 +129,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
     };
     var res = await Http.post('/baby/new', params);
     if (res.code == 200) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     }else{
       Toast.show('保存失败', context);
     }

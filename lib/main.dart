@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/models/group/record_state.dart';
+import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/baby/detail.dart';
 import 'package:xeu/pages/baby/index.dart';
 import 'package:xeu/pages/group/sub_memorabilia_detail.dart';
@@ -27,9 +28,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => MemorabiliaModel()),
         ChangeNotifierProvider(create: (_) => RecordModel()),
+        ChangeNotifierProvider(create: (_) => UserModel()),
       ],
-      child: Consumer(
-        builder: (BuildContext context, MemorabiliaModel memorabiliaUploadList, _) {
+      child: Consumer3(
+        builder: (BuildContext context, MemorabiliaModel memorabiliaModel, RecordModel recordModel, UserModel userModel, _) {
           return MaterialApp(
             title: 'xeu',
             theme: ThemeData(

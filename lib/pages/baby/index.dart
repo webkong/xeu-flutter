@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
 import 'package:xeu/common/utils/adapt.dart';
+import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user.dart';
+import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/baby/detail.dart';
 
 class BabyPage extends StatefulWidget {
@@ -52,7 +55,8 @@ class _BabyPageState extends State<BabyPage> {
         child: ListView(
           children: <Widget>[
             _buildCard(),
-            ...List.generate(_user?.babies != null ?_user.babies.length : 0 , (int index){
+            ...List.generate(_user?.babies != null ? _user.babies.length : 0,
+                (int index) {
               return _buildItem(_user.babies[index]);
             }),
           ],
@@ -77,44 +81,51 @@ class _BabyPageState extends State<BabyPage> {
         children: <Widget>[
           Expanded(
             child: GestureDetector(
-              onTap: (){
-                 Navigator.push(context, SlideTopRoute(page: BabyDetailPage()));
+              onTap: () async {
+                var isNew = await Navigator.push(
+                    context, SlideTopRoute(page: BabyDetailPage()));
+                if (isNew) {
+                  //如果添加了宝宝，更新用户信息
+                  await Provider.of<UserModel>(context, listen: false).getUserInfo();
+                  await _init();
+                }
+                print(isNew);
               },
               child: Column(
-              children: <Widget>[
-                Icon(
-                  Icons.add,
-                  color: Colors.black54,
-                ),
-                Text(
-                  '添加宝宝',
-                  style: TextStyle(
+                children: <Widget>[
+                  Icon(
+                    Icons.add,
                     color: Colors.black54,
                   ),
-                ),
-              ],
-            ),
+                  Text(
+                    '添加宝宝',
+                    style: TextStyle(
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Toast.show('Comming soon', context);
               },
               child: Column(
-              children: <Widget>[
-                Icon(
-                  Icons.person_add,
-                  color: Colors.black54,
-                ),
-                Text(
-                  '邀请',
-                  style: TextStyle(
+                children: <Widget>[
+                  Icon(
+                    Icons.person_add,
                     color: Colors.black54,
                   ),
-                )
-              ],
-            ),
+                  Text(
+                    '邀请',
+                    style: TextStyle(
+                      color: Colors.black54,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ],
@@ -126,19 +137,31 @@ class _BabyPageState extends State<BabyPage> {
     print(baby);
     Baby _baby = Baby.fromJson(baby);
     print(_baby);
-    return ListTile(
-      leading: Container(
-//            margin: EdgeInsets.fromLTRB(40, 20, 40, 20),
-        decoration: ShapeDecoration(
-          shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+    return Card(
+      child: Container(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: ListTile(
+        leading: Container(
+          decoration: ShapeDecoration(
+            shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+          ),
+          height: 50,
+          width: 50,
+          child: CircleAvatar(
+            backgroundImage: CachedNetworkImageProvider(
+                _baby?.avatar ?? 'https://blog.webkong.cn/uploads/avatar.jpg'),
+          ),
         ),
-        height: 60,
-        width: 60,
-        child: CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(
-              _baby?.avatar ??'https://blog.webkong.cn/uploads/avatar.jpg'),
+        title: Text(
+          _baby.nickName + Tools.formatDate(_baby.birthday),
+          textAlign: TextAlign.center,
         ),
-      ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.black26,
+          size: 14,
+        ),
+      ),),
     );
   }
 }
