@@ -40,8 +40,9 @@ class _BabyDetailPage extends State<BabyDetailPage> {
   String _buttonText = '保存';
 
   _init() {
-    print(baby.toJson().toString());
+
     if (baby?.bid != null) {
+      print(baby.toJson().toString());
       setState(() {
         _isEdit = true;
         _defaultNickNameValue = baby?.nickName;

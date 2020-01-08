@@ -2,8 +2,12 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/utils/http.dart';
+import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/user.dart';
+import 'package:xeu/models/user/user_state.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -14,10 +18,15 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   User _user;
+  String _nickName = '用户837abd';
+  String uid;
+  TextEditingController _nickNameController = TextEditingController();
 
   _init() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     var user = pres.getString('user');
+    uid = pres.getString('u_id');
+
     Map userMap = json.decode(user);
     setState(() {
       _user = User.fromJson(userMap);
@@ -47,19 +56,19 @@ class _UserPageState extends State<UserPage> {
               flex: 4,
               child: Column(
                 children: <Widget>[
-                  buildUserBar(context),
-                  buildItemBar(context),
+                  _buildUserBar(context),
+                  _buildItemBar(context),
                 ],
               ),
             ),
             Expanded(
-              child: buildLoginButton(context),
+              child: _buildLoginButton(context),
             )
           ]),
         ));
   }
 
-  buildItemBar(BuildContext context) {
+  _buildItemBar(BuildContext context) {
     return Card(
       child: ListTile(
         leading: Icon(
@@ -75,7 +84,7 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  buildUserBar(BuildContext context) {
+  _buildUserBar(BuildContext context) {
     return Card(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,7 +107,7 @@ class _UserPageState extends State<UserPage> {
             child: Row(
               children: <Widget>[
                 Text(
-                  _user?.nickName ?? 'Denny',
+                  _user?.nickName ?? _nickName,
                   style: TextStyle(fontSize: 24, color: Colors.black87),
                 ),
                 Icon(
@@ -109,7 +118,52 @@ class _UserPageState extends State<UserPage> {
               ],
             ),
             onTap: () {
-              print(1111);
+              showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text('设置昵称'),
+                content: TextFormField(
+                  controller: _nickNameController,
+                  decoration: InputDecoration(
+                    hintText: _nickName,
+                  ),
+                  validator: (value) {
+                    if (value != null) {
+                      return null;
+                    } else {
+                      return '不能为空';
+                    }
+                  },
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('取消'),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('确定'),
+                    onPressed: () async {
+                      String _name = _nickNameController.text;
+                      if (_name.length > 0 && _name != _user.nickName) {
+                        setState(() {
+                          _nickName = _name;
+                        });
+                        await Http.post('/user/update', {"u_id": uid, "nick_name": _nickName});
+                        await Provider.of<UserModel>(context, listen: false).getUserInfo();
+                        _init();
+                        Navigator.of(context).pop();
+                      } else {
+                        Toast.show('昵称不符合，或未有改动', context);
+                      }
+                    },
+                  ),
+                ],
+              );
+            },
+          );
             },
           )
         ],
@@ -117,7 +171,9 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  Align buildLoginButton(BuildContext context) {
+
+
+  Align _buildLoginButton(BuildContext context) {
     return Align(
       child: SizedBox(
         height: 40,
