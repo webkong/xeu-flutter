@@ -65,6 +65,20 @@ class _BabyPageState extends State<BabyPage> {
     );
   }
 
+  _pushPage({data}) async {
+    var _page = BabyDetailPage();
+    if (data != null) {
+      _page = BabyDetailPage(
+        data: data,
+      );
+    }
+    var isNew = await Navigator.push(context, SlideTopRoute(page: _page));
+    print(isNew);
+    if (isNew != null) {
+      await _init();
+    }
+  }
+
   Widget _buildCard() {
     return Container(
       padding: EdgeInsets.all(Adapt.px(30)),
@@ -82,14 +96,7 @@ class _BabyPageState extends State<BabyPage> {
           Expanded(
             child: GestureDetector(
               onTap: () async {
-                var isNew = await Navigator.push(
-                    context, SlideTopRoute(page: BabyDetailPage()));
-                if (isNew) {
-                  //如果添加了宝宝，更新用户信息
-                  await Provider.of<UserModel>(context, listen: false).getUserInfo();
-                  await _init();
-                }
-                print(isNew);
+                _pushPage();
               },
               child: Column(
                 children: <Widget>[
@@ -134,34 +141,48 @@ class _BabyPageState extends State<BabyPage> {
   }
 
   Widget _buildItem(baby) {
-    print(baby);
     Baby _baby = Baby.fromJson(baby);
-    print(_baby);
     return Card(
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child: ListTile(
-        leading: Container(
-          decoration: ShapeDecoration(
-            shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+          leading: Container(
+            decoration: ShapeDecoration(
+              shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+            ),
+            height: 50,
+            width: 50,
+            child: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(_baby?.avatar ??
+                  'https://blog.webkong.cn/uploads/avatar.jpg'),
+            ),
           ),
-          height: 50,
-          width: 50,
-          child: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(
-                _baby?.avatar ?? 'https://blog.webkong.cn/uploads/avatar.jpg'),
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                _baby.nickName,
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  Tools.formatDate(_baby.birthday),
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            ],
           ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.black26,
+            size: 14,
+          ),
+          onTap: () {
+            _pushPage(data: _baby);
+          },
         ),
-        title: Text(
-          _baby.nickName + Tools.formatDate(_baby.birthday),
-          textAlign: TextAlign.center,
-        ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.black26,
-          size: 14,
-        ),
-      ),),
+      ),
     );
   }
 }

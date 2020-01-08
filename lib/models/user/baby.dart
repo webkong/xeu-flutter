@@ -32,7 +32,7 @@ class Baby {
 
 Baby _$BabyFromJson(Map<String, dynamic> json) {
   return Baby(
-    bid: json['b_id'] as String,
+    bid: json['_id'] as String,
     uid: json['u_id'] as String,
     nickName: json['nick_name'] as String,
     name: json['name'] as String,
@@ -46,7 +46,7 @@ Baby _$BabyFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$BabyToJson(Baby instance) => <String, dynamic>{
-      'b_id': instance.bid,
+      '_id': instance.bid,
       'u_id': instance.uid,
       'nick_name': instance.nickName,
       'name': instance.name,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/constant/avatar.dart';
 import 'package:xeu/common/utils/tools.dart';
@@ -7,35 +8,58 @@ import 'package:xeu/common/widget/datePicker.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/common/utils/http.dart';
+import 'package:xeu/models/user/baby.dart';
+import 'package:xeu/models/user/user_state.dart';
 
 class BabyDetailPage extends StatefulWidget {
+  BabyDetailPage({this.data});
+  final Baby data;
   @override
   State<StatefulWidget> createState() {
-    return _BabyDetailPage();
+    return _BabyDetailPage(baby: data);
   }
 }
 
 enum Genders { boy, girl }
 
 class _BabyDetailPage extends State<BabyDetailPage> {
+  _BabyDetailPage({this.baby});
+  Baby baby;
   final nickNameEditingController = TextEditingController();
   String _defaultNickNameValue = '宝宝小名';
-
+  bool _isEdit = false;
   String _genderName = '选择性别'; // 0 男孩 1 女孩
   int _gender = -1;
   String _defaultBirthday =
       DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
   int _birthday = Tools.formatToUtt(Tools.nowFormat());
 
-
   String _bloodName = '选择血型';
   String _blood = '';
 
   String _buttonText = '保存';
 
+  _init() {
+    print(baby.toJson().toString());
+    if (baby?.bid != null) {
+      setState(() {
+        _isEdit = true;
+        _defaultNickNameValue = baby?.nickName;
+        nickNameEditingController.text = baby?.nickName;
+        _genderName = baby?.gender == 0 ? '男孩' : '女孩';
+        _defaultBirthday = Tools.formatDate(baby?.birthday);
+        _bloodName = baby?.blood;
+        _gender = baby?.gender;
+        _blood = baby?.blood;
+        _birthday = baby?.birthday;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _init();
   }
 
   @override
@@ -127,10 +151,17 @@ class _BabyDetailPage extends State<BabyDetailPage> {
       'blood': _blood,
       'birthday': _birthday
     };
-    var res = await Http.post('/baby/new', params);
+    String path = '/baby/new';
+    if (_isEdit) {
+      path = '/baby/update';
+      params['b_id'] = baby?.bid;
+    }
+    var res = await Http.post(path, params);
     if (res.code == 200) {
+      await Provider.of<UserModel>(context, listen: false).getUserInfo();
       Navigator.of(context).pop(true);
-    }else{
+      Toast.show('保存成功', context);
+    } else {
       Toast.show('保存失败', context);
     }
   }
@@ -354,7 +385,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
         onTap: () {
           showDialog(
             context: context,
-            barrierDismissible: false,
+            barrierDismissible: _isEdit, // 如果是修改可以直接消失
             builder: (_) {
               return AlertDialog(
                 title: Text('设置小名'),
