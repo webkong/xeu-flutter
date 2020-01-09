@@ -36,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('注册'),
+        title: Text(_buttonText),
       ),
       body: Form(
         key: _formKeyRegister,

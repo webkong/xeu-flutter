@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/utils/http.dart';
-import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user.dart';
 
 class UserModel with ChangeNotifier {

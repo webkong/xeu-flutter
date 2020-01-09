@@ -8,7 +8,6 @@ import 'package:xeu/pages/baby/detail.dart';
 import 'package:xeu/pages/baby/index.dart';
 import 'package:xeu/pages/group/sub_memorabilia_detail.dart';
 import 'package:xeu/UIOverlay/index.dart';
-import 'package:xeu/signup.dart';
 import 'package:xeu/home.dart';
 import 'package:xeu/pages/group/index.dart';
 import 'package:xeu/pages/login/index.dart';
@@ -62,7 +61,7 @@ class MyApp extends StatelessWidget {
               '/group': (BuildContext context) => GroupPage(),
               '/memorabiliaDetail': (BuildContext context) => MemorabiliaDetail(),
 
-              '/test': (BuildContext context) => SignUpPage(),
+//              '/test': (BuildContext context) => SignUpPage(),
             },
           );
         },

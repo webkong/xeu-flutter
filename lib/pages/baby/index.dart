@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
 import 'package:xeu/common/utils/adapt.dart';
@@ -11,8 +8,6 @@ import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/baby.dart';
-import 'package:xeu/models/user/user.dart';
-import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/baby/detail.dart';
 
 class BabyPage extends StatefulWidget {

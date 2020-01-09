@@ -1,4 +1,3 @@
-import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';

@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:xeu/common/constant/chart/index.dart';
-import 'package:xeu/common/utils/adapt.dart';
 
 class TrendChart extends StatelessWidget {
   TrendChart({Key key, this.tag, this.data, this.displayName = '', this.xAxis = '(单位：月)', this.yAxis=''})
