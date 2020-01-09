@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
               '/group': (BuildContext context) => GroupPage(),
               '/memorabiliaDetail': (BuildContext context) => MemorabiliaDetail(),
 
-              '/signup': (BuildContext context) => SignUpPage(),
+              '/test': (BuildContext context) => SignUpPage(),
             },
           );
         },

@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   List<CardData> cardMap = [
     new CardData('assets/images/01.png', '成长记录', '/group'),
-    new CardData('assets/images/02.png', '益智游戏', '/game'),
+    new CardData('assets/images/02.png', '益智游戏', '/test'),
     new CardData('assets/images/01.png', '成长记录', '/group'),
     new CardData('assets/images/01.png', '成长记录', '/group'),
   ];
@@ -67,30 +67,6 @@ Widget _createCard(BuildContext context, CardData data) {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-//          Stack(
-//            alignment: FractionalOffset(0.5, 0.5),
-//            children: <Widget>[
-//              Container(
-//                height: Adapt.px(300),
-//                width: Adapt.px(660),
-//                child: Opacity(
-//                  opacity: 0.8,
-//                  child: Image.asset(
-//                    data.image,
-//                    fit: BoxFit.cover,
-//                  ),
-//                ),
-//              ),
-//              Text(
-//                data.text,
-//                style: TextStyle(
-//                  fontSize: 28.0,
-//                  color: Theme.of(context).accentColor,
-//                  fontWeight: FontWeight.bold,
-//                ),
-//              ),
-//            ],
-//          ),
           Container(
             height: Adapt.px(300),
             width: Adapt.px(660),

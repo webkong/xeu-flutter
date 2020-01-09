@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xeu/common/constant/avatar.dart';
+import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/datePicker.dart';
 import 'package:xeu/common/utils/adapt.dart';
@@ -39,20 +39,24 @@ class _BabyDetailPage extends State<BabyDetailPage> {
 
   String _buttonText = '保存';
 
-  _init() {
+  String _avatar = Avatars.b1;
 
+  _init() {
     if (baby?.bid != null) {
       print(baby.toJson().toString());
       setState(() {
         _isEdit = true;
         _defaultNickNameValue = baby?.nickName;
         nickNameEditingController.text = baby?.nickName;
-        _genderName = baby?.gender == 0 ? '男孩' : '女孩';
         _defaultBirthday = Tools.formatDate(baby?.birthday);
-        _bloodName = baby?.blood;
-        _gender = baby?.gender;
-        _blood = baby?.blood;
-        _birthday = baby?.birthday;
+        _birthday = baby?.birthday ?? _birthday;
+        _avatar = baby?.avatar ?? _avatar;
+        _bloodName = baby?.blood ?? _bloodName;
+        _blood = baby?.blood ?? _blood;
+        _genderName = baby?.gender != null
+            ? (baby.gender == 0 ? '男孩' : '女孩')
+            : _genderName;
+        _gender = baby?.gender ?? _gender;
       });
     }
   }
@@ -150,7 +154,8 @@ class _BabyDetailPage extends State<BabyDetailPage> {
       "nick_name": _defaultNickNameValue,
       'gender': _gender,
       'blood': _blood,
-      'birthday': _birthday
+      'birthday': _birthday,
+      'avatar': _avatar,
     };
     String path = '/baby/new';
     if (_isEdit) {
@@ -222,7 +227,12 @@ class _BabyDetailPage extends State<BabyDetailPage> {
             context: context,
             builder: (_) {
               return AlertDialog(
-                title: Text('选择血型'),
+                title: Text(
+                  '选择血型',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
                 content: StatefulBuilder(
                   builder: (BuildContext context, StateSetter setStateLocal) {
                     return Container(
@@ -306,7 +316,12 @@ class _BabyDetailPage extends State<BabyDetailPage> {
             context: context,
             builder: (_) {
               return AlertDialog(
-                title: Text('选择性别'),
+                title: Text(
+                  '选择性别',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
                 content: StatefulBuilder(
                   builder: (BuildContext context, StateSetter setStateLocal) {
                     return Container(
@@ -353,13 +368,20 @@ class _BabyDetailPage extends State<BabyDetailPage> {
         children: <Widget>[
           Container(
             margin: EdgeInsets.fromLTRB(40, 20, 40, 20),
-            decoration: ShapeDecoration(
-              shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
-            ),
             height: 60,
             width: 60,
-            child: CircleAvatar(
-              child: Image.asset(Avatars.b1),
+            child: GestureDetector(
+              onTap: () async {
+                String sA = await Avatars()
+                    .showSelection(context, defaultAvatar: _avatar);
+                print(sA);
+                setState(() {
+                  _avatar = sA;
+                });
+              },
+              child: CircleAvatar(
+                child: Image.asset(_avatar),
+              ),
             ),
           ),
         ],
@@ -389,8 +411,14 @@ class _BabyDetailPage extends State<BabyDetailPage> {
             barrierDismissible: _isEdit, // 如果是修改可以直接消失
             builder: (_) {
               return AlertDialog(
-                title: Text('设置小名'),
+                title: Text(
+                  '设置小名',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
                 content: TextFormField(
+                  autofocus: true,
                   controller: nickNameEditingController,
                   decoration: InputDecoration(
                     hintText: _defaultNickNameValue,

@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                 await pres.setString("token", data.token);
                 await pres.setString("u_id", data.uid);
                 await pres.setString('user', json.encode(data));
-                print( json.encode(data));
+                await pres.setString('babies', json.encode(data.babies));
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);

@@ -30,6 +30,8 @@ class _UserPageState extends State<UserPage> {
     Map userMap = json.decode(user);
     setState(() {
       _user = User.fromJson(userMap);
+      _nickName = _user?.nickName;
+      _nickNameController.text = _user?.nickName ?? _nickName;
     });
   }
 

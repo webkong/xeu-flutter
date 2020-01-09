@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
 import 'package:xeu/common/utils/adapt.dart';
+import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/utils/tools.dart';
+import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user.dart';
@@ -22,14 +25,16 @@ class BabyPage extends StatefulWidget {
 }
 
 class _BabyPageState extends State<BabyPage> {
-  User _user;
-
+  List _babies;
+  String uid;
   _init() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
-    var user = pres.getString('user');
-    Map userMap = json.decode(user);
+    var babies = pres.getString('babies');
+    uid = pres.getString('u_id');
+    print(babies);
+    print(json.decode(babies));
     setState(() {
-      _user = User.fromJson(userMap);
+      _babies = json.decode(babies);
     });
   }
 
@@ -55,9 +60,8 @@ class _BabyPageState extends State<BabyPage> {
         child: ListView(
           children: <Widget>[
             _buildCard(),
-            ...List.generate(_user?.babies != null ? _user.babies.length : 0,
-                (int index) {
-              return _buildItem(_user.babies[index]);
+            ...List.generate(_babies != null ? _babies.length : 0, (int index) {
+              return _buildItem(_babies[index], index);
             }),
           ],
         ),
@@ -140,21 +144,23 @@ class _BabyPageState extends State<BabyPage> {
     );
   }
 
-  Widget _buildItem(baby) {
+  Widget _buildItem(baby, index) {
     Baby _baby = Baby.fromJson(baby);
     return Card(
+      margin: EdgeInsets.only(top: 8),
       child: Container(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
         child: ListTile(
+          contentPadding:
+              EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
           leading: Container(
-            decoration: ShapeDecoration(
-              shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12),
+              shape: BoxShape.circle,
             ),
-            height: 50,
-            width: 50,
-            child: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(_baby?.avatar ??
-                  'https://blog.webkong.cn/uploads/avatar.jpg'),
+            child: Image(
+              width: 60,
+              height: 60,
+              image: AssetImage(_baby?.avatar ?? Avatars.b1),
             ),
           ),
           title: Row(
@@ -180,6 +186,37 @@ class _BabyPageState extends State<BabyPage> {
           ),
           onTap: () {
             _pushPage(data: _baby);
+          },
+          onLongPress: () async {
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(
+                      '是否删除宝宝:' + _baby.nickName + '?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('取消'),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('确定'),
+                        onPressed: () async {
+                          setState(() {
+                            _babies.removeAt(index);
+                          });
+                          await Http.post(
+                              '/baby/del', {"u_id": uid, "b_id": _baby.bid});
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
           },
         ),
       ),
