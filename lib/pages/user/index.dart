@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/utils/http.dart';
+import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/user_state.dart';
@@ -20,6 +21,7 @@ class _UserPageState extends State<UserPage> {
   User _user;
   String _nickName = '用户837abd';
   String uid;
+  String _avatar = Avatars.a1;
   TextEditingController _nickNameController = TextEditingController();
 
   _init() async {
@@ -92,17 +94,30 @@ class _UserPageState extends State<UserPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Center(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(40, 20, 40, 20),
-              decoration: ShapeDecoration(
-                shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+            child: GestureDetector(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(40, 20, 40, 20),
+                decoration: ShapeDecoration(
+                  shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+                ),
+                height: 80,
+                width: 80,
+                child: CircleAvatar(
+                  backgroundImage: AssetImage(_user?.avatar ?? _avatar),
+                ),
               ),
-              height: 80,
-              width: 80,
-              child: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(_user?.avatar ??
-                    'https://blog.webkong.cn/uploads/avatar.jpg'),
-              ),
+              onTap: () async {
+                String sA = await Avatars().showSelection(context,
+                    defaultAvatar: _avatar, type: 'user');
+                setState(() {
+                  _avatar = sA;
+                });
+                await Http.post(
+                    '/user/update', {"u_id": uid, "avatar": _avatar});
+                await Provider.of<UserModel>(context, listen: false)
+                    .getUserInfo();
+                _init();
+              },
             ),
           ),
           GestureDetector(
@@ -121,59 +136,59 @@ class _UserPageState extends State<UserPage> {
             ),
             onTap: () {
               showDialog(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: Text('设置昵称'),
-                content: TextFormField(
-                  controller: _nickNameController,
-                  decoration: InputDecoration(
-                    hintText: _nickName,
-                  ),
-                  validator: (value) {
-                    if (value != null) {
-                      return null;
-                    } else {
-                      return '不能为空';
-                    }
-                  },
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('取消'),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  FlatButton(
-                    child: Text('确定'),
-                    onPressed: () async {
-                      String _name = _nickNameController.text;
-                      if (_name.length > 0 && _name != _user.nickName) {
-                        setState(() {
-                          _nickName = _name;
-                        });
-                        await Http.post('/user/update', {"u_id": uid, "nick_name": _nickName});
-                        await Provider.of<UserModel>(context, listen: false).getUserInfo();
-                        _init();
-                        Navigator.of(context).pop();
-                      } else {
-                        Toast.show('昵称不符合，或未有改动', context);
-                      }
-                    },
-                  ),
-                ],
+                context: context,
+                builder: (_) {
+                  return AlertDialog(
+                    title: Text('设置昵称'),
+                    content: TextFormField(
+                      controller: _nickNameController,
+                      decoration: InputDecoration(
+                        hintText: _nickName,
+                      ),
+                      validator: (value) {
+                        if (value != null) {
+                          return null;
+                        } else {
+                          return '不能为空';
+                        }
+                      },
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('取消'),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('确定'),
+                        onPressed: () async {
+                          String _name = _nickNameController.text;
+                          if (_name.length > 0 && _name != _user.nickName) {
+                            setState(() {
+                              _nickName = _name;
+                            });
+                            await Http.post('/user/update',
+                                {"u_id": uid, "nick_name": _nickName});
+                            await Provider.of<UserModel>(context, listen: false)
+                                .getUserInfo();
+                            _init();
+                            Navigator.of(context).pop();
+                          } else {
+                            Toast.show('昵称不符合，或未有改动', context);
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                },
               );
-            },
-          );
             },
           )
         ],
       ),
     );
   }
-
-
 
   Align _buildLoginButton(BuildContext context) {
     return Align(

@@ -23,7 +23,30 @@ class Avatars {
   static final b19 = 'assets/avatar/baby/b19.png';
   static final b20 = 'assets/avatar/baby/b20.png';
 
-  final List avatars = [
+  static final a1 = 'assets/avatar/user/a1.png';
+  static final a2 = 'assets/avatar/user/a2.png';
+  static final a3 = 'assets/avatar/user/a3.png';
+  static final a4 = 'assets/avatar/user/a4.png';
+  static final a5 = 'assets/avatar/user/a5.png';
+  static final a6 = 'assets/avatar/user/a6.png';
+  static final a7 = 'assets/avatar/user/a7.png';
+  static final a8 = 'assets/avatar/user/a8.png';
+  static final a9 = 'assets/avatar/user/a9.png';
+  static final a10 = 'assets/avatar/user/a10.png';
+  static final a11 = 'assets/avatar/user/a11.png';
+  static final a12 = 'assets/avatar/user/a12.png';
+  static final a13 = 'assets/avatar/user/a13.png';
+  static final a14 = 'assets/avatar/user/a14.png';
+  static final a15 = 'assets/avatar/user/a15.png';
+  static final a16 = 'assets/avatar/user/a16.png';
+  static final a17 = 'assets/avatar/user/a17.png';
+  static final a18 = 'assets/avatar/user/a18.png';
+  static final a19 = 'assets/avatar/user/a19.png';
+  static final a20 = 'assets/avatar/user/a20.png';
+  static final a21 = 'assets/avatar/user/a21.png';
+  static final a22 = 'assets/avatar/user/a22.png';
+
+  final List avatarBaby = [
     b1,
     b2,
     b3,
@@ -45,8 +68,38 @@ class Avatars {
     b19,
     b20,
   ];
-  showSelection(context, {defaultAvatar = ''}) async {
+   final List avatars = [
+    a1,
+    a2,
+    a3,
+    a4,
+    a5,
+    a6,
+    a7,
+    a8,
+    a9,
+    a10,
+    a11,
+    a12,
+    a13,
+    a14,
+    a15,
+    a16,
+    a17,
+    a18,
+    a19,
+    a20,
+    a21,
+    a22,
+  ];
+  showSelection(context, {defaultAvatar = '', type: 'baby'}) async {
     var _selected = defaultAvatar;
+    List _avatars;
+    if(type == 'user'){
+      _avatars = avatars;
+    }else{
+      _avatars = avatarBaby;
+    }
     await showDialog(
       context: context,
       child: AlertDialog(
@@ -74,18 +127,18 @@ class Avatars {
                       padding: EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: _selected == avatars[index]
+                            color: _selected == _avatars[index]
                                 ? Theme.of(context).accentColor
                                 : Colors.black12),
                         shape: BoxShape.circle,
                       ),
                       child: Image(
-                        image: AssetImage(avatars[index]),
+                        image: AssetImage(_avatars[index]),
                       ),
                     ),
                     onTap: () {
                       setStateLocal(() {
-                        _selected = avatars[index];
+                        _selected = _avatars[index];
                       });
                     },
                   );
