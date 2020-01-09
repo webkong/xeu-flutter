@@ -117,7 +117,7 @@ class Avatars {
             builder: (BuildContext context, StateSetter setStateLocal) {
               return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
+                  crossAxisCount: 3,
                 ),
                 itemCount: 20,
                 itemBuilder: (BuildContext context, int index) {

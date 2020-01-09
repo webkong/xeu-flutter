@@ -367,7 +367,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.fromLTRB(40, 20, 40, 20),
+            margin: EdgeInsets.only(top: Adapt.px(10), bottom: Adapt.px(20)),
             height: 60,
             width: 60,
             child: GestureDetector(
