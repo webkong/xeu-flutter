@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/models/user/user.dart';
 
@@ -29,5 +30,11 @@ class UserModel with ChangeNotifier {
       await pres.setString('user', json.encode(data));
       await pres.setString('babies', json.encode(data.babies));
     }
+  }
+
+  logout(context) async {
+    Global.clear();
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/login', (Route<dynamic> route) => false);
   }
 }

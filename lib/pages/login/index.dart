@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -154,11 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                   '/login', {"phone": _phone, "password": _password});
               if (res.code == 200) {
                 User data = User.fromJson(res.data['data']);
-                SharedPreferences pres = await SharedPreferences.getInstance();
-                await pres.setString("token", data.token);
-                await pres.setString("u_id", data.uid);
-                await pres.setString('user', json.encode(data));
-                await pres.setString('babies', json.encode(data.babies));
+                Global.initLocal(data);
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);

@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'dart:collection';
 import 'package:xeu/common/config/config.dart';
 
@@ -72,15 +74,8 @@ class Http {
       headers.addAll(header);
     }
 
-    //授权码
-    if (optionParams["authorization"] == null) {
-      var authorization = await getAuthorization();
-      if (authorization != null) {
-        optionParams["authorization"] = authorization;
-      }
-    }
-
     headers["Authorization"] = optionParams["authorization"];
+
     // 设置 baseUrl
 
     if (option != null) {
@@ -91,7 +86,8 @@ class Http {
     }
 
     ///超时
-//    option.connectTimeout = 15000;
+    option.sendTimeout = 15000;
+    option.receiveTimeout = 15000;
 
     Dio dio = new Dio();
     // 添加拦截器
@@ -133,6 +129,9 @@ class Http {
       } else {
         errorResponse = new Response(statusCode: 666);
       }
+      if(errorResponse.statusCode == 401){
+        return new HttpException('未授权');
+      }
       if (e.type == DioErrorType.CONNECT_TIMEOUT) {
         errorResponse.statusCode = NETWORK_TIMEOUT;
       }
@@ -144,25 +143,23 @@ class Http {
     }
 
     try {
-      if (option.contentType != null &&
-          option.contentType.primaryType == "text") {
-        return new ResultData(response.data, true, SUCCESS);
-      } else {
-        var responseJson = response.data;
-        if (response.statusCode == 201 && responseJson["token"] != null) {
-          // TODO: save token
-          optionParams["authorization"] = 'Bearer ' + responseJson["token"];
-        }
+      var responseJson = response.data;
+      if (response.statusCode == 201 && responseJson["data"]["token"] != null) {
+        print('set authorization');
+        optionParams["authorization"] =
+            'Bearer ' + responseJson["data"]["token"];
       }
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ResultData(response.data, true, SUCCESS,
             headers: response.headers);
       }
+
     } catch (e) {
       return ResultData(response.data, false, response.statusCode,
           headers: response.headers);
     }
-    return 'error is error';
+//    return 'error is error';
   }
 
   ///清除授权

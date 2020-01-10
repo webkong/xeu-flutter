@@ -205,12 +205,7 @@ class _UserPageState extends State<UserPage> {
           ),
           color: Colors.redAccent,
           onPressed: () async {
-            SharedPreferences pres = await SharedPreferences.getInstance();
-            await pres.setString("token", null);
-            await pres.setString("user", null);
-            await pres.setString("u_id", null);
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/login', (Route<dynamic> route) => false);
+              Provider.of<UserModel>(context, listen: false).logout(context);
           },
         ),
       ),
