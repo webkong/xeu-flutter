@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/utils/http.dart';
@@ -15,7 +16,7 @@ class UserPage extends StatefulWidget {
   }
 }
 
-class _UserPageState extends State<UserPage> {
+class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin {
   User _user;
   String _nickName = '用户837abd';
   String uid;
@@ -29,11 +30,16 @@ class _UserPageState extends State<UserPage> {
 
     Map userMap = json.decode(user);
     setState(() {
+      _avatar = _user?.avatar ?? _avatar;
       _user = User.fromJson(userMap);
-      _nickName = _user?.nickName;
+      _nickName = _user?.nickName ?? _nickName;
       _nickNameController.text = _user?.nickName ?? _nickName;
     });
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -48,6 +54,7 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         appBar: AppBar(
           title: Text('个人中心'),
@@ -101,7 +108,7 @@ class _UserPageState extends State<UserPage> {
                 height: 80,
                 width: 80,
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(_user?.avatar ?? _avatar),
+                  backgroundImage: AssetImage(_avatar),
                 ),
               ),
               onTap: () async {
@@ -122,7 +129,7 @@ class _UserPageState extends State<UserPage> {
             child: Row(
               children: <Widget>[
                 Text(
-                  _user?.nickName ?? _nickName,
+                  _nickName,
                   style: TextStyle(fontSize: 24, color: Colors.black87),
                 ),
                 Icon(

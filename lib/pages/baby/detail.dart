@@ -162,8 +162,8 @@ class _BabyDetailPage extends State<BabyDetailPage> {
       path = '/baby/update';
       params['b_id'] = baby?.bid;
     }
-    var res = await Http.post(path, params);
-    if (res.code == 200) {
+    ResultData res = await Http.post(path, params);
+    if (res.data['code'] == 200) {
       await Provider.of<UserModel>(context, listen: false).getUserInfo();
       Navigator.of(context).pop(true);
       Toast.show('保存成功', context);

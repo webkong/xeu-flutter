@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                   '/login', {"phone": _phone, "password": _password});
               if (res.code == 200) {
                 User data = User.fromJson(res.data['data']);
-                Global.initLocal(data);
+                await Global.initLocal(data);
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);

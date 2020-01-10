@@ -29,19 +29,6 @@ class _HomePageState extends State<HomePage> {
     Adapt.init(context);
     print(_pages);
     return Scaffold(
-//      appBar: AppBar(
-//        title: Text('学源'),
-//        actions: <Widget>[
-//          IconButton(
-//              icon: Icon(
-//                Icons.account_circle,
-//                size: 26,
-//              ),
-//              onPressed: () {
-//                Navigator.pushNamed(context, '/user');
-//              })
-//        ],
-//      ),
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),
@@ -59,14 +46,13 @@ class _HomePageState extends State<HomePage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
 
-  _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 }
