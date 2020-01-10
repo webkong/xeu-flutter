@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/models/user/user_state.dart';
@@ -13,6 +14,7 @@ import 'package:xeu/pages/group/index.dart';
 import 'package:xeu/pages/login/index.dart';
 import 'package:xeu/pages/login/register.dart';
 import 'package:xeu/pages/user/index.dart';
+import 'package:xeu/signup.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MemorabiliaModel()),
@@ -60,8 +63,7 @@ class MyApp extends StatelessWidget {
               //成长记录
               '/group': (BuildContext context) => GroupPage(),
               '/memorabiliaDetail': (BuildContext context) => MemorabiliaDetail(),
-
-//              '/test': (BuildContext context) => SignUpPage(),
+              '/test': (BuildContext context) => SignUpPage(),
             },
           );
         },
