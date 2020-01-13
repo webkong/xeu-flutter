@@ -6,6 +6,7 @@ import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/models/user/user.dart';
+import 'package:xeu/pages/baby/detail.dart';
 import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
@@ -43,7 +44,9 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
       _baby = User().getBaby(_user.babies, babyId: _user?.defaultBaby);
     }
     print(_baby.toJson());
-    _babyAvatar = _baby?.avatar ?? _babyAvatar;
+    setState(() {
+      _babyAvatar = _baby?.avatar ?? _babyAvatar;
+    });
   }
 
   TabController _tabController;
@@ -66,12 +69,24 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         leading: Container(
           padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
-//          width: Adapt.px(80),
-//          height: Adapt.px(80),
           child: GestureDetector(
-            child: Image(
-              image: AssetImage(_babyAvatar),
+            child: CircleAvatar(
+              child: Image(image: AssetImage(_babyAvatar)),
             ),
+            onTap: () async {
+              var isNew = await Navigator.push(
+                context,
+                SlideTopRoute(
+                  page: BabyDetailPage(
+                    data: _baby,
+                  ),
+                ),
+              );
+              print(isNew);
+              if (isNew != null) {
+                await _init();
+              }
+            },
           ),
         ),
         title: Text('宝宝记录'),

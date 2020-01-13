@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/global.dart';
@@ -27,13 +25,12 @@ class UserModel with ChangeNotifier {
     print(res);
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);
-      await pres.setString('user', json.encode(data));
-      await pres.setString('babies', json.encode(data.babies));
+      await Global.flashData(data);
     }
   }
 
   logout(context) async {
-    Global.clear();
+    await Global.clear();
     Navigator.pushNamedAndRemoveUntil(
         context, '/login', (Route<dynamic> route) => false);
   }

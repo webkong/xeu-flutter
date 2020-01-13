@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
 import 'package:xeu/common/utils/adapt.dart';
@@ -8,6 +9,7 @@ import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/baby.dart';
+import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/baby/detail.dart';
 
 class BabyPage extends StatefulWidget {
@@ -206,6 +208,7 @@ class _BabyPageState extends State<BabyPage> {
                           });
                           await Http().post(context,
                               '/baby/del', {"u_id": uid, "b_id": _baby.bid});
+                          Provider.of<UserModel>(context).getUserInfo(context);
                           Navigator.of(context).pop();
                         },
                       ),

@@ -22,6 +22,7 @@ class Global {
   }
 
   unAuth(context) {
+    Navigator.pop(context);
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/login',
@@ -31,8 +32,15 @@ class Global {
 
   static initLocal(User data) async {
     _prefs = await SharedPreferences.getInstance();
-    await _prefs.setString("token", data.token);
+    if (data?.token != null) {
+      await _prefs.setString("token", data.token);
+    }
     await _prefs.setString("u_id", data.uid);
+    await flashData(data);
+  }
+
+  static flashData(User data) async {
+    _prefs = await SharedPreferences.getInstance();
     await _prefs.setString('user', json.encode(data));
     await _prefs.setString('babies', json.encode(data.babies));
   }
