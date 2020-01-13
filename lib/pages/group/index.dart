@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:xeu/common/widget/avatar.dart';
+import 'package:xeu/models/user/baby.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
@@ -16,6 +19,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
 
     int _index=0;
     var page ;
+    Baby _baby;
 
   _new() async{
     if(_index == 0){
@@ -24,6 +28,11 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
       page = NewRecord(); //身体参数
     }
      await Navigator.push(context, SlideTopRoute(page: page));
+  }
+
+  _init() async {
+    SharedPreferences pres = await SharedPreferences.getInstance();
+    // Todo: 设置默认的宝宝。显示宝宝的头像在这个地方
   }
 
 
@@ -44,6 +53,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Image(image: AssetImage(Avatars.b1),),
         title: Text('成长记录'),
         actions: <Widget>[
           IconButton(
