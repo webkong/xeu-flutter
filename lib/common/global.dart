@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/models/user/user.dart';
 
 class Global {
   static SharedPreferences _prefs;
-
-  static check(context) async {
+  check(context) async {
     _prefs = await SharedPreferences.getInstance();
     var token = _prefs.getString('token');
     if (token != null) {
+      print('token $token');
     } else {
       Navigator.pushReplacementNamed(context, '/login');
     }
@@ -20,7 +21,15 @@ class Global {
     await _prefs.clear();
   }
 
-  static initLocal(data) async {
+  unAuth(context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/login',
+      (Route<dynamic> route) => false,
+    );
+  }
+
+  static initLocal(User data) async {
     _prefs = await SharedPreferences.getInstance();
     await _prefs.setString("token", data.token);
     await _prefs.setString("u_id", data.uid);

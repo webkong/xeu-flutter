@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
               print(_formKeyRegister);
               _formKeyRegister.currentState.save();
               //TODO 执行注册方法
-              var res = await Http.post('/register', {"phone": _phone, "password": _password, "code":_code});
+              var res = await Http().post(context,'/register', {"phone": _phone, "password": _password, "code":_code});
               if(res.code == 200){
                 Navigator.pop(context);
               }

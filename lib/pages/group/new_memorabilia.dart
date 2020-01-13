@@ -43,7 +43,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                         await SharedPreferences.getInstance();
                     String uid = pres.getString('u_id');
                     //TODO 先存储record记录，然后再更新images字段。
-                    var res = await Http.post('/memorabilia/new', {
+                    var res = await Http().post(context, '/memorabilia/new', {
                       "u_id": uid,
                       "title": _title,
                       "description": _description
@@ -54,7 +54,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                       var item = save(uid, data['_id']);
                       Toast.show('保存成功,等待文件上传', context);
                       Provider.of<MemorabiliaModel>(context, listen: false)
-                          .add(item);
+                          .add(context,item);
                       Navigator.of(context).pop();
                     }
                   } else {

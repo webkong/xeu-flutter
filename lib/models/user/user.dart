@@ -3,6 +3,8 @@
 //part 'user.g.dart';
 //
 //@JsonSerializable()
+import 'package:xeu/models/user/baby.dart';
+
 class User {
   User({
     this.uid,
@@ -13,6 +15,7 @@ class User {
     this.location,
     this.avatar,
     this.country,
+    this.defaultBaby,
     this.babies,
   });
   String uid;
@@ -23,9 +26,11 @@ class User {
   Map location;
   String avatar;
   String country;
+  String defaultBaby;
   List babies;
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
+  Baby getBaby(babies, {babyId}) => _$GetDefaultBaby(babies, babyId: babyId);
 }
 
 User _$UserFromJson(Map<String, dynamic> json) {
@@ -38,6 +43,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     location: json['location'] as Map<String, dynamic>,
     avatar: json['avatar'] as String,
     country: json['country'] as String,
+    defaultBaby: json['default_baby'] as String,
     babies: json['babies'] as List,
   );
 }
@@ -51,5 +57,14 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'location': instance.location,
       'avatar': instance.avatar,
       'country': instance.country,
+      'default_baby': instance.defaultBaby,
       'babies': instance.babies,
     };
+
+Baby _$GetDefaultBaby(List babies, {String babyId = ''}) {
+  int _index = 0;
+  if (babyId != null && babyId != '') {
+    _index = babies.indexWhere((baby) => baby['_id'] == babyId);
+  }
+  return Baby.fromJson(babies[_index]);
+}

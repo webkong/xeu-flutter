@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
               ///只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
               //TODO 执行登录方法
-              var res = await Http.post(
+              var res = await Http().post(context,
                   '/login', {"phone": _phone, "password": _password});
               if (res.code == 200) {
                 User data = User.fromJson(res.data['data']);

@@ -204,7 +204,7 @@ class _BabyPageState extends State<BabyPage> {
                           setState(() {
                             _babies.removeAt(index);
                           });
-                          await Http.post(
+                          await Http().post(context,
                               '/baby/del', {"u_id": uid, "b_id": _baby.bid});
                           Navigator.of(context).pop();
                         },

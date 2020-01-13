@@ -20,10 +20,10 @@ class UserModel with ChangeNotifier {
     _hasNew = false;
   }
 
-  getUserInfo() async {
+  getUserInfo(context) async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
-    var res = await Http.get('/user/info', {"u_id": uid});
+    var res = await Http().get(context, '/user/info', {"u_id": uid});
     print(res);
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);

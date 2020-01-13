@@ -117,10 +117,10 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
                 setState(() {
                   _avatar = sA;
                 });
-                await Http.post(
+                await Http().post(context,
                     '/user/update', {"u_id": uid, "avatar": _avatar});
                 await Provider.of<UserModel>(context, listen: false)
-                    .getUserInfo();
+                    .getUserInfo(context);
                 _init();
               },
             ),
@@ -173,10 +173,10 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
                             setState(() {
                               _nickName = _name;
                             });
-                            await Http.post('/user/update',
+                            await Http().post(context,'/user/update',
                                 {"u_id": uid, "nick_name": _nickName});
                             await Provider.of<UserModel>(context, listen: false)
-                                .getUserInfo();
+                                .getUserInfo(context);
                             _init();
                             Navigator.of(context).pop();
                           } else {

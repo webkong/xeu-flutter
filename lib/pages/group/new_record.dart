@@ -63,7 +63,7 @@ class _NewRecord extends State<NewRecord> {
                   String uid = pres.getString('u_id');
                   Map<String, dynamic> params = Map.from(data);
                   params['u_id'] = uid;
-                  var res = await Http.post('/record/new', params);
+                  var res = await Http().post(context,'/record/new', params);
                   if (res.code == 200) {
                     Provider.of<RecordModel>(context, listen: false)
                         .add(params);

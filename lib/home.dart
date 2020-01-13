@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Global.check(context);
+    Global().check(context);
   }
 
   int _selectedIndex = 0;

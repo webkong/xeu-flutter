@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 import 'dart:collection';
 import 'package:xeu/common/config/config.dart';
 
+import '../global.dart';
+
 ///http请求管理类，可单独抽取出来
 class Http {
+  BuildContext context;
   static String baseUrl = Config.BASE_API_URL;
   static const CONTENT_TYPE_JSON = "application/json";
   static const CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
@@ -25,34 +27,30 @@ class Http {
 
   static Map optionParams = {
     "timeoutMs": 15000,
-    "token": null,
     "authorization": null,
   };
 
-  static setBaseUrl(String baseUrl) {
+   setBaseUrl(String baseUrl) {
     baseUrl = baseUrl;
   }
 
-  static get(url, param) async {
+   get(BuildContext context, url, param) async {
     return await request(
-        baseUrl + url, param, null, new Options(method: "GET"));
+        context, baseUrl + url, param, null, new Options(method: "GET"));
   }
 
-  static post(url, param) async {
+   post(BuildContext context, url, param) async {
     return await request(
-        baseUrl + url,
-        param,
-        {"Accept": 'application/vnd.github.VERSION.full+json'},
-        new Options(method: 'POST'));
+        context, baseUrl + url, param, null, new Options(method: 'POST'));
   }
 
-  static delete(url, param) async {
+   delete(BuildContext context, url, param) async {
     return await request(
-        baseUrl + url, param, null, new Options(method: 'DELETE'));
+        context, baseUrl + url, param, null, new Options(method: 'DELETE'));
   }
 
-  static put(url, param) async {
-    return await request(baseUrl + url, param, null,
+   put(BuildContext context, url, param) async {
+    return await request(context, baseUrl + url, param, null,
         new Options(method: "PUT", contentType: 'text/plain'));
   }
 
@@ -61,8 +59,10 @@ class Http {
   ///[ params] 请求参数
   ///[ header] 外加头
   ///[ option] 配置
-  static request(String url, params, Map<String, String> header, Options option,
+  request(BuildContext context, String url, params, Map<String, String> header,
+      Options option,
       {noTip = false}) async {
+    this.context = context;
     //没有网络
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
@@ -129,7 +129,8 @@ class Http {
       } else {
         errorResponse = new Response(statusCode: 666);
       }
-      if(errorResponse.statusCode == 401){
+      if (errorResponse.statusCode == 401) {
+        Global().unAuth(context);
         return new HttpException('未授权');
       }
       if (e.type == DioErrorType.CONNECT_TIMEOUT) {
@@ -154,7 +155,6 @@ class Http {
         return ResultData(response.data, true, SUCCESS,
             headers: response.headers);
       }
-
     } catch (e) {
       return ResultData(response.data, false, response.statusCode,
           headers: response.headers);

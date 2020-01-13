@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xeu/common/utils/adapt.dart';
 
 class Avatars {
+  static final avatar = 'assets/avatar/default.png';
   static final b1 = 'assets/avatar/baby/b1.png';
   static final b2 = 'assets/avatar/baby/b2.png';
   static final b3 = 'assets/avatar/baby/b3.png';
@@ -68,7 +69,7 @@ class Avatars {
     b19,
     b20,
   ];
-   final List avatars = [
+  final List avatars = [
     a1,
     a2,
     a3,
@@ -95,9 +96,9 @@ class Avatars {
   showSelection(context, {defaultAvatar = '', type: 'baby'}) async {
     var _selected = defaultAvatar;
     List _avatars;
-    if(type == 'user'){
+    if (type == 'user') {
       _avatars = avatars;
-    }else{
+    } else {
       _avatars = avatarBaby;
     }
     await showDialog(

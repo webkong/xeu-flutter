@@ -26,7 +26,7 @@ class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClien
   _getList() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
-    var response = await Http.get('/memorabilia/list', {"u_id": uid});
+    var response = await Http().get(context, '/memorabilia/list', {"u_id": uid});
 
     if (response == -1) {
       print(response);

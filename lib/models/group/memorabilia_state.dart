@@ -7,22 +7,25 @@ import '../../common/utils/http.dart';
 import 'package:http_parser/http_parser.dart';
 
 class MemorabiliaModel with ChangeNotifier {
+  BuildContext context;
   int _taskStatus = 0; // 0 没有任务 2 任务进行中 3 任务结束  -1 任务存在失败情况
   List<Task> _tasks = [];
   List<Task> _succeedTasks = [];
   List<Task> _failTasks = [];
   Map get() => {"tasks": _tasks, "fail": _failTasks};
-  void init(){
+  void init() {
     _tasks.clear();
     _taskStatus = 0;
     _succeedTasks.clear();
     _failTasks.clear();
   }
+
   int isDone() {
     return _taskStatus;
   }
 
-  void add(item) {
+  void add(context, item) {
+    this.context = context;
     print(' into add ...............`');
     print(item);
     //添加数组
@@ -50,7 +53,7 @@ class MemorabiliaModel with ChangeNotifier {
     }
     try {
       var list = await Future.wait(files);
-      var res = await _updateMemorabilia(list, item);
+      var res = await _updateMemorabilia( list, item);
       print(res);
       //TODO：上传失败
       // 删除数组中的上传完毕的内容,并添加success list
@@ -71,7 +74,7 @@ class MemorabiliaModel with ChangeNotifier {
       Task failTask = _tasks.removeAt(0);
       failTask.status = -1;
       _failTasks.add(failTask);
-      if(_tasks.length > 0){
+      if (_tasks.length > 0) {
         _upload();
       }
     }
@@ -81,7 +84,7 @@ class MemorabiliaModel with ChangeNotifier {
     print('更新记录');
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
-    return Http.post('/memorabilia/update',
+    return Http().post(context, '/memorabilia/update',
         {"u_id": item.uid, "m_id": item.mid, "images": images});
   }
 

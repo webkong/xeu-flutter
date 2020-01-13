@@ -32,7 +32,7 @@ class _SubRecordList extends State<SubRecordList>
   _getList() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     uid = pres.getString('u_id');
-    var response = await Http.get("/record/list", {"u_id": uid});
+    var response = await Http().get(context,"/record/list", {"u_id": uid});
 
     if (response == -1) {
       print(response);
