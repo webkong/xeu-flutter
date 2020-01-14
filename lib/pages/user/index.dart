@@ -16,25 +16,20 @@ class UserPage extends StatefulWidget {
   }
 }
 
-class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin {
+class _UserPageState extends State<UserPage>
+    with AutomaticKeepAliveClientMixin {
   User _user;
   String _nickName = '';
   String uid;
   String _avatar = Avatars.a1;
   TextEditingController _nickNameController = TextEditingController();
 
-  _init() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    var user = pres.getString('user');
-    uid = pres.getString('u_id');
-
-    Map userMap = json.decode(user);
-    setState(() {
-      _avatar = _user?.avatar ?? _avatar;
-      _user = User.fromJson(userMap);
-      _nickName = _user?.nickName ?? '宝妈or宝爸';
-      _nickNameController.text = _user?.nickName ?? _nickName;
-    });
+  _init(UserModel userModel) async {
+    _avatar = _user?.avatar ?? _avatar;
+    _user = await userModel.getUser();
+    _nickName = _user?.nickName ?? '宝妈or宝爸';
+    _nickNameController.text = _user?.nickName ?? _nickName;
+    uid = _user.uid;
   }
 
   @override
@@ -44,7 +39,6 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
-    _init();
   }
 
   @override
@@ -65,7 +59,11 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
               flex: 4,
               child: Column(
                 children: <Widget>[
-                  _buildUserBar(context),
+                  Consumer(
+                      builder: (BuildContext context, UserModel userModel, _) {
+                    _init(userModel);
+                    return _buildUserBar(context);
+                  }),
                   _buildItemBar(context),
                 ],
               ),
@@ -117,11 +115,10 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
                 setState(() {
                   _avatar = sA;
                 });
-                await Http().post(context,
-                    '/user/update', {"u_id": uid, "avatar": _avatar});
+                await Http().post(
+                    context, '/user/update', {"u_id": uid, "avatar": _avatar});
                 await Provider.of<UserModel>(context, listen: false)
-                    .getUserInfo(context);
-                _init();
+                    .fetchUserInfo(context);
               },
             ),
           ),
@@ -173,11 +170,10 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
                             setState(() {
                               _nickName = _name;
                             });
-                            await Http().post(context,'/user/update',
+                            await Http().post(context, '/user/update',
                                 {"u_id": uid, "nick_name": _nickName});
                             await Provider.of<UserModel>(context, listen: false)
-                                .getUserInfo(context);
-                            _init();
+                                .fetchUserInfo(context);
                             Navigator.of(context).pop();
                           } else {
                             Toast.show('昵称不符合，或未有改动', context);
@@ -212,7 +208,7 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
           ),
           color: Colors.redAccent,
           onPressed: () async {
-              Provider.of<UserModel>(context, listen: false).logout(context);
+            Provider.of<UserModel>(context, listen: false).logout(context);
           },
         ),
       ),

@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/models/user/baby.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xeu/models/user/user.dart';
+import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/baby/detail.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
 import 'package:xeu/pages/group/sub_record.dart';
@@ -17,30 +16,24 @@ class GroupPage extends StatefulWidget {
 }
 
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
-  int _index = 0;
-
-  Baby _baby = Baby();
   String _babyAvatar = Avatars.avatar;
+  Baby _baby;
+  TabController _tabController;
 
-  _init() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    var _user = User.fromJson(json.decode(pres.getString('user')));
-    if (_user.babies.length == 0) {
+  _init(UserModel userModel) async {
+    List babies = await userModel.getBabies();
+    if (babies.length == 0) {
       _showTip();
     } else {
-      _baby = User().getBaby(_user.babies, babyId: _user?.defaultBaby);
+      _baby = await userModel.getDefaultBaby();
     }
-    setState(() {
       _babyAvatar = _baby?.avatar ?? _babyAvatar;
-    });
   }
 
-  TabController _tabController;
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: choices.length);
-    _init();
   }
 
   @override
@@ -57,7 +50,13 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
           padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
           child: GestureDetector(
             child: CircleAvatar(
-              child: Image(image: AssetImage(_babyAvatar)),
+              child: Consumer<UserModel>(
+                builder: (BuildContext context, UserModel userModel, _) {
+                  print('group/index');
+                  _init(userModel);
+                  return Image(image: AssetImage(_babyAvatar));
+                },
+              ),
             ),
             onTap: () async {
 //              await _pushToBabyPage();
@@ -74,9 +73,6 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
 //              icon: new Icon(choice.icon),
             );
           }).toList(),
-          onTap: (index) {
-            _index = index;
-          },
         ),
       ),
       backgroundColor: Colors.white,
@@ -104,9 +100,6 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
         ),
       ),
     );
-    if (isNew != null) {
-      await _init();
-    }
   }
 
   _pushToBabyListPage() async {

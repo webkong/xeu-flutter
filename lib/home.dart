@@ -83,7 +83,11 @@ class _HomePageState extends State<HomePage>
     Adapt.init(context);
     return Scaffold(
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+//        child: _pages.elementAt(_selectedIndex),
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _pages,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).accentColor,

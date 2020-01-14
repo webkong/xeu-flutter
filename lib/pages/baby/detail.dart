@@ -164,7 +164,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
     }
     ResultData res = await Http().post(context, path, params);
     if (res.data['code'] == 200) {
-      await Provider.of<UserModel>(context, listen: false).getUserInfo(context);
+      await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context);
       Navigator.of(context).pop(true);
       Toast.show('保存成功', context);
     } else {

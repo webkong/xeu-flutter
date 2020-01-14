@@ -29,14 +29,12 @@ class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClien
     var response = await Http().get(context, '/memorabilia/list', {"u_id": uid});
 
     if (response == -1) {
-      print(response);
       setState(() {
         _contentLoad = ContentLoadStatus(
           flag: 'noNetwork',
         );
       });
     } else {
-      print('response for memorabilia $response');
       setState(() {
         var list = generateItems(response.data['data']['list']);
         if (list.length == 0) {
@@ -64,7 +62,6 @@ class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClien
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    print('_contentLoad $_contentLoad');
     if (!_pullData) {
       return _contentLoad;
     } else {
