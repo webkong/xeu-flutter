@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:xeu/models/device/deviceInfo.dart';
 import 'package:xeu/models/user/user.dart';
+import 'package:xeu/models/user/user_state.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -152,8 +154,8 @@ class _LoginPageState extends State<LoginPage> {
               var res = await Http().post(context,
                   '/login', {"phone": _phone, "password": _password});
               if (res.code == 200) {
-                User data = User.fromJson(res.data['data']);
-                await Global.initLocal(data);
+                await Global.initLocal(res.data['data']);
+                await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context);
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);

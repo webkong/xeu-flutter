@@ -22,9 +22,7 @@ class BabyPage extends StatefulWidget {
 
 class _BabyPageState extends State<BabyPage> {
   List _babies = [];
-  String _defaultBaby = '';
-  String uid;
-
+  String _defaultBaby;
   @override
   void initState() {
     super.initState();
@@ -35,17 +33,12 @@ class _BabyPageState extends State<BabyPage> {
     super.dispose();
   }
 
-  _init() async {
-    _babies = await Provider.of<UserModel>(context, listen: false).getBabies();
-    User user = await Provider.of<UserModel>(context, listen: false).getUser();
-    uid = user.uid;
-    _defaultBaby = user.defaultBaby;
-  }
-
   @override
   Widget build(BuildContext context) {
-    _init();
-    // TODO: implement build
+    _babies = Provider.of<UserModel>(context, listen: false).getBabies();
+    User user = Provider.of<UserModel>(context, listen: false).getUser();
+    _defaultBaby = user.defaultBaby;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('我的宝宝'),
@@ -72,9 +65,6 @@ class _BabyPageState extends State<BabyPage> {
     }
     var isNew = await Navigator.push(context, SlideTopRoute(page: _page));
     print(isNew);
-    if (isNew != null) {
-      await _init();
-    }
   }
 
   Widget _buildCard() {
@@ -242,11 +232,10 @@ class _BabyPageState extends State<BabyPage> {
                   setState(() {
                     _babies.removeAt(index);
                   });
-                  print(uid);
                   print(_baby);
                   await Http().post(context, '/baby/del',
                       {"u_id": _baby.uid, "b_id": _baby.bid});
-                  Provider.of<UserModel>(context, listen: false)
+                  await Provider.of<UserModel>(context, listen: false)
                       .fetchUserInfo(context);
                   Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
                 },

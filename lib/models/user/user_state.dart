@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
+import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/baby.dart';
 
 class UserModel with ChangeNotifier {
   bool _hasNew = false;
+  User user = User();
+  List babies = [];
   bool get() => _hasNew;
 
   void addBaby(item) {
@@ -20,26 +23,24 @@ class UserModel with ChangeNotifier {
     _hasNew = false;
   }
 
-  getUser() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    User user = User.fromJson(json.decode(pres.getString('user')));
-    return user;
+  getUser() {
+    return this.user;
   }
 
-  getBabies() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    List babies = json.decode(pres.getString('babies')) ?? [];
-    return babies;
+  getBabies() {
+    return this.user?.babies ?? [];
   }
-
-  getDefaultBaby() async {
-    List babies = await this.getBabies();
+  setUser(User user) async {
+    this.user = user;
+    notifyListeners();
+  }
+  getDefaultBaby() {
+    List babies = this.getBabies();
     if (babies.length == 0) {
       return Baby();
     }
     int _index = 0;
-    User user = await this.getUser();
-
+    User user = this.user;
     if (user.defaultBaby != null) {
       _index = babies.indexWhere((baby) => baby['_id'] == user.defaultBaby);
     }
@@ -50,11 +51,13 @@ class UserModel with ChangeNotifier {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
     var res = await Http().get(context, '/user/info', {"u_id": uid});
-    print(res);
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);
+      this.setUser(data);
       await Global.flashData(data);
-      notifyListeners();
+      return true;
+    } else {
+      Toast.show('服务器繁忙', context, duration: 10000);
     }
   }
 

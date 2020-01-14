@@ -24,9 +24,10 @@ class _UserPageState extends State<UserPage>
   String _avatar = Avatars.a1;
   TextEditingController _nickNameController = TextEditingController();
 
-  _init(UserModel userModel) async {
+  _init(UserModel userModel) {
+    print('触发 user index 刷新');
     _avatar = _user?.avatar ?? _avatar;
-    _user = await userModel.getUser();
+    _user =  userModel.getUser();
     _nickName = _user?.nickName ?? '宝妈or宝爸';
     _nickNameController.text = _user?.nickName ?? _nickName;
     uid = _user.uid;

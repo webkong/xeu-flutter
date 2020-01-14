@@ -30,13 +30,12 @@ class Global {
     );
   }
 
-  static initLocal(User data) async {
+  static initLocal(data) async {
     _prefs = await SharedPreferences.getInstance();
-    if (data?.token != null) {
-      await _prefs.setString("token", data.token);
+    if (data['token'] != null) {
+      await _prefs.setString("token", data['token']);
     }
-    await _prefs.setString("u_id", data.uid);
-    await flashData(data);
+    await _prefs.setString("u_id", data['_id']);
   }
 
   static flashData(User data) async {

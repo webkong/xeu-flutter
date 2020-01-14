@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
                   }),
             ),
             // MaterialApp contains our top-level Navigator
-            initialRoute: '/home',
+            initialRoute: '/login',
             routes: {
               '/register': (BuildContext context) => RegisterPage(),
               '/forget': (BuildContext context) => RegisterPage(

@@ -3,10 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user_state.dart';
-import 'package:xeu/pages/baby/detail.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
 import 'package:xeu/pages/group/sub_record.dart';
-import 'package:xeu/UIOverlay/slideTopRoute.dart';
 
 class GroupPage extends StatefulWidget {
   @override
@@ -16,20 +14,8 @@ class GroupPage extends StatefulWidget {
 }
 
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
-  String _babyAvatar = Avatars.avatar;
-  Baby _baby;
   TabController _tabController;
-
-  _init(UserModel userModel) async {
-    List babies = await userModel.getBabies();
-    if (babies.length == 0) {
-      _showTip();
-    } else {
-      _baby = await userModel.getDefaultBaby();
-    }
-      _babyAvatar = _baby?.avatar ?? _babyAvatar;
-  }
-
+  Baby _baby = Baby();
   @override
   void initState() {
     super.initState();
@@ -52,8 +38,16 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
             child: CircleAvatar(
               child: Consumer<UserModel>(
                 builder: (BuildContext context, UserModel userModel, _) {
-                  print('group/index');
-                  _init(userModel);
+                  print('触发 group index 刷新');
+                  List babies = userModel.getBabies();
+                  if (babies.length == 0) {
+                    _showTip();
+                  } else {
+                    _baby = userModel.getDefaultBaby();
+                    print('group baby `');
+                    print(_baby.avatar);
+                  }
+                  String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
                   return Image(image: AssetImage(_babyAvatar));
                 },
               ),
@@ -90,17 +84,17 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   }
 
   // 跳转到默认baby信息
-
-  _pushToBabyPage() async {
-    var isNew = await Navigator.push(
-      context,
-      SlideTopRoute(
-        page: BabyDetailPage(
-          data: _baby,
-        ),
-      ),
-    );
-  }
+//
+//  _pushToBabyPage() async {
+//    var isNew = await Navigator.push(
+//      context,
+//      SlideTopRoute(
+//        page: BabyDetailPage(
+//          data: _baby,
+//        ),
+//      ),
+//    );
+//  }
 
   _pushToBabyListPage() async {
     await Navigator.pushNamed(context, '/baby');
@@ -115,8 +109,15 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
             title: Text('还没有宝宝信息..'),
             actions: <Widget>[
               FlatButton(
+                child: Text('取消'),
+                onPressed: () async {
+                  Navigator.popUntil(context, ModalRoute.withName('/home'));
+                },
+              ),
+              FlatButton(
                 child: Text('去添加'),
                 onPressed: () async {
+                  Navigator.popUntil(context, ModalRoute.withName('/home'));
                   Navigator.pushNamed(context, '/baby/detail');
                 },
               ),
