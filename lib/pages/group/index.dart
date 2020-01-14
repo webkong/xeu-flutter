@@ -44,8 +44,6 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
                     _showTip();
                   } else {
                     _baby = userModel.getDefaultBaby();
-                    print('group baby `');
-                    print(_baby.avatar);
                   }
                   String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
                   return Image(image: AssetImage(_babyAvatar));

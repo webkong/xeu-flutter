@@ -63,8 +63,7 @@ class _BabyPageState extends State<BabyPage> {
         data: data,
       );
     }
-    var isNew = await Navigator.push(context, SlideTopRoute(page: _page));
-    print(isNew);
+    await Navigator.push(context, SlideTopRoute(page: _page));
   }
 
   Widget _buildCard() {
@@ -207,6 +206,7 @@ class _BabyPageState extends State<BabyPage> {
     await Http().post(
         context, '/user/update', {"u_id": baby.uid, "default_baby": baby.bid});
     await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context);
+    await Provider.of<UserModel>(context,listen: false).setDefaultBaby();
     Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
   }
 

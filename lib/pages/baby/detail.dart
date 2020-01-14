@@ -58,6 +58,10 @@ class _BabyDetailPage extends State<BabyDetailPage> {
             : _genderName;
         _gender = baby?.gender ?? _gender;
       });
+    }else{
+      setState(() {
+        nickNameEditingController.text = '';
+      });
     }
   }
 

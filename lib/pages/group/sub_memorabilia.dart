@@ -9,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/models/group/memorabilia.dart';
 import 'package:xeu/common/utils/http.dart';
+import 'package:xeu/models/user/baby.dart';
+import 'package:xeu/models/user/user.dart';
+import 'package:xeu/models/user/user_state.dart';
 
 class SubMemorabilia extends StatefulWidget {
   @override
@@ -17,17 +20,19 @@ class SubMemorabilia extends StatefulWidget {
   }
 }
 
-class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClientMixin {
+class _SubMemorabilia extends State<SubMemorabilia>
+    with AutomaticKeepAliveClientMixin {
   List<Memorabilia> _memorabiliaList = <Memorabilia>[];
   Widget _contentLoad = ContentLoadStatus(
     flag: 'loading',
   );
   bool _pullData = false;
+  String bid;
   _getList() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
-    var response = await Http().get(context, '/memorabilia/list', {"u_id": uid});
-
+    var response = await Http()
+        .get(context, '/memorabilia/list', {"u_id": uid, "b_id": bid});
     if (response == -1) {
       setState(() {
         _contentLoad = ContentLoadStatus(
@@ -62,6 +67,8 @@ class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClien
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    Baby baby = Provider.of<UserModel>(context, listen: true).getDefaultBaby();
+    bid = baby.bid;
     if (!_pullData) {
       return _contentLoad;
     } else {
@@ -156,7 +163,9 @@ class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClien
                               height: Adapt.px(300),
                               width: Adapt.px(450),
                               child: CachedNetworkImage(
-                                imageUrl: item.images.length > 0 ? item.images[0]['url'] : '',
+                                imageUrl: item.images.length > 0
+                                    ? item.images[0]['url']
+                                    : '',
                                 placeholder: (context, url) =>
                                     Image.memory(kTransparentImage),
                                 errorWidget: (context, url, error) =>

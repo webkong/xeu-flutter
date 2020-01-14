@@ -11,6 +11,7 @@ import 'package:xeu/models/user/baby.dart';
 class UserModel with ChangeNotifier {
   bool _hasNew = false;
   User user = User();
+  Baby defaultBaby = Baby();
   List babies = [];
   bool get() => _hasNew;
 
@@ -30,30 +31,42 @@ class UserModel with ChangeNotifier {
   getBabies() {
     return this.user?.babies ?? [];
   }
+
   setUser(User user) async {
     this.user = user;
     notifyListeners();
   }
+
   getDefaultBaby() {
+    return this.defaultBaby;
+  }
+
+  setDefaultBaby() {
     List babies = this.getBabies();
     if (babies.length == 0) {
+      print('default 00000');
       return Baby();
     }
     int _index = 0;
-    User user = this.user;
+    User user = getUser();
     if (user.defaultBaby != null) {
       _index = babies.indexWhere((baby) => baby['_id'] == user.defaultBaby);
     }
-    return Baby.fromJson(babies[_index]);
+    this.defaultBaby = Baby.fromJson(babies[_index]);
+    print(this.defaultBaby);
+    notifyListeners();
   }
 
-  fetchUserInfo(context) async {
+  fetchUserInfo(context, {hasBaby = false}) async {
     SharedPreferences pres = await SharedPreferences.getInstance();
     String uid = pres.getString("u_id");
     var res = await Http().get(context, '/user/info', {"u_id": uid});
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);
       this.setUser(data);
+      if (hasBaby) {
+        this.setDefaultBaby();
+      }
       await Global.flashData(data);
       return true;
     } else {

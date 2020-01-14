@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                   '/login', {"phone": _phone, "password": _password});
               if (res.code == 200) {
                 await Global.initLocal(res.data['data']);
-                await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context);
+                await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context, hasBaby: true);
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);
