@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'dart:collection';
 import 'package:xeu/common/config/config.dart';
+import 'package:xeu/common/widget/toast.dart';
 
 import '../global.dart';
 
@@ -140,6 +141,7 @@ class Http {
         print('请求异常: ' + e.toString());
         print('请求异常 url: ' + url);
       }
+      Toast.show('服务器繁忙', context);
       return new HttpException('请求异常');
     }
 

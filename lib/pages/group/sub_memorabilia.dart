@@ -159,7 +159,7 @@ class _SubMemorabilia extends State<SubMemorabilia> with AutomaticKeepAliveClien
                               height: Adapt.px(300),
                               width: Adapt.px(450),
                               child: CachedNetworkImage(
-                                imageUrl: item.images[0]['url'],
+                                imageUrl: item.images.length > 0 ? item.images[0]['url'] : '',
                                 placeholder: (context, url) =>
                                     Image.memory(kTransparentImage),
                                 errorWidget: (context, url, error) =>

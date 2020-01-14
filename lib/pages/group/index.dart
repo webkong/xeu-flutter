@@ -1,14 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/pages/baby/detail.dart';
-import 'package:xeu/pages/group/new_memorabilia.dart';
-import 'package:xeu/pages/group/new_record.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
 import 'package:xeu/pages/group/sub_record.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
@@ -22,18 +18,9 @@ class GroupPage extends StatefulWidget {
 
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   int _index = 0;
-  var page;
+
   Baby _baby = Baby();
-  var _user;
   String _babyAvatar = Avatars.avatar;
-  _new() async {
-    if (_index == 0) {
-      page = NewMemorabilia();
-    } else {
-      page = NewRecord(); //身体参数
-    }
-    await Navigator.push(context, SlideTopRoute(page: page));
-  }
 
   _init() async {
     SharedPreferences pres = await SharedPreferences.getInstance();
@@ -43,7 +30,6 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
     } else {
       _baby = User().getBaby(_user.babies, babyId: _user?.defaultBaby);
     }
-    print(_baby.toJson());
     setState(() {
       _babyAvatar = _baby?.avatar ?? _babyAvatar;
     });
@@ -74,30 +60,12 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
               child: Image(image: AssetImage(_babyAvatar)),
             ),
             onTap: () async {
-              var isNew = await Navigator.push(
-                context,
-                SlideTopRoute(
-                  page: BabyDetailPage(
-                    data: _baby,
-                  ),
-                ),
-              );
-              print(isNew);
-              if (isNew != null) {
-                await _init();
-              }
+//              await _pushToBabyPage();
+              await _pushToBabyListPage();
             },
           ),
         ),
         title: Text('宝宝记录'),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.add,
-                size: 30.0,
-              ),
-              onPressed: () => this._new()),
-        ],
         bottom: new TabBar(
           controller: _tabController,
           tabs: choices.map((Choice choice) {
@@ -123,6 +91,26 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
         ).toList(),
       ),
     );
+  }
+
+  // 跳转到默认baby信息
+
+  _pushToBabyPage() async {
+    var isNew = await Navigator.push(
+      context,
+      SlideTopRoute(
+        page: BabyDetailPage(
+          data: _baby,
+        ),
+      ),
+    );
+    if (isNew != null) {
+      await _init();
+    }
+  }
+
+  _pushToBabyListPage() async {
+    await Navigator.pushNamed(context, '/baby');
   }
 
   // 提示没有baby，添加baby

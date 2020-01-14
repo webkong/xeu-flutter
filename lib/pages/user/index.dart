@@ -18,7 +18,7 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin {
   User _user;
-  String _nickName = '用户837abd';
+  String _nickName = '';
   String uid;
   String _avatar = Avatars.a1;
   TextEditingController _nickNameController = TextEditingController();
@@ -32,7 +32,7 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
     setState(() {
       _avatar = _user?.avatar ?? _avatar;
       _user = User.fromJson(userMap);
-      _nickName = _user?.nickName ?? _nickName;
+      _nickName = _user?.nickName ?? '宝妈or宝爸';
       _nickNameController.text = _user?.nickName ?? _nickName;
     });
   }
@@ -81,8 +81,8 @@ class _UserPageState extends State<UserPage> with AutomaticKeepAliveClientMixin 
     return Card(
       child: ListTile(
         leading: Icon(
-          Icons.tag_faces,
-          color: Colors.grey,
+          Icons.face,
+          color: Theme.of(context).accentColor,
         ),
         title: Text('我的宝宝'),
         trailing: Icon(Icons.arrow_forward),

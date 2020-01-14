@@ -24,7 +24,7 @@ class MemorabiliaModel with ChangeNotifier {
     return _taskStatus;
   }
 
-  void add(context, item) {
+  void add(context, item) async{
     this.context = context;
     print(' into add ...............`');
     print(item);
@@ -32,7 +32,7 @@ class MemorabiliaModel with ChangeNotifier {
     _tasks.add(new Task(memorabilia: item, status: 0));
     //设置任务状态
     _taskStatus = 2;
-    _upload();
+    await _upload();
     notifyListeners();
   }
 
