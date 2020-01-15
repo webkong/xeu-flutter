@@ -14,6 +14,7 @@ class Http {
   static String baseUrl = Config.BASE_API_URL;
   static const CONTENT_TYPE_JSON = "application/json";
   static const CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+  static const CONTENT_TYPE_MULTIPART = "multipart/form-data";
 
   ///网络错误
   static const NETWORK_ERROR = -1;
@@ -31,26 +32,26 @@ class Http {
     "authorization": null,
   };
 
-   setBaseUrl(String baseUrl) {
+  setBaseUrl(String baseUrl) {
     baseUrl = baseUrl;
   }
 
-   get(BuildContext context, url, param) async {
+  get(BuildContext context, url, param) async {
     return await request(
         context, baseUrl + url, param, null, new Options(method: "GET"));
   }
 
-   post(BuildContext context, url, param) async {
+  post(BuildContext context, url, param) async {
     return await request(
         context, baseUrl + url, param, null, new Options(method: 'POST'));
   }
 
-   delete(BuildContext context, url, param) async {
-    return await request(
-        context, baseUrl + url, param, null, new Options(method: 'DELETE'));
+  file(BuildContext context, url, param) async {
+    return await request(context, baseUrl + url, param, null,
+        new Options(method: 'POST', contentType: CONTENT_TYPE_MULTIPART));
   }
 
-   put(BuildContext context, url, param) async {
+  put(BuildContext context, url, param) async {
     return await request(context, baseUrl + url, param, null,
         new Options(method: "PUT", contentType: 'text/plain'));
   }
@@ -67,6 +68,7 @@ class Http {
     //没有网络
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
+      Toast.show('网络不可用，请打开网络', context,duration: 10);
       return NETWORK_ERROR;
     }
 
@@ -124,6 +126,7 @@ class Http {
       }
     } on DioError catch (e) {
       // 请求错误处理
+      Toast.show('服务器繁忙', context, duration: 10000);
       Response errorResponse;
       if (e.response != null) {
         errorResponse = e.response;
@@ -141,7 +144,6 @@ class Http {
         print('请求异常: ' + e.toString());
         print('请求异常 url: ' + url);
       }
-      Toast.show('服务器繁忙', context);
       return new HttpException('请求异常');
     }
 

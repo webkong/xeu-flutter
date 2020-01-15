@@ -165,7 +165,7 @@ class _SubMemorabilia extends State<SubMemorabilia>
                               child: CachedNetworkImage(
                                 imageUrl: item.images.length > 0
                                     ? item.images[0]['url']
-                                    : '',
+                                    : 'https://dummyimage.com/300x200/efefef',
                                 placeholder: (context, url) =>
                                     Image.memory(kTransparentImage),
                                 errorWidget: (context, url, error) =>

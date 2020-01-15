@@ -152,7 +152,7 @@ class Avatars {
           FlatButton(
             child: Text('取消'),
             onPressed: () async {
-              _selected = defaultAvatar;
+              _selected = null;
               Navigator.of(context).pop();
             },
           ),

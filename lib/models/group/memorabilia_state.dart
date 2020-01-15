@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xeu/common/config/config.dart';
 import 'package:xeu/models/group/memorabilia.dart';
 import '../../common/utils/http.dart';
 import 'package:http_parser/http_parser.dart';
@@ -89,7 +88,6 @@ class MemorabiliaModel with ChangeNotifier {
   }
 
   Future convertAssetToHttp(asset) async {
-    Dio dio = new Dio();
     ByteData byteData = await asset.getByteData();
     List<int> imageData = byteData.buffer.asUint8List();
     MultipartFile multipartFile = MultipartFile.fromBytes(
@@ -101,8 +99,8 @@ class MemorabiliaModel with ChangeNotifier {
     FormData formData = FormData.fromMap({
       "file": multipartFile,
     });
-    var res = await dio.post(Config.BASE_API_URL + '/upload/file',
-        data: formData, options: Options(contentType: "multipart/form-data"));
+    print('upload file');
+    var res = await Http().file(context, '/upload/file', formData);
     return res.data;
   }
 }

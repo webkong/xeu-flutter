@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/widget/toast.dart';
@@ -27,7 +25,7 @@ class _UserPageState extends State<UserPage>
   _init(UserModel userModel) {
     print('触发 user index 刷新');
     _avatar = _user?.avatar ?? _avatar;
-    _user =  userModel.getUser();
+    _user = userModel.getUser();
     _nickName = _user?.nickName ?? '宝妈or宝爸';
     _nickNameController.text = _user?.nickName ?? _nickName;
     uid = _user.uid;
@@ -113,13 +111,15 @@ class _UserPageState extends State<UserPage>
               onTap: () async {
                 String sA = await Avatars().showSelection(context,
                     defaultAvatar: _avatar, type: 'user');
-                setState(() {
-                  _avatar = sA;
-                });
-                await Http().post(
-                    context, '/user/update', {"u_id": uid, "avatar": _avatar});
-                await Provider.of<UserModel>(context, listen: false)
-                    .fetchUserInfo(context);
+                if (sA != null) {
+                  setState(() {
+                    _avatar = sA;
+                  });
+                  await Http().post(context, '/user/update',
+                      {"u_id": uid, "avatar": _avatar});
+                  await Provider.of<UserModel>(context, listen: false)
+                      .fetchUserInfo(context);
+                }
               },
             ),
           ),

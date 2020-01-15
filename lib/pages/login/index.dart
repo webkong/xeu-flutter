@@ -153,11 +153,11 @@ class _LoginPageState extends State<LoginPage> {
               //TODO 执行登录方法
               var res = await Http().post(context,
                   '/login', {"phone": _phone, "password": _password});
-              if (res.code == 200) {
+              if (res != -1 && res?.code  == 200) {
                 await Global.initLocal(res.data['data']);
                 await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context, hasBaby: true);
                 Navigator.pushReplacementNamed(context, '/home');
-              }
+              }else{}
               print(res);
             }
           },
