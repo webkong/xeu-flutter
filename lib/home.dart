@@ -91,14 +91,21 @@ class _HomePageState extends State<HomePage>
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).accentColor,
+        selectedIconTheme: IconThemeData(color: Colors.white),
+        unselectedIconTheme: IconThemeData(color: Colors.black87),
+        iconSize: 26,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.face),
-            title: Text('Baby'),
+            icon: Icon(
+              Icons.face,
+            ),
+            title: Text('宝宝'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            title: Text('Me'),
+            icon: Icon(
+              Icons.account_circle,
+            ),
+            title: Text('我的'),
           ),
         ],
         currentIndex: _selectedIndex,
@@ -134,7 +141,7 @@ class _HomePageState extends State<HomePage>
             child: Container(
               child: new Icon(
                 _icon,
-                color: Colors.white70,
+                color: Colors.white,
                 size: 30,
               ),
             ),
@@ -150,11 +157,15 @@ class _HomePageState extends State<HomePage>
     return Container(
       height: 120,
       padding: EdgeInsets.all(20),
-//      margin: EdgeInsets.only(bottom: 1),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-          color: Color.fromRGBO(255, 193, 7, 0.7) //ffc107
-          ),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(16)),
+        border: Border.all(
+          color: Theme.of(context).accentColor,
+          width: 1,
+        ),
+        color: Color(0xFFFFC107), //ffc107 255, 193, 7, 0.2
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
