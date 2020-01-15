@@ -1,4 +1,4 @@
-package com.webkong.xeu
+package com.example.xeu
 
 import android.os.Bundle
 
