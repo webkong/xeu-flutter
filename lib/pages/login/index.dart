@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
@@ -16,10 +17,20 @@ class _LoginPageState extends State<LoginPage> {
   String _phone, _password;
   bool _isObscure = true;
   Color _eyeColor;
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
   List _loginMethod = [
     {
       "title": "wechat",
       "icon": GroovinMaterialIcons.wechat,
+    },
+    {
+      "title": "Google",
+      "icon": GroovinMaterialIcons.google,
     }
   ];
 
@@ -28,10 +39,18 @@ class _LoginPageState extends State<LoginPage> {
     print('Running on ${k.model}');
     print(k);
   }
+  Future<void> _handleSignIn() async {
+  try {
+    await _googleSignIn.signIn();
+  } catch (error) {
+    print(error);
+  }
+}
 
   @override
   void initState() {
     _getInfo();
+
     super.initState();
   }
 
@@ -46,26 +65,26 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: kToolbarHeight,
             ),
-            buildTitle(),
-            buildTitleLine(),
+            _buildTitle(),
+            _buildTitleLine(),
             SizedBox(height: 60.0),
-            buildPhoneTextField(),
+            _buildPhoneTextField(),
             SizedBox(height: 30.0),
-            buildPasswordTextField(context),
-            buildForgetPasswordText(context),
+            _buildPasswordTextField(context),
+            _buildForgetPasswordText(context),
             SizedBox(height: 40.0),
-            buildLoginButton(context),
+            _buildLoginButton(context),
             SizedBox(height: 20.0),
-            buildOtherLoginText(),
-            buildOtherMethod(context),
-            buildRegisterText(context),
+            _buildOtherLoginText(),
+            _buildOtherMethod(context),
+            _buildRegisterText(context),
           ],
         ),
       ),
     );
   }
 
-  Align buildRegisterText(BuildContext context) {
+  Widget _buildRegisterText(BuildContext context) {
     return Align(
       alignment: Alignment.center,
       child: Padding(
@@ -90,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  ButtonBar buildOtherMethod(BuildContext context) {
+  ButtonBar _buildOtherMethod(BuildContext context) {
     return ButtonBar(
       alignment: MainAxisAlignment.center,
       children: _loginMethod
@@ -108,6 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {},
                           ),
                         ));
+
+                        if (item['title'] == 'Google') {
+                          _handleSignIn();
+                        }
                       });
                 },
               ))
@@ -115,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Align buildOtherLoginText() {
+  Align _buildOtherLoginText() {
     return Align(
         alignment: Alignment.center,
         child: Text(
@@ -124,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
-  Align buildLoginButton(BuildContext context) {
+  Align _buildLoginButton(BuildContext context) {
     return Align(
       child: SizedBox(
         height: 45.0,
@@ -150,13 +173,14 @@ class _LoginPageState extends State<LoginPage> {
               ///只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
               //TODO 执行登录方法
-              var res = await Http().post(context,
-                  '/login', {"phone": _phone, "password": _password});
-              if (res != -1 && res?.code  == 200) {
+              var res = await Http().post(
+                  context, '/login', {"phone": _phone, "password": _password});
+              if (res != -1 && res?.code == 200) {
                 await Global.initLocal(res.data['data']);
-                await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context, hasBaby: true);
+                await Provider.of<UserModel>(context, listen: false)
+                    .fetchUserInfo(context, hasBaby: true);
                 Navigator.pushReplacementNamed(context, '/home');
-              }else{}
+              } else {}
               print(res);
             }
           },
@@ -167,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Padding buildForgetPasswordText(BuildContext context) {
+  Padding _buildForgetPasswordText(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Align(
@@ -185,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  TextFormField buildPasswordTextField(BuildContext context) {
+  TextFormField _buildPasswordTextField(BuildContext context) {
     return TextFormField(
       onSaved: (String value) => _password = value,
       keyboardType: TextInputType.visiblePassword,
@@ -217,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  TextFormField buildPhoneTextField() {
+  TextFormField _buildPhoneTextField() {
     return TextFormField(
 //      autofocus: true,
       keyboardType: TextInputType.phone,
@@ -238,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Padding buildTitleLine() {
+  Padding _buildTitleLine() {
     return Padding(
       padding: EdgeInsets.only(left: 12.0, top: 4.0),
       child: Align(
@@ -252,7 +276,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Padding buildTitle() {
+  Padding _buildTitle() {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Text(

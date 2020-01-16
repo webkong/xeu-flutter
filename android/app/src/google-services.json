@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "226951702192",
+    "firebase_url": "https://xeubaby-eb919.firebaseio.com",
+    "project_id": "xeubaby-eb919",
+    "storage_bucket": "xeubaby-eb919.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226951702192:android:387fca2b6877f766443d75",
+        "android_client_info": {
+          "package_name": "com.webkong.xeu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226951702192-m5cqv6hklnqjcbna9ghccqaohdqj244h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webkong.xeu",
+            "certificate_hash": "e87cf24f17b5ab8e0c53d10fd8da496d62d35d4b"
+          }
+        },
+        {
+          "client_id": "226951702192-vr2gpn9gt5mo7jv8ql7d178l5pr95akj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApSoVz1DuC5j8RSt8D0BrQKBjkMMHhERs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226951702192-vr2gpn9gt5mo7jv8ql7d178l5pr95akj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
