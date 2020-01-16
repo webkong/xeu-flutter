@@ -43,6 +43,18 @@
             "scale": "3x"
         },
         {
+            "size": "57x57",
+            "idiom": "iphone",
+            "filename": "icon-57.png",
+            "scale": "1x"
+        },
+        {
+            "size": "57x57",
+            "idiom": "iphone",
+            "filename": "icon-57@2x.png",
+            "scale": "2x"
+        },
+        {
             "size": "60x60",
             "idiom": "iphone",
             "filename": "icon-60@2x.png",
@@ -91,6 +103,30 @@
             "scale": "2x"
         },
         {
+            "size": "50x50",
+            "idiom": "ipad",
+            "filename": "icon-50.png",
+            "scale": "1x"
+        },
+        {
+            "size": "50x50",
+            "idiom": "ipad",
+            "filename": "icon-50@2x.png",
+            "scale": "2x"
+        },
+        {
+            "size": "72x72",
+            "idiom": "ipad",
+            "filename": "icon-72.png",
+            "scale": "1x"
+        },
+        {
+            "size": "72x72",
+            "idiom": "ipad",
+            "filename": "icon-72@2x.png",
+            "scale": "2x"
+        },
+        {
             "size": "76x76",
             "idiom": "ipad",
             "filename": "icon-76.png",
@@ -117,6 +153,6 @@
     ],
     "info": {
         "version": 1,
-        "author": "icon.wuruihong.com"
+        "author": "icon.webkong.com"
     }
 }
