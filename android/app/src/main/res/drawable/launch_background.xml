@@ -9,7 +9,4 @@
             android:gravity="center"
             android:src="@mipmap/ic_logo" />
     </item>
-    <item>
-
-    </item>
 </layer-list>
