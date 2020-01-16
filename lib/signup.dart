@@ -11,8 +11,6 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPage extends State<SignUpPage> {
 
-  var _image ;
-
   _getImage()async{
      var image = await MultiImagePicker.pickImages(
       maxImages: 1,
@@ -51,16 +49,16 @@ class _SignUpPage extends State<SignUpPage> {
 
   final cropKey = GlobalKey<CropState>();
 
-  Widget _buildCropImage() {
+//   Widget _buildCropImage() {
 
-    return Container(
-      color: Colors.black,
-      padding: const EdgeInsets.all(20.0),
-      child: Crop(
-        key: cropKey,
-        image: AssetImage('assets/images/01.png'),
-        aspectRatio: 4.0 / 4.0,
-      ),
-    );
-  }
+//     return Container(
+//       color: Colors.black,
+//       padding: const EdgeInsets.all(20.0),
+//       child: Crop(
+//         key: cropKey,
+//         image: AssetImage('assets/images/01.png'),
+//         aspectRatio: 4.0 / 4.0,
+//       ),
+//     );
+//   }
 }

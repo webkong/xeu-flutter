@@ -10,7 +10,6 @@ import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/models/group/memorabilia.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/models/user/baby.dart';
-import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/user_state.dart';
 
 class SubMemorabilia extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:xeu/common/global.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/models/user/user_state.dart';

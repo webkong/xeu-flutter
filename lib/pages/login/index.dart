@@ -4,7 +4,6 @@ import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:xeu/models/device/deviceInfo.dart';
-import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/user_state.dart';
 
 class LoginPage extends StatefulWidget {
