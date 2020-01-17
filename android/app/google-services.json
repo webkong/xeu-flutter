@@ -38,6 +38,13 @@
             {
               "client_id": "226951702192-vr2gpn9gt5mo7jv8ql7d178l5pr95akj.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "226951702192-v6aq5dtdih4smj4qngrvsvecru70mk99.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.webkong.xeu"
+              }
             }
           ]
         }
