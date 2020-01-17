@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
       'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
+      'profile',
     ],
   );
   List _loginMethod = [
@@ -41,7 +41,8 @@ class _LoginPageState extends State<LoginPage> {
   }
   Future<void> _handleSignIn() async {
   try {
-    await _googleSignIn.signIn();
+    var res = await _googleSignIn.signIn();
+    print(res);
   } catch (error) {
     print(error);
   }
@@ -120,13 +121,13 @@ class _LoginPageState extends State<LoginPage> {
                           color: Theme.of(context).iconTheme.color),
                       onPressed: () {
                         //TODO : 第三方登录方法
-                        Scaffold.of(context).showSnackBar(new SnackBar(
-                          content: new Text("${item['title']}登录"),
-                          action: new SnackBarAction(
-                            label: "取消",
-                            onPressed: () {},
-                          ),
-                        ));
+                        // Scaffold.of(context).showSnackBar(new SnackBar(
+                        //   content: new Text("${item['title']}登录"),
+                        //   action: new SnackBarAction(
+                        //     label: "取消",
+                        //     onPressed: () {},
+                        //   ),
+                        // ));
 
                         if (item['title'] == 'Google') {
                           _handleSignIn();
