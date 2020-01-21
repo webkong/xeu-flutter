@@ -126,7 +126,7 @@ class Http {
       }
     } on DioError catch (e) {
       // 请求错误处理
-      Toast.show('服务器繁忙', context, duration: 10000);
+      Toast.show('服务器繁忙', context, duration: 10);
       Response errorResponse;
       if (e.response != null) {
         errorResponse = e.response;

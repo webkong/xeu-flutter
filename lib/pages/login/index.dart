@@ -6,6 +6,7 @@ import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:xeu/models/device/deviceInfo.dart';
 import 'package:xeu/models/user/user_state.dart';
+import 'package:fluwx/fluwx.dart' as WX;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -39,19 +40,42 @@ class _LoginPageState extends State<LoginPage> {
     print('Running on ${k.model}');
     print(k);
   }
-  Future<void> _handleSignIn() async {
-  try {
-    var res = await _googleSignIn.signIn();
-    print(res);
-  } catch (error) {
-    print(error);
+
+  Future<void> _handleGoogleSignIn() async {
+    try {
+      var res = await _googleSignIn.signIn();
+      print(res);
+    } catch (error) {
+      print(error);
+    }
   }
-}
+
+  _handleWxSignIn() async {
+    print('wx');
+    try {
+      var res = await WX.sendWeChatAuth(
+          scope: "snsapi_userinfo", state: "wechat_sdk_demo_test");
+      print(res);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+  _initWX() async {
+    await WX.registerWxApi(
+        appId: "wxd930ea5d5a258f4f",
+        doOnAndroid: true,
+        doOnIOS: true,);
+    var result = await WX.isWeChatInstalled();
+    print("is installed $result");
+  }
+
 
   @override
   void initState() {
     _getInfo();
-
+    _initWX();
     super.initState();
   }
 
@@ -128,9 +152,10 @@ class _LoginPageState extends State<LoginPage> {
                         //     onPressed: () {},
                         //   ),
                         // ));
-
                         if (item['title'] == 'Google') {
-                          _handleSignIn();
+                          _handleGoogleSignIn();
+                        }else if (item['title'] == 'wechat') {
+                          _handleWxSignIn();
                         }
                       });
                 },
@@ -244,7 +269,6 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField _buildPhoneTextField() {
     return TextFormField(
-//      autofocus: true,
       keyboardType: TextInputType.phone,
       initialValue: '18610714908', //:TODO
       decoration: InputDecoration(
