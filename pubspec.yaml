@@ -36,7 +36,6 @@ dependencies:
   transparent_image: ^1.0.0
   image_crop: ^0.3.2
   google_sign_in: ^4.1.1
-  fluwx: ^1.2.1+1
 #  flutter_svg: ^0.15.0
 
 dev_dependencies:

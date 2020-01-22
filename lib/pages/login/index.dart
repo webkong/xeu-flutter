@@ -6,7 +6,7 @@ import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:xeu/models/device/deviceInfo.dart';
 import 'package:xeu/models/user/user_state.dart';
-import 'package:fluwx/fluwx.dart' as WX;
+//import 'package:fluwx/fluwx.dart' as WX;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -53,9 +53,9 @@ class _LoginPageState extends State<LoginPage> {
   _handleWxSignIn() async {
     print('wx');
     try {
-      var res = await WX.sendWeChatAuth(
-          scope: "snsapi_userinfo", state: "wechat_sdk_demo_test");
-      print(res);
+//      var res = await WX.sendWeChatAuth(
+//          scope: "snsapi_userinfo", state: "wechat_sdk_demo_test");
+//      print(res);
     } catch (e) {
       print(e);
     }
@@ -63,12 +63,12 @@ class _LoginPageState extends State<LoginPage> {
 
 
   _initWX() async {
-    await WX.registerWxApi(
-        appId: "wxd930ea5d5a258f4f",
-        doOnAndroid: true,
-        doOnIOS: true,);
-    var result = await WX.isWeChatInstalled();
-    print("is installed $result");
+//    await WX.registerWxApi(
+//        appId: "wxd930ea5d5a258f4f",
+//        doOnAndroid: true,
+//        doOnIOS: true,);
+//    var result = await WX.isWeChatInstalled();
+//    print("is installed $result");
   }
 
 
