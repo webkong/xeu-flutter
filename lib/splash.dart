@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
     if (enable) {
       logger.info('拉取用户信息');
       await Provider.of<UserModel>(context, listen: false)
-          .fetchUserInfo(context);
+          .fetchUserInfo(context, hasBaby: true);
       await Future.delayed(Duration(seconds: 3));
       await Navigator.pushReplacementNamed(context, '/home');
     } else {

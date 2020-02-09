@@ -60,17 +60,18 @@ class UserModel with ChangeNotifier {
 //    String uid = await Memory.get('u_id');
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String uid = _prefs.getString('u_id');
-        logger.info(uid);
+    logger.info(uid);
 
     var res = await Http().get(context, '/user/info', {"u_id": uid});
+
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);
+      await this.setUser(data);
       if (hasBaby) {
         // 如果是更新宝宝信息
         this.setDefaultBaby();
       }
       await Global.initMemory(user: data);
-      await this.setUser(data);
       return true;
     } else {
       Toast.show('服务器繁忙', context, duration: 10000);

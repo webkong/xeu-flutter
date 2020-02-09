@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/widget/avatar.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/models/user/baby.dart';
@@ -19,24 +20,11 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
   Baby _baby = Baby();
   String _babyAvatar = Avatars.avatar;
-  _init() async {
-    List babies =
-        await Provider.of<UserModel>(context, listen: false).getBabies();
-    if (babies.length == 0) {
-      _showTip();
-    } else {
-      _baby = Baby();
-    }
-    setState(() {
-      _babyAvatar = _baby?.avatar ?? _babyAvatar;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: choices.length);
-//    _init();
   }
 
   @override
@@ -65,10 +53,12 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
                       builder: (BuildContext context, UserModel userModel, _) {
                         print('触发 group index 刷新');
                         List babies = userModel.getBabies();
+                        logger.info(babies);
                         if (babies.length == 0) {
                           _showTip();
                         } else {
                           _baby = userModel.getDefaultBaby();
+                          logger.info(_baby.toJson());
                         }
                         String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
                         return Image(image: AssetImage(_babyAvatar));
