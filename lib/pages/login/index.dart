@@ -38,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
   _getInfo() async {
     var k = await DeviceInfo.get();
     print('Running on ${k.model}');
-    print(k);
   }
 
   Future<void> _handleGoogleSignIn() async {
@@ -202,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
               var res = await Http().post(
                   context, '/login', {"phone": _phone, "password": _password});
               if (res != -1 && res?.code == 200) {
-                await Global.initLocal(res.data['data']);
+                await Global.flashLoginData(login: res.data['data']);
                 await Provider.of<UserModel>(context, listen: false)
                     .fetchUserInfo(context, hasBaby: true);
                 Navigator.pushReplacementNamed(context, '/home');

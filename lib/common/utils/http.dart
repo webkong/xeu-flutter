@@ -68,7 +68,7 @@ class Http {
     //没有网络
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      Toast.show('网络不可用，请打开网络', context,duration: 10);
+      Toast.show('网络不可用，请打开网络', context, duration: 10);
       return NETWORK_ERROR;
     }
 
@@ -126,7 +126,7 @@ class Http {
       }
     } on DioError catch (e) {
       // 请求错误处理
-      Toast.show('服务器繁忙', context, duration: 10);
+
       Response errorResponse;
       if (e.response != null) {
         errorResponse = e.response;
@@ -134,9 +134,14 @@ class Http {
         errorResponse = new Response(statusCode: 666);
       }
       if (errorResponse.statusCode == 401) {
-        Global().unAuth(context);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/login',
+          (Route<dynamic> route) => false,
+        );
         return new HttpException('未授权');
       }
+      Toast.show('服务器繁忙', context, duration: 10);
       if (e.type == DioErrorType.CONNECT_TIMEOUT) {
         errorResponse.statusCode = NETWORK_TIMEOUT;
       }
@@ -150,7 +155,7 @@ class Http {
     try {
       var responseJson = response.data;
       if (response.statusCode == 201 && responseJson["data"]["token"] != null) {
-        print('set authorization');
+        print('Http set authorization: ' + responseJson["data"]["token"]);
         optionParams["authorization"] =
             'Bearer ' + responseJson["data"]["token"];
       }
@@ -172,7 +177,10 @@ class Http {
   }
 
   ///获取授权token
-  static getAuthorization() async {}
+  static setAuthorization(token) async {
+    print('setAuthorization' + token);
+    optionParams["authorization"] = 'Bearer ' + token;
+  }
 }
 
 /// 网络结果数据

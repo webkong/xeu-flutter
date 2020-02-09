@@ -58,7 +58,7 @@ class _UserPageState extends State<UserPage>
               flex: 4,
               child: Column(
                 children: <Widget>[
-                  Consumer(
+                  Consumer<UserModel>(
                       builder: (BuildContext context, UserModel userModel, _) {
                     _init(userModel);
                     return _buildUserBar(context);

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xeu/common/global.dart';
 import 'package:xeu/pages/group/index.dart';
 import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
@@ -67,13 +66,11 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    Global().check(context);
 //    _initAnimation();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 //    _controller?.dispose();
   }
@@ -158,8 +155,7 @@ class _HomePageState extends State<HomePage>
       height: 120,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(
-            top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         border: Border.all(
           color: Theme.of(context).accentColor,
           width: 1,
