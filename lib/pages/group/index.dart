@@ -36,7 +36,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: choices.length);
-    _init();
+//    _init();
   }
 
   @override
@@ -61,21 +61,19 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
                 padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                 child: GestureDetector(
                   child: CircleAvatar(
-//                    child: Consumer<UserModel>(
-////                      builder: (BuildContext context, UserModel userModel, _) {
-////                        print('触发 group index 刷新');
-////                        List babies = userModel.getBabies();
-////                        if (babies.length == 0) {
-////                          _showTip();
-////                        } else {
-////                          _baby = userModel.getDefaultBaby();
-////                        }
-////                        String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
-////                        return Image(image: AssetImage(_babyAvatar));
-////                      },
-////                    ),
-
-                    child: Image.asset(_babyAvatar),
+                    child: Consumer<UserModel>(
+                      builder: (BuildContext context, UserModel userModel, _) {
+                        print('触发 group index 刷新');
+                        List babies = userModel.getBabies();
+                        if (babies.length == 0) {
+                          _showTip();
+                        } else {
+                          _baby = userModel.getDefaultBaby();
+                        }
+                        String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
+                        return Image(image: AssetImage(_babyAvatar));
+                      },
+                    ),
                   ),
                   onTap: () async {
 //              await _pushToBabyPage();

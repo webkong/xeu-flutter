@@ -57,7 +57,11 @@ class UserModel with ChangeNotifier {
   }
 
   fetchUserInfo(context, {hasBaby = false}) async {
-    String uid = Memory.get('u_id');
+//    String uid = await Memory.get('u_id');
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String uid = _prefs.getString('u_id');
+        logger.info(uid);
+
     var res = await Http().get(context, '/user/info', {"u_id": uid});
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);

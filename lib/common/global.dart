@@ -1,20 +1,25 @@
 import 'dart:convert';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/utils/memory.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/common/utils/sqflite.dart';
 
 class Global {
   // 每次登录检查登录状态
-   check() async {
-    String token = Memory.get('token') ?? await DB().query('token');
-    String uid =  Memory.get('u_id') ?? await DB().query('u_id');
-    print(token);
-    print(uid);
-    if(token != null){
-          await Http.setAuthorization(token);
+  check() async {
+    bool enable = false;
+    String token = await Memory.get('token') ?? await DB().query('token');
+    String uid = await Memory.get('u_id') ?? await DB().query('u_id');
+
+    if (token != null && uid != null) {
+      await Http.setAuthorization(token);
+      print(token);
+      print(uid);
+      await Global.initMemory(login: {'token': token, '_id': uid});
+      enable = true;
     }
-    return  {'token': token, 'u_id': uid};
+    return enable;
   }
 
   static clear() async {
@@ -25,8 +30,10 @@ class Global {
   // 设置内存
   static initMemory({Map login, User user}) async {
     if (login != null) {
-      await Memory.insert('token', login['token']);
-      await Memory.insert('u_id', login['_id']);
+      var res = await Memory.insert('token', login['token']);
+      logger.info(res);
+      var res2 = await Memory.insert('u_id', login['_id']);
+      logger.info(res2);
     }
     if (user != null) {
       await Memory.insert('user', json.encode(user));
@@ -48,7 +55,7 @@ class Global {
 
   // 存储登陆信息
   static flashLoginData({Map login}) async {
-    print('flash data : ' );
+    print('flash data : ');
     print(login.toString());
     await initMemory(login: login);
     await initLocalDB(login: login);

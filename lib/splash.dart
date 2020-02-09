@@ -17,8 +17,8 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   _init() async {
     await Memory().init();
-    Map loginInfo = await Global().check(); //查看登录信息是否过期
-    if (loginInfo['token'] != null && loginInfo['u_id'] !=null) {
+    bool enable = await Global().check(); //查看登录信息是否过期
+    if (enable) {
       logger.info('拉取用户信息');
       await Provider.of<UserModel>(context, listen: false)
           .fetchUserInfo(context);

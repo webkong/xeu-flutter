@@ -1,24 +1,32 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/main.dart';
 
 class Memory {
   static SharedPreferences _prefs;
 
   init() async {
     _prefs = await SharedPreferences.getInstance();
+    return _prefs;
   }
 
   static clear() async {
     if (_prefs == null) {
       _prefs = await SharedPreferences.getInstance();
     }
-    await _prefs.clear();
+    return await _prefs.clear();
   }
 
   static insert(key, value) async {
-    await _prefs.setString(key, value);
+    if (_prefs == null) {
+      _prefs = await SharedPreferences.getInstance();
+    }
+    return await _prefs.setString(key, value);
   }
 
-  static get(key) {
+  static get(key) async{
+    if (_prefs == null) {
+      _prefs = await SharedPreferences.getInstance();
+    }
     return _prefs.getString(key);
   }
 }
