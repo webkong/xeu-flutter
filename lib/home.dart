@@ -6,7 +6,6 @@ import 'package:xeu/pages/group/new_memorabilia.dart';
 import 'package:xeu/pages/group/new_record.dart';
 import 'package:xeu/pages/user/index.dart';
 import 'UIOverlay/slideTopRoute.dart';
-import 'common/utils/adapt.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -77,7 +76,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    Adapt.init(context);
+
     return Scaffold(
       body: Center(
 //        child: _pages.elementAt(_selectedIndex),
