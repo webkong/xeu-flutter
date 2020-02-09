@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/widget/toast.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/user_state.dart';
 
@@ -26,6 +27,7 @@ class _UserPageState extends State<UserPage>
     print('触发 user index 刷新');
     _avatar = _user?.avatar ?? _avatar;
     _user = userModel.getUser();
+    logger.info(_user.toJson());
     _nickName = _user?.nickName ?? '宝妈or宝爸';
     _nickNameController.text = _user?.nickName ?? _nickName;
     uid = _user.uid;

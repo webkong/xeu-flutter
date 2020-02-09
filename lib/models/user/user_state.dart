@@ -4,25 +4,27 @@ import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/widget/toast.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/baby.dart';
 
 class UserModel with ChangeNotifier {
-  static User user = User();
+  User user = User();
   Baby defaultBaby = Baby();
-  static List babies = [];
+  List babies = [];
 
   getUser() {
-    return user;
+    return this.user;
   }
 
   getBabies() {
-    return user?.babies ?? [];
+    return this.user?.babies ?? [];
   }
 
   setUser(User user, {notify = true}) async {
     print('set user ');
-    user = user;
+    logger.info(user.toJson());
+    this.user = user;
     if (notify) {
       notifyListeners();
     }
@@ -59,12 +61,12 @@ class UserModel with ChangeNotifier {
     var res = await Http().get(context, '/user/info', {"u_id": uid});
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);
-      this.setUser(data);
       if (hasBaby) {
         // 如果是更新宝宝信息
         this.setDefaultBaby();
       }
       await Global.initMemory(user: data);
+      await this.setUser(data);
       return true;
     } else {
       Toast.show('服务器繁忙', context, duration: 10000);
