@@ -35,67 +35,55 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => MemorabiliaModel()),
-        ChangeNotifierProvider(create: (_) => RecordModel()),
-      ],
-      child: Consumer3(
-        builder: (BuildContext context, MemorabiliaModel memorabiliaModel,
-            RecordModel recordModel, UserModel userModel, _) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: Container(
-                padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
-                child: GestureDetector(
-                  child: CircleAvatar(
-                    child: Consumer<UserModel>(
-                      builder: (BuildContext context, UserModel userModel, _) {
-                        print('触发 group index 刷新');
-                        List babies = userModel.getBabies();
-                        logger.info(babies);
-                        if (babies.length == 0) {
-                          _showTip();
-                        } else {
-                          _baby = userModel.getDefaultBaby();
-                          logger.info(_baby.toJson());
-                        }
-                        String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
-                        return Image(image: AssetImage(_babyAvatar));
-                      },
-                    ),
-                  ),
-                  onTap: () async {
-//              await _pushToBabyPage();
-                    await _pushToBabyListPage();
-                  },
-                ),
-              ),
-              title: Text('宝宝记录'),
-              bottom: new TabBar(
-                controller: _tabController,
-                tabs: choices.map((Choice choice) {
-                  return new Tab(
-                    text: choice.title,
-//              icon: new Icon(choice.icon),
-                  );
-                }).toList(),
-              ),
-            ),
-            backgroundColor: Colors.white,
-            body: new TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(), //TODO:禁止左右滑动
-              children: choices.map(
-                (Choice choice) {
-                  return new Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: choicePage(choice));
+    return Scaffold(
+      appBar: AppBar(
+        leading: Container(
+          padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
+          child: GestureDetector(
+            child: CircleAvatar(
+              child: Consumer<UserModel>(
+                builder: (BuildContext context, UserModel userModel, _) {
+                  print('触发 group index 刷新');
+                  List babies = userModel.getBabies();
+                  logger.info(babies);
+                  if (babies.length == 0) {
+                    _showTip();
+                  } else {
+                    _baby = userModel.getDefaultBaby();
+                    logger.info(_baby.toJson());
+                  }
+                  String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
+                  return Image(image: AssetImage(_babyAvatar));
                 },
-              ).toList(),
+              ),
             ),
-          );
-        },
+            onTap: () async {
+//              await _pushToBabyPage();
+              await _pushToBabyListPage();
+            },
+          ),
+        ),
+        title: Text('宝宝记录'),
+        bottom: new TabBar(
+          controller: _tabController,
+          tabs: choices.map((Choice choice) {
+            return new Tab(
+              text: choice.title,
+//              icon: new Icon(choice.icon),
+            );
+          }).toList(),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      body: new TabBarView(
+        controller: _tabController,
+        physics: NeverScrollableScrollPhysics(), //TODO:禁止左右滑动
+        children: choices.map(
+          (Choice choice) {
+            return new Padding(
+                padding: const EdgeInsets.all(8.0), child: choicePage(choice));
+          },
+        ).toList(),
       ),
     );
   }
