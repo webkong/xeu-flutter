@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/main.dart';
-import 'package:xeu/models/group/memorabilia_state.dart';
-import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
-import 'package:xeu/pages/group/sub_record.dart';
 import 'package:xeu/pages/group/sub_record_detail.dart';
 
 class GroupPage extends StatefulWidget {

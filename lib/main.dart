@@ -14,7 +14,6 @@ import 'package:xeu/pages/user/index.dart';
 import 'package:xeu/signup.dart';
 import 'package:xeu/splash.dart';
 import 'package:simple_logger/simple_logger.dart';
-
 import 'models/group/memorabilia_state.dart';
 import 'models/group/record_state.dart';
 final logger = SimpleLogger();

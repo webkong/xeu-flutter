@@ -8,7 +8,6 @@ import 'package:xeu/models/group/memorabilia.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
-import 'package:xeu/models/user/user_state.dart';
 
 class MemorabiliaDetail extends StatefulWidget {
   @override
