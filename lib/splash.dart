@@ -22,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
       await Provider.of<UserModel>(context, listen: false)
           .fetchUserInfo(context, hasBaby: true);
     } else {
-      await Navigator.pushNamed(context, '/login');
+      await Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
@@ -45,16 +45,11 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     Adapt.init(context);
-// var container = ContainerPage();
 
     bool showAd = true;
     print('build splash');
     return Stack(
       children: <Widget>[
-//        Offstage(
-//          child: container,
-//          offstage: showAd,
-//        ),
         Offstage(
           child: Container(
             color: Colors.white,
@@ -121,7 +116,7 @@ class _SplashPageState extends State<SplashPage> {
                             child: Text(
                               'Hi,西柚',
                               style: TextStyle(
-                                  color: Colors.green,
+                                  color: Colors.black,
                                   fontSize: 30.0,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -167,20 +162,21 @@ class _CountDownWidgetState extends State<CountDownWidget> {
   Widget build(BuildContext context) {
     return Text(
       '$_seconds',
-      style: TextStyle(fontSize: 17.0),
+      style: TextStyle(fontSize: 17.0, color: Theme.of(context).accentColor),
     );
   }
 
   /// 启动倒计时的计时器。
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {});
+      setState(() {
+        _seconds--;
+      });
       if (_seconds <= 1) {
         widget.onCountDownFinishCallBack(true);
         _cancelTimer();
         return;
       }
-      _seconds--;
     });
   }
 
