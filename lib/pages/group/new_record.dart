@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/widget/datePicker.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
@@ -58,12 +58,13 @@ class _NewRecord extends State<NewRecord> {
                 if (_formRecord.currentState.validate()) {
                   Toast.show('保存成功', context);
                   _formRecord.currentState.save();
-                  SharedPreferences pres =
-                      await SharedPreferences.getInstance();
-                  String uid = pres.getString('u_id');
+
+                  String uid = await Memory.get('u_id');
+                  String bid = await Memory.get('b_id');
                   Map<String, dynamic> params = Map.from(data);
                   params['u_id'] = uid;
-                  var res = await Http().post(context,'/record/new', params);
+                  params['b_id'] = bid;
+                  var res = await Http().post(context, '/record/new', params);
                   if (res.code == 200) {
                     Provider.of<RecordModel>(context, listen: false)
                         .add(params);

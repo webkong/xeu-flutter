@@ -2,9 +2,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:xeu/common/constant/chart/index.dart';
+import 'package:xeu/main.dart';
 
 class TrendChart extends StatelessWidget {
-  TrendChart({Key key, this.tag, this.data, this.displayName = '', this.xAxis = '(单位：月)', this.yAxis=''})
+  TrendChart(
+      {Key key,
+      this.tag,
+      this.data,
+      this.displayName = '',
+      this.xAxis = '(单位：月)',
+      this.yAxis = ''})
       : super(key: key);
 
   final List data;
@@ -24,12 +31,18 @@ class TrendChart extends StatelessWidget {
           child: Text(this.displayName),
         ),
         Positioned(
-          child: Text(this.yAxis, style: TextStyle(color: Colors.lightBlue, fontSize: 12),),
+          child: Text(
+            this.yAxis,
+            style: TextStyle(color: Colors.lightBlue, fontSize: 12),
+          ),
           top: 0,
           left: 0,
         ),
         Positioned(
-          child: Text(this.xAxis,style: TextStyle(color: Colors.lightBlue, fontSize: 12),),
+          child: Text(
+            this.xAxis,
+            style: TextStyle(color: Colors.lightBlue, fontSize: 12),
+          ),
           bottom: 0,
           right: 0,
         ),
@@ -90,21 +103,19 @@ Widget _generateChart(String tag, List list) {
       defaultRenderer: new charts.LineRendererConfig(
 //        includeArea: true,
 //        stacked: true,
-      ),
+          ),
       customSeriesRenderers: [
         new charts.LineRendererConfig(
-          customRendererId: 'customPoint',
-          includeArea: false,
-          includePoints: true
-        ),
+            customRendererId: 'customPoint',
+            includeArea: false,
+            includePoints: true),
         new charts.LineRendererConfig(
           customRendererId: 'low',
           includeArea: true,
           stacked: false,
-        ), new charts.LineRendererConfig(
-          customRendererId: 'high',
-          includeArea: true
         ),
+        new charts.LineRendererConfig(
+            customRendererId: 'high', includeArea: true),
       ],
       behaviors: [
         new charts.PanBehavior(),
@@ -125,7 +136,8 @@ Widget _generateChart(String tag, List list) {
 List<charts.Series<LinearSales, double>> _createSampleData(
     String tag, List list) {
   Map defaultData = BodyConstants.getByTag(tag);
-
+  logger.info(tag);
+  logger.info(list);
   Map seriesMap = generateLine(list, defaultData);
 
   return [
@@ -163,17 +175,19 @@ List<charts.Series<LinearSales, double>> _createSampleData(
 }
 
 Map generateLine(List list, Map defaultMap) {
-  print(list);
+  logger.info(list);
   List<LinearSales> _list = [];
   List<LinearSales> _minList = [];
   List<LinearSales> _maxList = [];
-  for (int i = 0; i < min(list.length, 35); i++) {
-//    _list.add(LinearSales(defaultX[i], list[i]));
+  for (int i = 0; i < list.length; i++) {
     _list.add(LinearSales(double.parse(list[i][0].toString()),
         double.parse(list[i][1].toString())));
+  }
+  for (int i = 0; i < 35; i++) {
     _minList.add(LinearSales(defaultX[i], defaultMap['min'][i]));
     _maxList.add(LinearSales(defaultX[i], defaultMap['max'][i]));
   }
+  logger.info({"max": _maxList, "min": _minList, "data": _list});
   return {"max": _maxList, "min": _minList, "data": _list};
 }
 
@@ -183,4 +197,8 @@ class LinearSales {
   final double sales;
 
   LinearSales(this.mouth, this.sales);
+
+  toJson(LinearSales linearSales) {
+    return {'mouth': linearSales.mouth, 'sales': linearSales.sales};
+  }
 }

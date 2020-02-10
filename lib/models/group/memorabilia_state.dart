@@ -22,6 +22,10 @@ class MemorabiliaModel with ChangeNotifier {
   int isDone() {
     return _taskStatus;
   }
+  void del() async{
+    _taskStatus = 3;
+    notifyListeners();
+  }
 
   void add(context, item) async{
     this.context = context;
@@ -59,13 +63,8 @@ class MemorabiliaModel with ChangeNotifier {
       _succeedTasks.add(_tasks.removeAt(0));
       // 根据任务情况查看
       if (_tasks.length == 0) {
-        print('set _stat');
         _taskStatus = 3;
-        print('notify start');
         notifyListeners();
-        print('notify end');
-//        init();
-        print('init ');
       } else {
         _upload();
       }
@@ -84,7 +83,7 @@ class MemorabiliaModel with ChangeNotifier {
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
     return Http().post(context, '/memorabilia/update',
-        {"u_id": item.uid, "m_id": item.mid, "images": images});
+        {"u_id": item.uid, 'b_id':item.bid, "m_id": item.mid, "images": images});
   }
 
   Future convertAssetToHttp(asset) async {

@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/widget/ContentLoadStatus.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/models/group/memorabilia.dart';
 import 'package:xeu/common/utils/http.dart';
@@ -28,8 +28,7 @@ class _SubMemorabilia extends State<SubMemorabilia>
   bool _pullData = false;
   String bid;
   _getList() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    String uid = pres.getString("u_id");
+    String uid = await Memory.get('u_id');
     var response = await Http()
         .get(context, '/memorabilia/list', {"u_id": uid, "b_id": bid});
     if (response == -1) {
@@ -42,6 +41,8 @@ class _SubMemorabilia extends State<SubMemorabilia>
       setState(() {
         var list = generateItems(response.data['data']['list']);
         if (list.length == 0) {
+          _memorabiliaList = list;
+          _pullData = false;
           _contentLoad = ContentLoadStatus(
             flag: 'noContent',
           );

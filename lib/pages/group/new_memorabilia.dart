@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/utils/memory.dart';
+import 'package:xeu/home.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/group/memorabilia.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
@@ -20,6 +22,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
   String _description, _title, _tag;
   String prefix = '第一次';
   List<Asset> _photoList = List<Asset>();
+
   @override
   void initState() {
     super.initState();
@@ -39,23 +42,24 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                   _formMemorabilia.currentState.save();
 
                   if (_photoList.isNotEmpty) {
-                    SharedPreferences pres =
-                        await SharedPreferences.getInstance();
-                    String uid = pres.getString('u_id');
+                    String uid = await Memory.get('u_id');
+                    String bid = await Memory.get('b_id');
+                    logger.info(bid);
                     //TODO 先存储record记录，然后再更新images字段。
                     var res = await Http().post(context, '/memorabilia/new', {
                       "u_id": uid,
+                      "b_id": bid,
                       "title": _title,
                       "description": _description
                     });
                     print('020202020202020202');
                     if (res.code == 200) {
                       var data = res.data['data'];
-                      var item = save(uid, data['_id']);
+                      var item = save(uid, bid, data['_id']);
                       Toast.show('保存成功,等待文件上传', context);
                       Provider.of<MemorabiliaModel>(context, listen: false)
-                          .add(context,item);
-                      Navigator.of(context).pop();
+                          .add(context, item);
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> HomePage()));
                     }
                   } else {
                     showDialog(
@@ -222,7 +226,6 @@ class _NewMemorabilia extends State<NewMemorabilia> {
         selectCircleStrokeColor: "#FFFFFF",
         selectionLimitReachedText: "You can't select any more.",
       ),
-
     );
     if (!mounted) return;
     setState(() {
@@ -263,12 +266,13 @@ class _NewMemorabilia extends State<NewMemorabilia> {
     );
   }
 
-  save(uid, mid) {
+  save(uid, bid, mid) {
     print("tiltle: $_title, description: $_description, ");
     print("images: $_photoList");
     return new Memorabilia(
         uid: uid,
         mid: mid,
+        bid: bid,
         title: _title,
         description: _description,
         images: _photoList,

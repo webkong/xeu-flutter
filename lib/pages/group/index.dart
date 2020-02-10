@@ -8,6 +8,7 @@ import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/group/sub_memorabilia.dart';
 import 'package:xeu/pages/group/sub_record.dart';
+import 'package:xeu/pages/group/sub_record_detail.dart';
 
 class GroupPage extends StatefulWidget {
   @override
@@ -24,7 +25,8 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: choices.length);
+    _tabController = new TabController(
+        vsync: this, length: choices.length, initialIndex: 0);
   }
 
   @override
@@ -147,7 +149,7 @@ const List<Choice> choices = const <Choice>[
 choicePage(Choice choice) {
   switch (choice.view) {
     case 'recordList':
-      return SubRecordList();
+      return SubRecordListDetail();
       break;
     case 'memorabilia':
       return SubMemorabilia();

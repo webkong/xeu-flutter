@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/ContentLoadStatus.dart';
 import 'package:xeu/common/widget/chart.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/models/group/record.dart';
 import 'package:xeu/common/utils/http.dart';
+import 'package:xeu/models/user/baby.dart';
+import 'package:xeu/models/user/user_state.dart';
 
 class SubRecordList extends StatefulWidget {
   @override
@@ -23,16 +25,16 @@ class _SubRecordList extends State<SubRecordList>
     "weight": [],
     "head": [],
   };
-  String uid;
   bool showLoading = true;
   Widget _contentLoad = ContentLoadStatus(
     flag: 'loading',
   );
   bool _pullData = false;
   _getList() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    uid = pres.getString('u_id');
-    var response = await Http().get(context,"/record/list", {"u_id": uid});
+    String uid = await Memory.get('u_id');
+    String bid = await Memory.get('b_id');
+    var response =
+        await Http().get(context, "/record/list", {"u_id": uid, 'b_id': bid});
 
     if (response == -1) {
       print(response);
@@ -69,6 +71,16 @@ class _SubRecordList extends State<SubRecordList>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('趋势图'),
+      ),
+      body: _buildContext(context),
+    );
+  }
+
+  Widget _buildContext(BuildContext context) {
     if (!_pullData) {
       return _contentLoad;
     } else {
@@ -100,7 +112,7 @@ class _SubRecordList extends State<SubRecordList>
           yAxis: '（单位：Kg）',
         ),
 //TODO: 头围相关
-      //TODO：删除， 列表，record
+        //TODO：删除， 列表，record
 //        TrendChart(
 //          tag: 'boyHead',
 //          data: chartsMapData['head'],
@@ -113,6 +125,8 @@ class _SubRecordList extends State<SubRecordList>
 
   // 构建Record List数据
   List<Record> _generateList(List array) {
+    Baby _baby = Provider.of<UserModel>(context, listen: false).getDefaultBaby();
+    int birthday = _baby.birthday;
     List<Record> _list = [];
     Map<String, List> _map = {
       "height": [],
@@ -122,15 +136,14 @@ class _SubRecordList extends State<SubRecordList>
     if (array.length == 0) return _list;
     print(array);
     array.forEach((elem) {
-
       print(elem);
       Record r = Record.fromJson(elem);
 
       print(r.toJson());
       _list.add(r);
-      _map['height'].add([Tools.getMouth( 1554817018000,r.date), r.height]);
-      _map['weight'].add([Tools.getMouth(1554817018000,r.date), r.weight]);
-      _map['head'].add([Tools.getMouth( 1554817018000,r.date), r.head]);
+      _map['height'].add([Tools.getMouth(birthday, r.date), r.height]);
+      _map['weight'].add([Tools.getMouth(birthday, r.date), r.weight]);
+      _map['head'].add([Tools.getMouth(birthday, r.date), r.head]);
     });
     setState(() {
       print(_map);

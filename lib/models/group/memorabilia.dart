@@ -2,6 +2,7 @@ class Memorabilia {
   Memorabilia(
       {this.uid,
       this.mid,
+      this.bid,
       this.date,
       this.title,
       this.description,
@@ -11,6 +12,7 @@ class Memorabilia {
       this.location = ''});
   String uid;
   String mid;
+  String bid;
   num date;
   String title;
   String description;
@@ -26,6 +28,7 @@ class Memorabilia {
 Memorabilia _$MemorabiliaFromJson(Map<String, dynamic> json) {
   return Memorabilia(
     uid: json['u_id'] as String,
+    bid: json['b_id'] as String,
     mid: json['_id'] as String,
     date: DateTime.parse(json['create_at']).millisecondsSinceEpoch,
     title: json['title'] as String,
@@ -40,6 +43,7 @@ Memorabilia _$MemorabiliaFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$MemorabiliaToJson(Memorabilia instance) =>
     <String, dynamic>{
       'u_id': instance.uid,
+      'b_id': instance.bid,
       '_id': instance.mid,
       'title': instance.title,
       'description': instance.description,

@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/utils/http.dart';
+import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/models/user/baby.dart';
-import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/baby/detail.dart';
 
@@ -22,7 +22,8 @@ class BabyPage extends StatefulWidget {
 
 class _BabyPageState extends State<BabyPage> {
   List _babies = [];
-  String _defaultBaby;
+  String _defaultBabyId;
+
   @override
   void initState() {
     super.initState();
@@ -36,8 +37,10 @@ class _BabyPageState extends State<BabyPage> {
   @override
   Widget build(BuildContext context) {
     _babies = Provider.of<UserModel>(context, listen: false).getBabies();
-    User user = Provider.of<UserModel>(context, listen: false).getUser();
-    _defaultBaby = user.defaultBaby;
+    Baby _baby = Provider.of<UserModel>(context, listen: false).getDefaultBaby();
+    setState(() {
+      _defaultBabyId = _baby.bid;
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +136,7 @@ class _BabyPageState extends State<BabyPage> {
       margin: EdgeInsets.only(top: 8),
       child: Container(
         child: ListTile(
-          selected: _defaultBaby == _baby.bid,
+          selected: _defaultBabyId == _baby.bid,
           contentPadding:
               EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
           leading: Container(
@@ -173,29 +176,30 @@ class _BabyPageState extends State<BabyPage> {
           },
           onLongPress: () async {
             await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SimpleDialog(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text('设为默认'),
-                        onTap: () {
-                          _setDefaultBaby(_baby);
-                        },
-                      ),
-                      Container(
-                        height: Adapt.px(1),
-                        color: Colors.grey,
-                      ),
-                      ListTile(
-                        title: Text('删除宝宝'),
-                        onTap: () {
-                          _deleteBaby(context, _baby, index);
-                        },
-                      ),
-                    ],
-                  );
-                });
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('设为默认'),
+                      onTap: () {
+                        _setDefaultBaby(_baby);
+                      },
+                    ),
+                    Container(
+                      height: Adapt.px(1),
+                      color: Colors.grey,
+                    ),
+                    ListTile(
+                      title: Text('删除宝宝'),
+                      onTap: () {
+                        _deleteBaby(context, _baby, index);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
       ),
@@ -205,8 +209,11 @@ class _BabyPageState extends State<BabyPage> {
   _setDefaultBaby(Baby baby) async {
     await Http().post(
         context, '/user/update', {"u_id": baby.uid, "default_baby": baby.bid});
-    await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context);
-    await Provider.of<UserModel>(context,listen: false).setDefaultBaby();
+    await Provider.of<UserModel>(context, listen: false)
+        .fetchUserInfo(context, hasBaby: true);
+    setState(() {
+      _defaultBabyId = baby.bid;
+    });
     Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
   }
 
@@ -236,12 +243,12 @@ class _BabyPageState extends State<BabyPage> {
                   await Http().post(context, '/baby/del',
                       {"u_id": _baby.uid, "b_id": _baby.bid});
                   await Provider.of<UserModel>(context, listen: false)
-                      .fetchUserInfo(context);
+                      .fetchUserInfo(context, hasBaby: true);
                   Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
                 },
               ),
             ],
           );
-        });
+        },);
   }
 }

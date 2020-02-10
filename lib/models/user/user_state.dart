@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/global.dart';
@@ -51,6 +53,8 @@ class UserModel with ChangeNotifier {
 
     print(this.defaultBaby);
     print(notify);
+    //将默认baby放到内存
+    Memory.insert('b_id', this.defaultBaby.bid);
     if (notify) {
       notifyListeners();
     }
