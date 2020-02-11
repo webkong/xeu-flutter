@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/group/memorabilia.dart';
 import '../../common/utils/http.dart';
 import 'package:http_parser/http_parser.dart';
@@ -22,12 +25,13 @@ class MemorabiliaModel with ChangeNotifier {
   int isDone() {
     return _taskStatus;
   }
-  void del() async{
+
+  void del() async {
     _taskStatus = 3;
     notifyListeners();
   }
 
-  void add(context, item) async{
+  void add(context, item) async {
     this.context = context;
     print(' into add ...............`');
     print(item);
@@ -56,7 +60,7 @@ class MemorabiliaModel with ChangeNotifier {
     }
     try {
       var list = await Future.wait(files);
-      var res = await _updateMemorabilia( list, item);
+      var res = await _updateMemorabilia(list, item);
       print(res);
       //TODO：上传失败
       // 删除数组中的上传完毕的内容,并添加success list
@@ -82,25 +86,48 @@ class MemorabiliaModel with ChangeNotifier {
     print('更新记录');
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
-    return Http().post(context, '/memorabilia/update',
-        {"u_id": item.uid, 'b_id':item.bid, "m_id": item.mid, "images": images});
+    return Http().post(context, '/memorabilia/update', {
+      "u_id": item.uid,
+      'b_id': item.bid,
+      "m_id": item.mid,
+      "images": images
+    });
   }
 
-  Future convertAssetToHttp(asset) async {
+  Future convertAssetToHttp(Asset asset) async {
+    String name =  asset.name;
+    String suffix = name.split('.').removeLast();
+    logger.info(name);
+    logger.info(suffix);
+//    logger.info(asset.identifier);
+//    logger.info(await asset.metadata);
     ByteData byteData = await asset.getByteData();
-    List<int> imageData = byteData.buffer.asUint8List();
-    MultipartFile multipartFile = MultipartFile.fromBytes(
-      imageData,
-      filename: 'file.jpg',
-      contentType: MediaType("image", "jpg"),
-    );
-    print('multipartFile $multipartFile');
-    FormData formData = FormData.fromMap({
-      "file": multipartFile,
-    });
-    print('upload file');
-    var res = await Http().file(context, '/upload/file', formData);
-    return res.data;
+    List<int> imageDataList = byteData.buffer.asUint8List();
+    try {
+      List<int> imageData = await FlutterImageCompress.compressWithList(
+        imageDataList,
+//      minHeight: 1920,
+//      minWidth: 1080,
+        quality: 80,
+//      rotate: 180,
+      );
+      logger.info(imageData);
+
+      MultipartFile multipartFile = MultipartFile.fromBytes(
+        imageData,
+        filename: name,
+        contentType: MediaType("image", suffix),
+      );
+      print('multipartFile $multipartFile');
+      FormData formData = FormData.fromMap({
+        "file": multipartFile,
+      });
+      print('upload file');
+      var res = await Http().file(context, '/upload/file', formData);
+      return res.data;
+    } catch (e) {
+      logger.warning(e);
+    }
   }
 }
 

@@ -14,10 +14,14 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  bool _showCount = false;
   _init() async {
     await Memory().init();
     bool enable = await Global().check(); //查看登录信息是否过期
     if (enable) {
+      setState(() {
+        _showCount = true;
+      });
       logger.info('拉取用户信息');
       await Provider.of<UserModel>(context, listen: false)
           .fetchUserInfo(context, hasBaby: true);
@@ -85,16 +89,18 @@ class _SplashPageState extends State<SplashPage> {
                         margin: const EdgeInsets.only(right: 30.0, top: 20.0),
                         padding: const EdgeInsets.only(
                             left: 10.0, right: 10.0, top: 2.0, bottom: 2.0),
-                        child: CountDownWidget(
-                          onCountDownFinishCallBack: (bool value) {
-                            if (value) {
-                              setState(() {
-                                showAd = false;
-                                _goHome();
-                              });
-                            }
-                          },
-                        ),
+                        child: _showCount
+                            ? CountDownWidget(
+                                onCountDownFinishCallBack: (bool value) {
+                                  if (value) {
+                                    setState(() {
+                                      showAd = false;
+                                      _goHome();
+                                    });
+                                  }
+                                },
+                              )
+                            : Container(),
                         decoration: BoxDecoration(
                             color: Color(0xffEDEDED),
                             borderRadius:
@@ -140,7 +146,6 @@ class _SplashPageState extends State<SplashPage> {
 
 class CountDownWidget extends StatefulWidget {
   final onCountDownFinishCallBack;
-
   CountDownWidget({Key key, @required this.onCountDownFinishCallBack})
       : super(key: key);
 
