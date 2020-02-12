@@ -104,37 +104,38 @@ class _MemorabiliaDetail extends State<MemorabiliaDetail> {
 
   _deleteMemorabilia(BuildContext context, memorabilia) async {
     await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              '确认删除?',
-              style: TextStyle(fontSize: 16),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            '确认删除?',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('取消'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
             ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('取消'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text('确定'),
-                onPressed: () async {
-
-                  await Http().post(context, '/memorabilia/del',
-                      {"u_id": memorabilia.uid, "b_id": memorabilia.bid, "m_id": memorabilia.mid});
-                  Provider.of<MemorabiliaModel>(context, listen: false)
-                      .del();
-                  Navigator.of(context).popUntil(ModalRoute.withName('/home'));
-                },
-              ),
-            ],
-          );
-        },);
+            FlatButton(
+              child: Text('确定'),
+              onPressed: () async {
+                await Http().post('/memorabilia/del', {
+                  "u_id": memorabilia.uid,
+                  "b_id": memorabilia.bid,
+                  "m_id": memorabilia.mid
+                });
+                Provider.of<MemorabiliaModel>(context, listen: false).del();
+                Navigator.of(context).popUntil(ModalRoute.withName('/home'));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
-
 
   List _photoList(images) {
     return List.generate(images.length, (index) {

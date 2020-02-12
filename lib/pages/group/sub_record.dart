@@ -33,8 +33,7 @@ class _SubRecordList extends State<SubRecordList>
   _getList() async {
     String uid = await Memory.get('u_id');
     String bid = await Memory.get('b_id');
-    var response =
-        await Http().get(context, "/record/list", {"u_id": uid, 'b_id': bid});
+    var response = await Http().get("/record/list", {"u_id": uid, 'b_id': bid});
 
     if (response == -1) {
       print(response);
@@ -125,7 +124,8 @@ class _SubRecordList extends State<SubRecordList>
 
   // 构建Record List数据
   List<Record> _generateList(List array) {
-    Baby _baby = Provider.of<UserModel>(context, listen: false).getDefaultBaby();
+    Baby _baby =
+        Provider.of<UserModel>(context, listen: false).getDefaultBaby();
     int birthday = _baby.birthday;
     List<Record> _list = [];
     Map<String, List> _map = {

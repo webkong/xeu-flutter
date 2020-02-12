@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/utils/memory.dart';
-import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/main.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/baby.dart';
@@ -60,13 +58,13 @@ class UserModel with ChangeNotifier {
     }
   }
 
-  fetchUserInfo(context, {hasBaby = false}) async {
+  fetchUserInfo({hasBaby = false}) async {
 //    String uid = await Memory.get('u_id');
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String uid = _prefs.getString('u_id');
     logger.info(uid);
 
-    var res = await Http().get(context, '/user/info', {"u_id": uid});
+    var res = await Http().get('/user/info', {"u_id": uid});
 
     if (res.code == 200) {
       User data = User.fromJson(res.data['data']);
@@ -78,7 +76,7 @@ class UserModel with ChangeNotifier {
       await Global.initMemory(user: data);
       return true;
     } else {
-      Toast.show('服务器繁忙', context, duration: 10000);
+      showToast('服务器繁忙', duration: Duration(seconds: 10));
     }
   }
 

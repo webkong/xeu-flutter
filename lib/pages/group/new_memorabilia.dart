@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/home.dart';
@@ -46,7 +47,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                     String bid = await Memory.get('b_id');
                     logger.info(bid);
                     //TODO 先存储record记录，然后再更新images字段。
-                    var res = await Http().post(context, '/memorabilia/new', {
+                    var res = await Http().post( '/memorabilia/new', {
                       "u_id": uid,
                       "b_id": bid,
                       "title": _title,
@@ -56,7 +57,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                     if (res.code == 200) {
                       var data = res.data['data'];
                       var item = save(uid, bid, data['_id']);
-                      Toast.show('保存成功,等待文件上传', context);
+                      showToast('保存成功,等待文件上传');
                       Provider.of<MemorabiliaModel>(context, listen: false)
                           .add(context, item);
                       Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> HomePage()));

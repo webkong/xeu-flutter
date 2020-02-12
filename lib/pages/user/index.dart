@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/widget/avatar.dart';
@@ -117,10 +118,10 @@ class _UserPageState extends State<UserPage>
                   setState(() {
                     _avatar = sA;
                   });
-                  await Http().post(context, '/user/update',
+                  await Http().post( '/user/update',
                       {"u_id": uid, "avatar": _avatar});
                   await Provider.of<UserModel>(context, listen: false)
-                      .fetchUserInfo(context);
+                      .fetchUserInfo();
                 }
               },
             ),
@@ -173,13 +174,13 @@ class _UserPageState extends State<UserPage>
                             setState(() {
                               _nickName = _name;
                             });
-                            await Http().post(context, '/user/update',
+                            await Http().post( '/user/update',
                                 {"u_id": uid, "nick_name": _nickName});
                             await Provider.of<UserModel>(context, listen: false)
-                                .fetchUserInfo(context);
+                                .fetchUserInfo();
                             Navigator.of(context).pop();
                           } else {
-                            Toast.show('昵称不符合，或未有改动', context);
+                            showToast('昵称不符合，或未有改动');
                           }
                         },
                       ),

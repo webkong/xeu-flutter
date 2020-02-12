@@ -60,7 +60,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
   _initWX() async {
 //    await WX.registerWxApi(
 //        appId: "wxd930ea5d5a258f4f",
@@ -69,7 +68,6 @@ class _LoginPageState extends State<LoginPage> {
 //    var result = await WX.isWeChatInstalled();
 //    print("is installed $result");
   }
-
 
   @override
   void initState() {
@@ -153,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                         // ));
                         if (item['title'] == 'Google') {
                           _handleGoogleSignIn();
-                        }else if (item['title'] == 'wechat') {
+                        } else if (item['title'] == 'wechat') {
                           _handleWxSignIn();
                         }
                       });
@@ -198,12 +196,12 @@ class _LoginPageState extends State<LoginPage> {
               ///只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
               //TODO 执行登录方法
-              var res = await Http().post(
-                  context, '/login', {"phone": _phone, "password": _password});
+              var res = await Http()
+                  .post('/login', {"phone": _phone, "password": _password});
               if (res != -1 && res?.code == 200) {
                 await Global.flashLoginData(login: res.data['data']);
                 await Provider.of<UserModel>(context, listen: false)
-                    .fetchUserInfo(context, hasBaby: true);
+                    .fetchUserInfo(hasBaby: true);
                 Navigator.pushReplacementNamed(context, '/home');
               } else {}
               print(res);
@@ -238,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextFormField(
       onSaved: (String value) => _password = value,
       keyboardType: TextInputType.visiblePassword,
-      initialValue: '123456',
+//      initialValue: '123456',
       obscureText: _isObscure,
       validator: (String value) {
         if (value.isEmpty) {
@@ -269,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
   TextFormField _buildPhoneTextField() {
     return TextFormField(
       keyboardType: TextInputType.phone,
-      initialValue: '18610714908', //:TODO
+//      initialValue: '18610714908', //:TODO
       decoration: InputDecoration(
         labelText: '手机号',
         icon: Icon(Icons.person),

@@ -24,7 +24,7 @@ class _SplashPageState extends State<SplashPage> {
       });
       logger.info('拉取用户信息');
       await Provider.of<UserModel>(context, listen: false)
-          .fetchUserInfo(context, hasBaby: true);
+          .fetchUserInfo(hasBaby: true);
     } else {
       await Navigator.pushReplacementNamed(context, '/login');
     }

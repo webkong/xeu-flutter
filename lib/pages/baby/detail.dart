@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/widget/avatar.dart';
@@ -58,7 +59,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
             : _genderName;
         _gender = baby?.gender ?? _gender;
       });
-    }else{
+    } else {
       setState(() {
         nickNameEditingController.text = '';
       });
@@ -166,13 +167,14 @@ class _BabyDetailPage extends State<BabyDetailPage> {
       path = '/baby/update';
       params['b_id'] = baby?.bid;
     }
-    ResultData res = await Http().post(context, path, params);
+    ResultData res = await Http().post(path, params);
     if (res.data['code'] == 200) {
-      await Provider.of<UserModel>(context, listen: false).fetchUserInfo(context, hasBaby: true);
+      await Provider.of<UserModel>(context, listen: false)
+          .fetchUserInfo(hasBaby: true);
       Navigator.of(context).pop(true);
-      Toast.show('保存成功', context);
+      showToast('保存成功');
     } else {
-      Toast.show('保存失败', context);
+      showToast('保存失败');
     }
   }
 
@@ -453,7 +455,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
                         });
                         Navigator.of(context).pop();
                       } else {
-                        Toast.show('小名不能为空', context);
+                        showToast('小名不能为空');
                       }
                     },
                   ),

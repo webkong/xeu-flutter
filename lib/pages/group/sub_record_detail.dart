@@ -27,8 +27,7 @@ class _SubRecordListDetail extends State<SubRecordListDetail> {
   _getList() async {
     String uid = await Memory.get('u_id');
     String bid = await Memory.get('b_id');
-    var response =
-        await Http().get(context, "/record/list", {"u_id": uid, 'b_id': bid});
+    var response = await Http().get("/record/list", {"u_id": uid, 'b_id': bid});
 
     if (response == -1) {
       print(response);

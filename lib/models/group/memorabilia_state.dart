@@ -86,7 +86,7 @@ class MemorabiliaModel with ChangeNotifier {
     print('更新记录');
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
-    return Http().post(context, '/memorabilia/update', {
+    return Http().post( '/memorabilia/update', {
       "u_id": item.uid,
       'b_id': item.bid,
       "m_id": item.mid,
@@ -123,7 +123,7 @@ class MemorabiliaModel with ChangeNotifier {
         "file": multipartFile,
       });
       print('upload file');
-      var res = await Http().file(context, '/upload/file', formData);
+      var res = await Http().file('/upload/file', formData);
       return res.data;
     } catch (e) {
       logger.warning(e);

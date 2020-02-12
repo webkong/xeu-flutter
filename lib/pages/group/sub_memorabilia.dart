@@ -29,8 +29,8 @@ class _SubMemorabilia extends State<SubMemorabilia>
   String bid;
   _getList() async {
     String uid = await Memory.get('u_id');
-    var response = await Http()
-        .get(context, '/memorabilia/list', {"u_id": uid, "b_id": bid});
+    var response =
+        await Http().get('/memorabilia/list', {"u_id": uid, "b_id": bid});
     if (response == -1) {
       setState(() {
         _contentLoad = ContentLoadStatus(

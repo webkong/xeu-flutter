@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/widget/datePicker.dart';
 import 'package:xeu/models/group/record_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
-import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/common/utils/http.dart';
 
 class NewRecord extends StatefulWidget {
@@ -56,7 +56,7 @@ class _NewRecord extends State<NewRecord> {
             MaterialButton(
               onPressed: () async {
                 if (_formRecord.currentState.validate()) {
-                  Toast.show('保存成功', context);
+                  showToast('保存成功');
                   _formRecord.currentState.save();
 
                   String uid = await Memory.get('u_id');
@@ -64,7 +64,7 @@ class _NewRecord extends State<NewRecord> {
                   Map<String, dynamic> params = Map.from(data);
                   params['u_id'] = uid;
                   params['b_id'] = bid;
-                  var res = await Http().post(context, '/record/new', params);
+                  var res = await Http().post('/record/new', params);
                   if (res.code == 200) {
                     Provider.of<RecordModel>(context, listen: false)
                         .add(params);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/UIOverlay/slideTopRoute.dart';
 import 'package:xeu/common/utils/adapt.dart';
@@ -37,7 +38,8 @@ class _BabyPageState extends State<BabyPage> {
   @override
   Widget build(BuildContext context) {
     _babies = Provider.of<UserModel>(context, listen: false).getBabies();
-    Baby _baby = Provider.of<UserModel>(context, listen: false).getDefaultBaby();
+    Baby _baby =
+        Provider.of<UserModel>(context, listen: false).getDefaultBaby();
     setState(() {
       _defaultBabyId = _baby.bid;
     });
@@ -107,7 +109,7 @@ class _BabyPageState extends State<BabyPage> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                Toast.show('Comming soon', context);
+                showToast('Comming soon');
               },
               child: Column(
                 children: <Widget>[
@@ -207,10 +209,10 @@ class _BabyPageState extends State<BabyPage> {
   }
 
   _setDefaultBaby(Baby baby) async {
-    await Http().post(
-        context, '/user/update', {"u_id": baby.uid, "default_baby": baby.bid});
+    await Http()
+        .post('/user/update', {"u_id": baby.uid, "default_baby": baby.bid});
     await Provider.of<UserModel>(context, listen: false)
-        .fetchUserInfo(context, hasBaby: true);
+        .fetchUserInfo(hasBaby: true);
     setState(() {
       _defaultBabyId = baby.bid;
     });
@@ -219,36 +221,37 @@ class _BabyPageState extends State<BabyPage> {
 
   _deleteBaby(BuildContext context, Baby _baby, index) async {
     await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              '是否删除宝宝:' + _baby.nickName + '?',
-              style: TextStyle(fontSize: 16),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            '是否删除宝宝:' + _baby.nickName + '?',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('取消'),
+              onPressed: () async {
+                Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
+              },
             ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('取消'),
-                onPressed: () async {
-                  Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
-                },
-              ),
-              FlatButton(
-                child: Text('确定'),
-                onPressed: () async {
-                  setState(() {
-                    _babies.removeAt(index);
-                  });
-                  print(_baby);
-                  await Http().post(context, '/baby/del',
-                      {"u_id": _baby.uid, "b_id": _baby.bid});
-                  await Provider.of<UserModel>(context, listen: false)
-                      .fetchUserInfo(context, hasBaby: true);
-                  Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
-                },
-              ),
-            ],
-          );
-        },);
+            FlatButton(
+              child: Text('确定'),
+              onPressed: () async {
+                setState(() {
+                  _babies.removeAt(index);
+                });
+                print(_baby);
+                await Http()
+                    .post('/baby/del', {"u_id": _baby.uid, "b_id": _baby.bid});
+                await Provider.of<UserModel>(context, listen: false)
+                    .fetchUserInfo(hasBaby: true);
+                Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

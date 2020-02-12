@@ -2,11 +2,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 import 'dart:collection';
 import 'package:xeu/common/config/config.dart';
-import 'package:xeu/common/widget/toast.dart';
-
-import '../global.dart';
 
 ///http请求管理类，可单独抽取出来
 class Http {
@@ -36,23 +34,23 @@ class Http {
     baseUrl = baseUrl;
   }
 
-  get(BuildContext context, url, param) async {
+  get(url, param) async {
     return await request(
-        context, baseUrl + url, param, null, new Options(method: "GET"));
+        baseUrl + url, param, null, new Options(method: "GET"));
   }
 
-  post(BuildContext context, url, param) async {
+  post(url, param) async {
     return await request(
-        context, baseUrl + url, param, null, new Options(method: 'POST'));
+        baseUrl + url, param, null, new Options(method: 'POST'));
   }
 
-  file(BuildContext context, url, param) async {
-    return await request(context, baseUrl + url, param, null,
+  file(url, param) async {
+    return await request(baseUrl + url, param, null,
         new Options(method: 'POST', contentType: CONTENT_TYPE_MULTIPART));
   }
 
-  put(BuildContext context, url, param) async {
-    return await request(context, baseUrl + url, param, null,
+  put(url, param) async {
+    return await request(baseUrl + url, param, null,
         new Options(method: "PUT", contentType: 'text/plain'));
   }
 
@@ -61,14 +59,12 @@ class Http {
   ///[ params] 请求参数
   ///[ header] 外加头
   ///[ option] 配置
-  request(BuildContext context, String url, params, Map<String, String> header,
-      Options option,
+  request(String url, params, Map<String, String> header, Options option,
       {noTip = false}) async {
-    this.context = context;
     //没有网络
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      Toast.show('网络不可用，请打开网络', context, duration: 10);
+      showToast('网络不可用，请打开网络', duration: Duration(seconds: 10));
       return NETWORK_ERROR;
     }
 
@@ -141,7 +137,7 @@ class Http {
         );
         return new HttpException('未授权');
       }
-      Toast.show('服务器繁忙', context, duration: 10);
+      showToast('服务器繁忙', duration: Duration(seconds: 10));
       if (e.type == DioErrorType.CONNECT_TIMEOUT) {
         errorResponse.statusCode = NETWORK_TIMEOUT;
       }
