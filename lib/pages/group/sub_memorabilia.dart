@@ -23,7 +23,7 @@ class _SubMemorabilia extends State<SubMemorabilia>
     with AutomaticKeepAliveClientMixin {
   List<Memorabilia> _memorabiliaList = <Memorabilia>[];
   Widget _contentLoad = ContentLoadStatus(
-    flag: 'loading',
+    flag: 'noContent',
   );
   bool _pullData = false;
   String bid;
@@ -61,7 +61,9 @@ class _SubMemorabilia extends State<SubMemorabilia>
   @override
   void initState() {
     super.initState();
-    _getList();
+    if(bid !=null){
+      _getList();
+    }
   }
 
   @override

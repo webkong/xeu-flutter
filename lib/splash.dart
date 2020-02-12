@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/utils/memory.dart';
+import 'package:xeu/home.dart';
 import 'package:xeu/main.dart';
 import 'common/global.dart';
 import 'models/user/user_state.dart';
@@ -14,17 +15,16 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  bool _showCount = false;
+
   _init() async {
     await Memory().init();
     bool enable = await Global().check(); //查看登录信息是否过期
     if (enable) {
-      setState(() {
-        _showCount = true;
-      });
       logger.info('拉取用户信息');
-      await Provider.of<UserModel>(context, listen: false)
+      bool back = await Provider.of<UserModel>(context, listen: false)
           .fetchUserInfo(hasBaby: true);
+      if(back){
+      }
     } else {
       await Navigator.pushReplacementNamed(context, '/login');
     }
@@ -32,7 +32,11 @@ class _SplashPageState extends State<SplashPage> {
 
   _goHome() async {
 //    await Future.delayed(Duration(seconds: 6));
-    await Navigator.pushReplacementNamed(context, '/home');
+  Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage()));
+//    await Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
@@ -89,18 +93,16 @@ class _SplashPageState extends State<SplashPage> {
                         margin: const EdgeInsets.only(right: 30.0, top: 20.0),
                         padding: const EdgeInsets.only(
                             left: 10.0, right: 10.0, top: 2.0, bottom: 2.0),
-                        child: _showCount
-                            ? CountDownWidget(
-                                onCountDownFinishCallBack: (bool value) {
-                                  if (value) {
-                                    setState(() {
-                                      showAd = false;
-                                      _goHome();
-                                    });
-                                  }
-                                },
-                              )
-                            : Container(),
+                        child: CountDownWidget(
+                          onFinish: (bool value) async {
+                            if (value) {
+                              setState(() {
+                                showAd = false;
+                              });
+                              await _goHome();
+                            }
+                          },
+                        ),
                         decoration: BoxDecoration(
                             color: Color(0xffEDEDED),
                             borderRadius:
@@ -145,9 +147,8 @@ class _SplashPageState extends State<SplashPage> {
 }
 
 class CountDownWidget extends StatefulWidget {
-  final onCountDownFinishCallBack;
-  CountDownWidget({Key key, @required this.onCountDownFinishCallBack})
-      : super(key: key);
+  final onFinish;
+  CountDownWidget({Key key, @required this.onFinish}) : super(key: key);
 
   @override
   _CountDownWidgetState createState() => _CountDownWidgetState();
@@ -178,7 +179,7 @@ class _CountDownWidgetState extends State<CountDownWidget> {
         _seconds--;
       });
       if (_seconds <= 1) {
-        widget.onCountDownFinishCallBack(true);
+        widget.onFinish(true);
         _cancelTimer();
         return;
       }

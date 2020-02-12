@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/widget/avatar.dart';
+import 'package:xeu/home.dart';
 import 'package:xeu/main.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user_state.dart';
@@ -16,14 +17,12 @@ class GroupPage extends StatefulWidget {
 
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
-  Baby _baby = Baby();
-  String _babyAvatar = Avatars.avatar;
-
+  bool _noBaby = false;
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(
-        vsync: this, length: choices.length, initialIndex: 0);
+    _tabController =
+        new TabController(vsync: this, length: choices.length, initialIndex: 0);
   }
 
   @override
@@ -34,30 +33,21 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_noBaby) {
+        _showTip(context);
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         leading: Container(
           padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
           child: GestureDetector(
             child: CircleAvatar(
-              child: Consumer<UserModel>(
-                builder: (BuildContext context, UserModel userModel, _) {
-                  print('触发 group index 刷新');
-                  List babies = userModel.getBabies();
-                  logger.info(babies);
-                  if (babies.length == 0) {
-                    _showTip();
-                  } else {
-                    _baby = userModel.getDefaultBaby();
-                    logger.info(_baby.toJson());
-                  }
-                  String _babyAvatar = _baby?.avatar ?? Avatars.avatar;
-                  return Image(image: AssetImage(_babyAvatar));
-                },
-              ),
+              child: _avatarWidget(context),
             ),
             onTap: () async {
-//              await _pushToBabyPage();
               await _pushToBabyListPage();
             },
           ),
@@ -68,7 +58,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
           tabs: choices.map((Choice choice) {
             return new Tab(
               text: choice.title,
-//              icon: new Icon(choice.icon),
+//              icon: Icon(choice.icon),
             );
           }).toList(),
         ),
@@ -84,6 +74,33 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
           },
         ).toList(),
       ),
+    );
+  }
+
+  _avatarWidget(BuildContext context) {
+    return Consumer<UserModel>(
+      builder: (BuildContext context, UserModel userModel, _) {
+        Baby _baby = Baby();
+        String _babyAvatar = Avatars.avatar;
+        print('触发 group index 刷新');
+        List babies = userModel.getBabies();
+        logger.info(babies);
+        if (babies.length == 0) {
+          print('触发 group index 刷新 $_noBaby');
+          _noBaby = !_noBaby;
+          print('触发 group index 刷新 $_noBaby');
+//          if(!_noBaby){
+//            _noBaby = true;
+//            print('触发 group index 刷新 $_noBaby');
+//          }
+          return Image.asset(_babyAvatar);
+        } else {
+          _baby = userModel.getDefaultBaby();
+          logger.info(_baby.toJson());
+        }
+        _babyAvatar = _baby?.avatar ?? _babyAvatar;
+        return Image(image: AssetImage(_babyAvatar));
+      },
     );
   }
 
@@ -105,29 +122,30 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   }
 
   // 提示没有baby，添加baby
-  _showTip() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('还没有宝宝信息..'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('取消'),
-                onPressed: () async {
-                  Navigator.popUntil(context, ModalRoute.withName('/home'));
-                },
-              ),
-              FlatButton(
-                child: Text('去添加'),
-                onPressed: () async {
-                  Navigator.popUntil(context, ModalRoute.withName('/home'));
-                  Navigator.pushNamed(context, '/baby/detail');
-                },
-              ),
-            ],
-          );
-        });
+  _showTip(context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('还没有宝宝信息..'),
+          actions: <Widget>[
+//            FlatButton(
+//              child: Text('取消'),
+//              onPressed: () async {
+//                Navigator.pop(context);
+//              },
+//            ),
+            FlatButton(
+              child: Text('去添加', textAlign: TextAlign.center,),
+              onPressed: () async {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/babyDetail');
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

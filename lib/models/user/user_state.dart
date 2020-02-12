@@ -39,7 +39,8 @@ class UserModel with ChangeNotifier {
     List babies = this.getBabies();
     if (babies.length == 0) {
       print('baby defaul 0000');
-      this.defaultBaby = Baby();
+    this.defaultBaby = Baby();
+    return ;
     } else {
       int _index = 0;
       User user = getUser();
@@ -59,11 +60,8 @@ class UserModel with ChangeNotifier {
   }
 
   fetchUserInfo({hasBaby = false}) async {
-//    String uid = await Memory.get('u_id');
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    String uid = _prefs.getString('u_id');
+    String uid = await Memory.get('u_id');
     logger.info(uid);
-
     var res = await Http().get('/user/info', {"u_id": uid});
 
     if (res.code == 200) {
@@ -71,12 +69,13 @@ class UserModel with ChangeNotifier {
       await this.setUser(data);
       if (hasBaby) {
         // 如果是更新宝宝信息
-        this.setDefaultBaby();
+        await this.setDefaultBaby();
       }
       await Global.initMemory(user: data);
       return true;
     } else {
       showToast('服务器繁忙', duration: Duration(seconds: 10));
+      return false;
     }
   }
 
