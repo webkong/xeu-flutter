@@ -61,7 +61,7 @@ class _SubMemorabilia extends State<SubMemorabilia>
   @override
   void initState() {
     super.initState();
-    if(bid !=null){
+    if (bid != null) {
       _getList();
     }
   }

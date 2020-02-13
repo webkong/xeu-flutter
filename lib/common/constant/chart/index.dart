@@ -1,6 +1,7 @@
 import 'package:xeu/common/constant/chart/weight.dart';
 import 'package:xeu/common/constant/chart/height.dart';
 import 'package:xeu/common/constant/chart/head.dart';
+
 class BodyConstants {
   static final List boyWMax = boyWeightMax;
   static final List boyWMix = boyWeightMin;

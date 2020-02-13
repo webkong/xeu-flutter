@@ -198,11 +198,11 @@ class _LoginPageState extends State<LoginPage> {
             if (_formKey.currentState.validate()) {
               //只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
-              logger.info(Tools.generateMd5(_phone));
+              logger.info(Tools.generateMd5(_password));
 
               var res = await Http().post('/login', {
                 "phone": _phone.trim(),
-                "password": Tools.generateMd5(_phone)
+                "password": Tools.generateMd5(_password)
               });
               if (res != -1 && Tools.g2(res?.code)) {
                 // 处理无用户和账号密码错误的逻辑
@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                 }
                 await Global.flashLoginData(login: res.data['data']);
                 await Provider.of<UserModel>(context, listen: false)
-                    .fetchUserInfo(hasBaby: true);
+                    .fetchUserInfo(defaultBaby: true);
                 Navigator.pushReplacementNamed(context, '/home');
               }
               print(res);
@@ -249,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextFormField(
       onSaved: (String value) => _password = value,
       keyboardType: TextInputType.visiblePassword,
-//      initialValue: '123456',
+      initialValue: '123456',
       obscureText: _isObscure,
       validator: (String value) {
         if (value.isEmpty) {
@@ -280,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
   TextFormField _buildPhoneTextField() {
     return TextFormField(
       keyboardType: TextInputType.phone,
-//      initialValue: '18610714908', //:TODO
+      initialValue: '18610714908', //:TODO
       decoration: InputDecoration(
         labelText: '手机号',
         icon: Icon(Icons.person),

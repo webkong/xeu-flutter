@@ -86,7 +86,7 @@ class MemorabiliaModel with ChangeNotifier {
     print('更新记录');
     List images = new List.generate(
         list.length, (int index) => {"url": list[index], "index": index});
-    return Http().post( '/memorabilia/update', {
+    return Http().post('/memorabilia/update', {
       "u_id": item.uid,
       'b_id': item.bid,
       "m_id": item.mid,
@@ -95,7 +95,7 @@ class MemorabiliaModel with ChangeNotifier {
   }
 
   Future convertAssetToHttp(Asset asset) async {
-    String name =  asset.name;
+    String name = asset.name;
     String suffix = name.split('.').removeLast();
     logger.info(name);
     logger.info(suffix);

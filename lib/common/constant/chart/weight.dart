@@ -36,7 +36,7 @@ const List<double> boyWeightMin = [
   15.3,
   15.6,
 ];
-const List<double>  boyWeightMax = [
+const List<double> boyWeightMax = [
   4.66,
   6.33,
   7.97,

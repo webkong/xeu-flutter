@@ -210,7 +210,7 @@ class _BabyPageState extends State<BabyPage> {
     await Http()
         .post('/user/update', {"u_id": baby.uid, "default_baby": baby.bid});
     await Provider.of<UserModel>(context, listen: false)
-        .fetchUserInfo(hasBaby: true);
+        .fetchUserInfo(defaultBaby: true, babies: false);
     setState(() {
       _defaultBabyId = baby.bid;
     });
@@ -243,7 +243,7 @@ class _BabyPageState extends State<BabyPage> {
                 await Http()
                     .post('/baby/del', {"u_id": _baby.uid, "b_id": _baby.bid});
                 await Provider.of<UserModel>(context, listen: false)
-                    .fetchUserInfo(hasBaby: true);
+                    .fetchUserInfo(defaultBaby: true);
                 Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
               },
             ),

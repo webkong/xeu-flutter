@@ -106,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
               //TODO 执行注册/登陆方法
               var res = await Http().post(_apiPath, {
                 "phone": _phone.trim(),
-                "password": Tools.generateMd5(_phone),
+                "password": Tools.generateMd5(_password),
                 "code": _code
               });
               num code = res.data['code'];

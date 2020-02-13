@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/widget/avatar.dart';
-import 'package:xeu/home.dart';
 import 'package:xeu/main.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user_state.dart';
@@ -132,7 +131,10 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
 //              },
 //            ),
             FlatButton(
-              child: Text('去添加', textAlign: TextAlign.center,),
+              child: Text(
+                '去添加',
+                textAlign: TextAlign.center,
+              ),
               onPressed: () async {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/babyDetail');

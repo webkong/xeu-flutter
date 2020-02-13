@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/utils/memory.dart';
@@ -39,15 +38,15 @@ class UserModel with ChangeNotifier {
     List babies = this.getBabies();
     if (babies.length == 0) {
       print('baby defaul 0000');
-    this.defaultBaby = Baby();
-    return ;
+      this.defaultBaby = Baby();
+      return;
     } else {
-      int _index = 0;
+      int _index;
       User user = getUser();
       if (user.defaultBaby != null) {
         _index = babies.indexWhere((baby) => baby['_id'] == user.defaultBaby);
+        this.defaultBaby = Baby.fromJson(babies[_index]);
       }
-      this.defaultBaby = Baby.fromJson(babies[_index]);
     }
 
     print(this.defaultBaby);
@@ -59,17 +58,19 @@ class UserModel with ChangeNotifier {
     }
   }
 
-  fetchUserInfo({hasBaby = false}) async {
+  fetchUserInfo({defaultBaby = false, babies = true}) async {
     String uid = await Memory.get('u_id');
     logger.info(uid);
     var res = await Http().get('/user/info', {"u_id": uid});
 
-    if (res.code == 200) {
+    if (res.code == 200 || res.code == 201) {
       User data = User.fromJson(res.data['data']);
       await this.setUser(data);
-      if (hasBaby) {
+      if (defaultBaby) {
         // 如果是更新宝宝信息
         await this.setDefaultBaby();
+      }
+      if (babies) {
         this.babies = user.babies;
       }
       await Global.initMemory(user: data);

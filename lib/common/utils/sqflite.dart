@@ -1,6 +1,5 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:xeu/main.dart';
 
 class DB {
   static Database db;
@@ -47,7 +46,7 @@ class DB {
     }
     List<Map> list =
         await db.rawQuery('SELECT value FROM Session WHERE key = ?', [key]);
-    print('value : $list' );
+    print('value : $list');
     return list[0]['value'] ?? null;
   }
 
@@ -55,8 +54,7 @@ class DB {
     if (db == null) {
       await init();
     }
-    List<Map> list =
-        await db.rawQuery('SELECT * FROM Session ');
+    List<Map> list = await db.rawQuery('SELECT * FROM Session ');
     print('db find all query');
     print(list);
     return list;

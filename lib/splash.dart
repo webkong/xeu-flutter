@@ -15,16 +15,14 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   _init() async {
     await Memory().init();
     bool enable = await Global().check(); //查看登录信息是否过期
     if (enable) {
       logger.info('拉取用户信息');
       bool back = await Provider.of<UserModel>(context, listen: false)
-          .fetchUserInfo(hasBaby: true);
-      if(back){
-      }
+          .fetchUserInfo(defaultBaby: true);
+      if (back) {}
     } else {
       await Navigator.pushReplacementNamed(context, '/login');
     }
@@ -32,10 +30,8 @@ class _SplashPageState extends State<SplashPage> {
 
   _goHome() async {
 //    await Future.delayed(Duration(seconds: 6));
-  Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomePage()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
 //    await Navigator.pushReplacementNamed(context, '/home');
   }
 

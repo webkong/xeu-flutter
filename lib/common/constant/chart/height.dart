@@ -36,7 +36,7 @@ const List<double> boyHeightMin = [
   106.5,
   107.9
 ];
-const List<double>  boyHeightMax = [
+const List<double> boyHeightMax = [
   55.8,
   61.2,
   65.7,

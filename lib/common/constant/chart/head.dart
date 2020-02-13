@@ -34,7 +34,7 @@ const List<double> boyHeadMax = [
   55.4,
   null
 ];
-const List <double>  boyHeadMin = [
+const List<double> boyHeadMin = [
   30.9,
   33.3,
   35.2,

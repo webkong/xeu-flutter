@@ -55,8 +55,6 @@ Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
   };
 }
 
-
-
 Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
   return <String, dynamic>{
     'name': data.name,

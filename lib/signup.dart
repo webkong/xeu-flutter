@@ -10,9 +10,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPage extends State<SignUpPage> {
-
-  _getImage()async{
-     var image = await MultiImagePicker.pickImages(
+  _getImage() async {
+    var image = await MultiImagePicker.pickImages(
       maxImages: 1,
       enableCamera: true,
       materialOptions: MaterialOptions(
@@ -27,7 +26,7 @@ class _SignUpPage extends State<SignUpPage> {
         selectionLimitReachedText: "You can't select any more.",
       ),
     );
-     print(image);
+    print(image);
   }
 
   @override

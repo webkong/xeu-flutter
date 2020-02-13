@@ -7,7 +7,6 @@ import 'package:xeu/main.dart';
 import 'package:xeu/models/group/memorabilia.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
-import 'package:xeu/common/widget/toast.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:xeu/common/utils/http.dart';
 
@@ -47,7 +46,7 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                     String bid = await Memory.get('b_id');
                     logger.info(bid);
                     //TODO 先存储record记录，然后再更新images字段。
-                    var res = await Http().post( '/memorabilia/new', {
+                    var res = await Http().post('/memorabilia/new', {
                       "u_id": uid,
                       "b_id": bid,
                       "title": _title,
@@ -60,7 +59,10 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                       showToast('保存成功,等待文件上传');
                       Provider.of<MemorabiliaModel>(context, listen: false)
                           .add(context, item);
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=> HomePage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => HomePage()));
                     }
                   } else {
                     showDialog(
