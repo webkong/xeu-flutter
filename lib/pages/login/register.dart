@@ -22,9 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
   String _title, _buttonText;
   bool _isObscure = true;
   Color _eyeColor;
-  Timer _timer;
-  int _count = 300;
-  String _codeText = '验证码';
 
   @override
   void initState() {
@@ -44,11 +41,11 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _clearTimer();
   }
 
   @override
   Widget build(BuildContext context) {
+    logger.info('build register');
     return Scaffold(
       appBar: AppBar(
         title: Text(_buttonText),
@@ -120,30 +117,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-  // 倒计时
-
-  void _startTimer() {
-    _timer = Timer.periodic(
-      Duration(seconds: 1),
-      (timer) {
-        setState(() {
-          _count--;
-        });
-        if (_count <= 1) {
-          _clearTimer();
-          return;
-        }
-      },
-    );
-  }
-
-  _clearTimer() {
-    _timer?.cancel();
-    setState(() {
-      _timer = null;
-    });
-    _count = 120;
-  }
 
   _codeButtonPress() async {
     //TODO 调用获取验证码
@@ -164,13 +137,14 @@ class _RegisterPageState extends State<RegisterPage> {
         } else if (res.data['biz_code'] == 11001) {
           showToast('用户不存在，请先注册');
         } else {
-          _startTimer();
           showToast('验证码已发送');
+          return true;
         }
       }
     } else {
       showToast('请输入正确手机号');
     }
+    return false;
   }
 
   //手机号
@@ -184,17 +158,11 @@ class _RegisterPageState extends State<RegisterPage> {
         suffix: SizedBox(
           width: 90,
           height: 30,
-          child: RaisedButton(
-            onPressed: _timer == null ? _codeButtonPress : null,
-            color: Theme.of(context).accentColor,
-            child: Text(
-              _timer == null ? _codeText : '$_count s',
-              style: TextStyle(fontSize: 12, color: Colors.white),
-            ),
-            disabledColor: Colors.black26,
-            shape: StadiumBorder(
-              side: BorderSide(color: Theme.of(context).accentColor),
-            ),
+          child: CodeButton(
+            onPressed: _codeButtonPress,
+            onFinish: (bool value) {
+              showToast('验证码过期');
+            },
           ),
         ),
       ),
@@ -278,5 +246,82 @@ class _RegisterPageState extends State<RegisterPage> {
         )),
       ),
     );
+  }
+}
+
+class CodeButton extends StatefulWidget {
+  CodeButton({Key key, @required this.onPressed, @required this.onFinish})
+      : super(key: key);
+  final Function onPressed;
+  final Function onFinish;
+  @override
+  _CodeButtonState createState() => _CodeButtonState();
+}
+
+class _CodeButtonState extends State<CodeButton> {
+  Timer _timer;
+  int _count = 300;
+  String _codeText = '验证码';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _clearTimer();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      onPressed: _timer == null ? _pressAction : null,
+      color: Theme.of(context).accentColor,
+      child: Text(
+        _timer == null ? _codeText : '$_count s',
+        style: TextStyle(fontSize: 12, color: Colors.white),
+      ),
+      disabledColor: Colors.black26,
+      shape: StadiumBorder(
+        side: BorderSide(color: Theme.of(context).accentColor),
+      ),
+    );
+  }
+
+  _pressAction() async {
+    bool isSend = await widget.onPressed();
+    if (isSend) {
+      _startTimer();
+    }
+  }
+
+  // 倒计时
+
+  void _startTimer() {
+    _timer = Timer.periodic(
+      Duration(seconds: 1),
+      (timer) {
+        setState(() {
+          _count--;
+        });
+        if (_count <= 1) {
+          _clearTimer();
+          widget.onFinish(true);
+          return;
+        }
+      },
+    );
+  }
+
+  _clearTimer() {
+    _timer?.cancel();
+    setState(() {
+      _timer = null;
+      _count = 300;
+    });
   }
 }

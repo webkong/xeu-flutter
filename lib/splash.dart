@@ -165,6 +165,13 @@ class _CountDownWidgetState extends State<CountDownWidget> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _cancelTimer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Text(
       '$_seconds',
