@@ -38,7 +38,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
         _showTip(context);
       }
     });
-
+    logger.info('build group index');
     return Scaffold(
       appBar: AppBar(
         leading: Container(
@@ -89,10 +89,6 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
           print('触发 group index 刷新 $_noBaby');
           _noBaby = !_noBaby;
           print('触发 group index 刷新 $_noBaby');
-//          if(!_noBaby){
-//            _noBaby = true;
-//            print('触发 group index 刷新 $_noBaby');
-//          }
           return Image.asset(_babyAvatar);
         } else {
           _baby = userModel.getDefaultBaby();

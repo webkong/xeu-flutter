@@ -18,7 +18,7 @@ class UserModel with ChangeNotifier {
   }
 
   getBabies() {
-    return this.user?.babies ?? [];
+    return this.babies ?? [];
   }
 
   setUser(User user, {notify = true}) async {
@@ -70,6 +70,7 @@ class UserModel with ChangeNotifier {
       if (hasBaby) {
         // 如果是更新宝宝信息
         await this.setDefaultBaby();
+        this.babies = user.babies;
       }
       await Global.initMemory(user: data);
       return true;

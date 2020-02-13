@@ -4,7 +4,6 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/widget/avatar.dart';
-import 'package:xeu/common/widget/toast.dart';
 import 'package:xeu/main.dart';
 import 'package:xeu/models/user/user.dart';
 import 'package:xeu/models/user/user_state.dart';
@@ -21,13 +20,13 @@ class _UserPageState extends State<UserPage>
   User _user;
   String _nickName = '';
   String uid;
-  String _avatar = Avatars.a1;
+  String _avatar = Avatars.avatar;
   TextEditingController _nickNameController = TextEditingController();
 
   _init(UserModel userModel) {
     print('触发 user index 刷新');
-    _avatar = _user?.avatar ?? _avatar;
     _user = userModel.getUser();
+    _avatar = _user?.avatar ?? _avatar;
     logger.info(_user.toJson());
     _nickName = _user?.nickName ?? '宝妈or宝爸';
     _nickNameController.text = _user?.nickName ?? _nickName;
@@ -51,6 +50,7 @@ class _UserPageState extends State<UserPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    logger.info('build user index');
     return Scaffold(
         appBar: AppBar(
           title: Text('个人中心'),
@@ -118,8 +118,8 @@ class _UserPageState extends State<UserPage>
                   setState(() {
                     _avatar = sA;
                   });
-                  await Http().post( '/user/update',
-                      {"u_id": uid, "avatar": _avatar});
+                  await Http()
+                      .post('/user/update', {"u_id": uid, "avatar": _avatar});
                   await Provider.of<UserModel>(context, listen: false)
                       .fetchUserInfo();
                 }
@@ -174,7 +174,7 @@ class _UserPageState extends State<UserPage>
                             setState(() {
                               _nickName = _name;
                             });
-                            await Http().post( '/user/update',
+                            await Http().post('/user/update',
                                 {"u_id": uid, "nick_name": _nickName});
                             await Provider.of<UserModel>(context, listen: false)
                                 .fetchUserInfo();
