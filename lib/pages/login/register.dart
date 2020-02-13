@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
+import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/main.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -104,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
               _formKeyRegister.currentState.save();
               //TODO 执行注册/登陆方法
               var res = await Http().post(_apiPath,
-                  {"phone": _phone, "password": _password, "code": _code});
+                  {"phone": _phone.trim(), "password": Tools.generateMd5(_phone), "code": _code});
               if (res.data['code'] == 200) {
                 Navigator.pop(context);
               }
