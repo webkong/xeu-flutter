@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:convert/convert.dart';
-import 'package:crypto/crypto.dart' as crypto;
+import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
 
 class Tools {
@@ -27,9 +27,8 @@ class Tools {
   }
 
   ///Generate MD5 hash
-  static generateMd5(String data) {
+  static String generateMd5(String data) {
     var content = new Utf8Encoder().convert(data);
-    var md5 = crypto.md5;
     var digest = md5.convert(content);
     return hex.encode(digest.bytes);
   }
@@ -38,10 +37,12 @@ class Tools {
   static bool g(List list, dynamic value) {
     return list.indexOf(value) > -1;
   }
+
   /// 200 201
   static bool g2(dynamic value) {
     return [200, 201].indexOf(value) > -1;
   }
+
   /// 400 404
   static bool g4(dynamic value) {
     return [400, 404].indexOf(value) > -1;
