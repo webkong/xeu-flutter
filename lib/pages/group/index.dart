@@ -17,6 +17,7 @@ class GroupPage extends StatefulWidget {
 class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
   bool _noBaby = false;
+  bool _loading = false;
   @override
   void initState() {
     super.initState();
@@ -33,7 +34,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_noBaby) {
+      if (_noBaby && !_loading) {
         _showTip(context);
       }
     });
@@ -86,10 +87,11 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
         logger.info(babies);
         if (babies.length == 0) {
           print('触发 group index 刷新 $_noBaby');
-          _noBaby = !_noBaby;
+          _noBaby = true;
           print('触发 group index 刷新 $_noBaby');
           return Image.asset(_babyAvatar);
         } else {
+          _noBaby = false;
           _baby = userModel.getDefaultBaby();
           logger.info(_baby.toJson());
         }
@@ -118,25 +120,27 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
 
   // 提示没有baby，添加baby
   _showTip(context) async {
+    _loading = true;
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('还没有宝宝信息..'),
           actions: <Widget>[
-//            FlatButton(
-//              child: Text('取消'),
-//              onPressed: () async {
-//                Navigator.pop(context);
-//              },
-//            ),
+            FlatButton(
+              child: Text('取消'),
+              onPressed: () async {
+                _loading = false;
+                Navigator.pop(context);
+              },
+            ),
             FlatButton(
               child: Text(
                 '去添加',
                 textAlign: TextAlign.center,
               ),
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/babyDetail');
               },
             ),

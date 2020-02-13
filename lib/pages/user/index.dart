@@ -23,9 +23,9 @@ class _UserPageState extends State<UserPage>
   String _avatar = Avatars.avatar;
   TextEditingController _nickNameController = TextEditingController();
 
-  _init(UserModel userModel) {
+  _init() {
+    _user = Provider.of<UserModel>(context, listen: false).getUser();
     print('触发 user index 刷新');
-    _user = userModel.getUser();
     _avatar = _user?.avatar ?? _avatar;
     logger.info(_user.toJson());
     _nickName = _user?.nickName ?? '宝妈or宝爸';
@@ -50,6 +50,7 @@ class _UserPageState extends State<UserPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    _init();
     logger.info('build user index');
     return Scaffold(
         appBar: AppBar(
@@ -61,11 +62,12 @@ class _UserPageState extends State<UserPage>
               flex: 4,
               child: Column(
                 children: <Widget>[
-                  Consumer<UserModel>(
-                      builder: (BuildContext context, UserModel userModel, _) {
-                    _init(userModel);
-                    return _buildUserBar(context);
-                  }),
+//                  Consumer<UserModel>(
+//                      builder: (BuildContext context, UserModel userModel, _) {
+//                    _init(userModel);
+//                    return ;
+//                  }),
+                  _buildUserBar(context),
                   _buildItemBar(context),
                 ],
               ),
@@ -116,6 +118,7 @@ class _UserPageState extends State<UserPage>
                     defaultAvatar: _avatar, type: 'user');
                 if (sA != null) {
                   setState(() {
+                    logger.info(sA);
                     _avatar = sA;
                   });
                   await Http()
@@ -172,6 +175,7 @@ class _UserPageState extends State<UserPage>
                           String _name = _nickNameController.text;
                           if (_name.length > 0 && _name != _user.nickName) {
                             setState(() {
+                              logger.info('chage name');
                               _nickName = _name;
                             });
                             await Http().post('/user/update',

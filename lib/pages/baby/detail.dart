@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/widget/avatar.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/datePicker.dart';
@@ -151,8 +152,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
   }
 
   _save() async {
-    SharedPreferences pres = await SharedPreferences.getInstance();
-    String uid = pres.getString('u_id');
+    String uid = await Memory.get('u_id');
     Map<String, dynamic> params = {
       "u_id": uid,
       "nick_name": _defaultNickNameValue.trim(),
@@ -169,7 +169,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
     ResultData res = await Http().post(path, params);
     if (res.data['code'] == 200) {
       Provider.of<UserModel>(context, listen: false)
-          .fetchUserInfo(defaultBaby: false);
+          .fetchUserInfo(defaultBaby: true);
       Navigator.of(context).pop(true);
       showToast('保存成功');
     } else {

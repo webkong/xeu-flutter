@@ -14,11 +14,11 @@ class Global {
 
     if (token != null && uid != null) {
       await Http.setAuthorization(token);
-      print(token);
-      print(uid);
-      await Global.initMemory(login: {'token': token, '_id': uid});
+      await Global.initMemory(login: {'token': token, 'u_id': uid});
       enable = true;
     }
+    logger.info(token);
+    logger.info(uid);
     return enable;
   }
 

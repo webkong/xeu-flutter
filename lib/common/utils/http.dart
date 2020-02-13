@@ -176,7 +176,6 @@ class Http {
 
   ///获取授权token
   static setAuthorization(token) async {
-    print('setAuthorization' + token);
     optionParams["authorization"] = 'Bearer ' + token;
   }
 }

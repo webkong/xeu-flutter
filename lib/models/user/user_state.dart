@@ -66,12 +66,13 @@ class UserModel with ChangeNotifier {
     if (res.code == 200 || res.code == 201) {
       User data = User.fromJson(res.data['data']);
       await this.setUser(data);
+
+      if (babies) {
+        this.babies = user.babies;
+      }
       if (defaultBaby) {
         // 如果是更新宝宝信息
         await this.setDefaultBaby();
-      }
-      if (babies) {
-        this.babies = user.babies;
       }
       await Global.initMemory(user: data);
       return true;
