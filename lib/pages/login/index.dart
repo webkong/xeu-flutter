@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:xeu/common/global.dart';
 import 'package:xeu/common/utils/http.dart';
@@ -195,16 +196,27 @@ class _LoginPageState extends State<LoginPage> {
           color: Theme.of(context).accentColor,
           onPressed: () async {
             if (_formKey.currentState.validate()) {
-              ///只有输入的内容符合要求通过才会到达此处
+              //只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
-              var res = await Http()
-                  .post('/login', {"phone": _phone.trim(), "password": Tools.generateMd5(_phone)});
-              if (res != -1 && res?.code == 200) {
+              logger.info(Tools.generateMd5(_phone));
+
+              var res = await Http().post('/login', {
+                "phone": _phone.trim(),
+                "password": Tools.generateMd5(_phone)
+              });
+              if (res != -1 && Tools.g2(res?.code)) {
+                // 处理无用户和账号密码错误的逻辑
+                logger.info(res.data);
+                num bizCode = res.data['biz_code'];
+                if (Tools.g4(bizCode)) {
+                  showToast('用户名或者密码错误');
+                  return;
+                }
                 await Global.flashLoginData(login: res.data['data']);
                 await Provider.of<UserModel>(context, listen: false)
                     .fetchUserInfo(hasBaby: true);
                 Navigator.pushReplacementNamed(context, '/home');
-              } else {}
+              }
               print(res);
             }
           },

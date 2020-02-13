@@ -104,12 +104,21 @@ class _RegisterPageState extends State<RegisterPage> {
               print(_formKeyRegister);
               _formKeyRegister.currentState.save();
               //TODO 执行注册/登陆方法
-              var res = await Http().post(_apiPath,
-                  {"phone": _phone.trim(), "password": Tools.generateMd5(_phone), "code": _code});
-              if (res.data['code'] == 200) {
+              var res = await Http().post(_apiPath, {
+                "phone": _phone.trim(),
+                "password": Tools.generateMd5(_phone),
+                "code": _code
+              });
+              num code = res.data['code'];
+              if (Tools.g2(code)) {
+                num bizCode = res.data['biz_code'];
+                if (Tools.g([400 | 402], bizCode)) {
+                  showToast('验证码错误');
+                  return;
+                }
+                showToast('注册成功');
                 Navigator.pop(context);
               }
-              print('email:$_phone , assword:$_password, code: $_code');
             }
           },
           shape: StadiumBorder(

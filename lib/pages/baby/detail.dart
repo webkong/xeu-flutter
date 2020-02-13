@@ -155,7 +155,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
     String uid = pres.getString('u_id');
     Map<String, dynamic> params = {
       "u_id": uid,
-      "nick_name": _defaultNickNameValue,
+      "nick_name": _defaultNickNameValue.trim(),
       'gender': _gender,
       'blood': _blood,
       'birthday': _birthday,

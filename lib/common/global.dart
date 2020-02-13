@@ -32,7 +32,7 @@ class Global {
     if (login != null) {
       var res = await Memory.insert('token', login['token']);
       logger.info(res);
-      var res2 = await Memory.insert('u_id', login['_id']);
+      var res2 = await Memory.insert('u_id', login['u_id']);
       logger.info(res2);
     }
     if (user != null) {

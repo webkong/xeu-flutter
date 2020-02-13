@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'dart:collection';
 import 'package:xeu/common/config/config.dart';
+import 'package:xeu/common/utils/tools.dart';
 
 ///http请求管理类，可单独抽取出来
 class Http {
@@ -150,13 +151,14 @@ class Http {
 
     try {
       var responseJson = response.data;
-      if (response.statusCode == 201 && responseJson["data"]["token"] != null) {
+      if (Tools.g2(response.statusCode) &&
+          responseJson["data"]["token"] != null) {
         print('Http set authorization: ' + responseJson["data"]["token"]);
         optionParams["authorization"] =
             'Bearer ' + responseJson["data"]["token"];
       }
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (Tools.g2(response.statusCode)) {
         return ResultData(response.data, true, SUCCESS,
             headers: response.headers);
       }

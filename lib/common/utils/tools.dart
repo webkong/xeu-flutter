@@ -33,4 +33,17 @@ class Tools {
     var digest = md5.convert(content);
     return hex.encode(digest.bytes);
   }
+  // 判断 response.statusCode == 200 || response.statusCode == 201 的简写
+
+  static bool g(List list, dynamic value) {
+    return list.indexOf(value) > -1;
+  }
+  /// 200 201
+  static bool g2(dynamic value) {
+    return [200, 201].indexOf(value) > -1;
+  }
+  /// 400 404
+  static bool g4(dynamic value) {
+    return [400, 404].indexOf(value) > -1;
+  }
 }
