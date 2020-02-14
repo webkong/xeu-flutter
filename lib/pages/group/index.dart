@@ -86,13 +86,12 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
         List babies = userModel.getBabies();
         logger.info(babies);
         if (babies.length == 0) {
-          print('触发 group index 刷新 $_noBaby');
           _noBaby = true;
-          print('触发 group index 刷新 $_noBaby');
           return Image.asset(_babyAvatar);
         } else {
           _noBaby = false;
           _baby = userModel.getDefaultBaby();
+          logger.info('get default baby');
           logger.info(_baby.toJson());
         }
         _babyAvatar = _baby?.avatar ?? _babyAvatar;

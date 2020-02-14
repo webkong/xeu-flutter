@@ -17,22 +17,6 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage>
     with AutomaticKeepAliveClientMixin {
-  User _user;
-  String _nickName = '';
-  String uid;
-  String _avatar = Avatars.avatar;
-  TextEditingController _nickNameController = TextEditingController();
-
-  _init() {
-    _user = Provider.of<UserModel>(context, listen: false).getUser();
-    print('触发 user index 刷新');
-    _avatar = _user?.avatar ?? _avatar;
-    logger.info(_user.toJson());
-    _nickName = _user?.nickName ?? '宝妈or宝爸';
-    _nickNameController.text = _user?.nickName ?? _nickName;
-    uid = _user.uid;
-  }
-
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
@@ -50,7 +34,6 @@ class _UserPageState extends State<UserPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    _init();
     logger.info('build user index');
     return Scaffold(
         appBar: AppBar(
@@ -62,12 +45,7 @@ class _UserPageState extends State<UserPage>
               flex: 4,
               child: Column(
                 children: <Widget>[
-//                  Consumer<UserModel>(
-//                      builder: (BuildContext context, UserModel userModel, _) {
-//                    _init(userModel);
-//                    return ;
-//                  }),
-                  _buildUserBar(context),
+                  UserBar(),
                   _buildItemBar(context),
                 ],
               ),
@@ -95,6 +73,62 @@ class _UserPageState extends State<UserPage>
     );
   }
 
+  Align _buildLoginButton(BuildContext context) {
+    return Align(
+      child: SizedBox(
+        height: 40,
+        width: 200.0,
+        child: RaisedButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '退出登录',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ],
+          ),
+          color: Colors.redAccent,
+          onPressed: () async {
+            Provider.of<UserModel>(context, listen: false).logout(context);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class UserBar extends StatefulWidget {
+  @override
+  _UserBarState createState() => _UserBarState();
+}
+
+class _UserBarState extends State<UserBar> {
+  User _user;
+  String _nickName = '';
+  String uid;
+  String _avatar = Avatars.avatar;
+  TextEditingController _nickNameController = TextEditingController();
+
+  _init() {
+    _user = Provider.of<UserModel>(context, listen: false).getUser();
+    _avatar = _user?.avatar ?? _avatar;
+    _nickName = _user?.nickName ?? '宝妈or宝爸';
+    _nickNameController.text = _user?.nickName ?? _nickName;
+    uid = _user.uid;
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildUserBar(context);
+  }
+
   _buildUserBar(BuildContext context) {
     return Card(
       child: Row(
@@ -117,14 +151,14 @@ class _UserPageState extends State<UserPage>
                 String sA = await Avatars().showSelection(context,
                     defaultAvatar: _avatar, type: 'user');
                 if (sA != null) {
+                  await Http()
+                      .post('/user/update', {"u_id": uid, "avatar": sA});
+                  await Provider.of<UserModel>(context, listen: false)
+                      .setUserAttr('avatar', sA);
                   setState(() {
                     logger.info(sA);
                     _avatar = sA;
                   });
-                  await Http()
-                      .post('/user/update', {"u_id": uid, "avatar": _avatar});
-                  await Provider.of<UserModel>(context, listen: false)
-                      .fetchUserInfo();
                 }
               },
             ),
@@ -174,14 +208,15 @@ class _UserPageState extends State<UserPage>
                         onPressed: () async {
                           String _name = _nickNameController.text;
                           if (_name.length > 0 && _name != _user.nickName) {
-                            setState(() {
+
+                            await Http().post('/user/update',
+                                {"u_id": uid, "nick_name": _name});
+                            await Provider.of<UserModel>(context, listen: false)
+                                .setUserAttr('nickName', _name);
+                             setState(() {
                               logger.info('chage name');
                               _nickName = _name;
                             });
-                            await Http().post('/user/update',
-                                {"u_id": uid, "nick_name": _nickName});
-                            await Provider.of<UserModel>(context, listen: false)
-                                .fetchUserInfo();
                             Navigator.of(context).pop();
                           } else {
                             showToast('昵称不符合，或未有改动');
@@ -195,30 +230,6 @@ class _UserPageState extends State<UserPage>
             },
           )
         ],
-      ),
-    );
-  }
-
-  Align _buildLoginButton(BuildContext context) {
-    return Align(
-      child: SizedBox(
-        height: 40,
-        width: 200.0,
-        child: RaisedButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '退出登录',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ],
-          ),
-          color: Colors.redAccent,
-          onPressed: () async {
-            Provider.of<UserModel>(context, listen: false).logout(context);
-          },
-        ),
       ),
     );
   }

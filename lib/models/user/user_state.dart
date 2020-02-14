@@ -22,8 +22,21 @@ class UserModel with ChangeNotifier {
 
   setUser(User user, {notify = true}) async {
     print('set user ');
-    logger.info(user.toJson());
+    logger.info(user.avatar);
     this.user = user;
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  setUserAttr(key, value, {notify = false}) async {
+    if (key == 'avatar') {
+      this.user.avatar = value;
+    }
+    if (key == 'nickName') {
+      this.user.nickName = value;
+    }
+    logger.info(this.user.toJson());
     if (notify) {
       notifyListeners();
     }
@@ -62,11 +75,11 @@ class UserModel with ChangeNotifier {
     String uid = await Memory.get('u_id');
     logger.info(uid);
     var res = await Http().get('/user/info', {"u_id": uid});
-
-    if (res.code == 200 || res.code == 201) {
+    logger.info(res.data['data']);
+    if (res.code == 200) {
       User data = User.fromJson(res.data['data']);
+      logger.info(data.avatar);
       await this.setUser(data);
-
       if (babies) {
         this.babies = user.babies;
       }
