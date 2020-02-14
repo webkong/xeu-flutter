@@ -36,6 +36,24 @@ class UserModel with ChangeNotifier {
     if (key == 'nickName') {
       this.user.nickName = value;
     }
+    if (key == 'defaultBaby') {
+      this.user.defaultBaby = value;
+      this.setDefaultBaby(notify: true);
+    }
+    if(key == 'delBaby'){
+      logger.info(this.user.babies);
+      this.user.babies.removeAt(value);
+      this.babies = this.user.babies;
+      logger.info(this.user.babies);
+    }
+    if(key == 'addBaby'){
+      this.user.babies.add(value);
+      if(this.user.babies.length <= 1){
+        this.user.defaultBaby = value['_id'];
+        this.setDefaultBaby(notify: true);
+      }
+      this.babies = this.user.babies;
+    }
     logger.info(this.user.toJson());
     if (notify) {
       notifyListeners();

@@ -6,6 +6,7 @@ import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/utils/http.dart';
 import 'package:xeu/common/utils/tools.dart';
 import 'package:xeu/common/widget/avatar.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/user/baby.dart';
 import 'package:xeu/models/user/user_state.dart';
 import 'package:xeu/pages/baby/detail.dart';
@@ -23,9 +24,19 @@ class _BabyPageState extends State<BabyPage> {
   List _babies = [];
   String _defaultBabyId;
 
+  _init() {
+    Baby _baby =
+        Provider.of<UserModel>(context, listen: false).getDefaultBaby();
+    logger.info('刷新 baby 列表');
+    setState(() {
+      _defaultBabyId = _baby.bid;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _init();
   }
 
   @override
@@ -35,13 +46,7 @@ class _BabyPageState extends State<BabyPage> {
 
   @override
   Widget build(BuildContext context) {
-    _babies = Provider.of<UserModel>(context, listen: false).getBabies();
-    Baby _baby =
-        Provider.of<UserModel>(context, listen: false).getDefaultBaby();
-    setState(() {
-      _defaultBabyId = _baby.bid;
-    });
-
+    _babies = Provider.of<UserModel>(context, listen: true).getBabies();
     return Scaffold(
       appBar: AppBar(
         title: Text('我的宝宝'),
@@ -183,6 +188,7 @@ class _BabyPageState extends State<BabyPage> {
                     ListTile(
                       title: Text('设为默认'),
                       onTap: () {
+                        Navigator.pop(context);
                         _setDefaultBaby(_baby);
                       },
                     ),
@@ -193,6 +199,7 @@ class _BabyPageState extends State<BabyPage> {
                     ListTile(
                       title: Text('删除宝宝'),
                       onTap: () {
+                        Navigator.pop(context);
                         _deleteBaby(context, _baby, index);
                       },
                     ),
@@ -210,7 +217,7 @@ class _BabyPageState extends State<BabyPage> {
     await Http()
         .post('/user/update', {"u_id": baby.uid, "default_baby": baby.bid});
     await Provider.of<UserModel>(context, listen: false)
-        .fetchUserInfo(defaultBaby: true, babies: false);
+        .setUserAttr('defaultBaby', baby.bid);
     setState(() {
       _defaultBabyId = baby.bid;
     });
@@ -221,34 +228,53 @@ class _BabyPageState extends State<BabyPage> {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            '是否删除宝宝:' + _baby.nickName + '?',
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('取消'),
-              onPressed: () async {
-                Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
-              },
+        var _alert;
+        if (_babies.length > 1 && _defaultBabyId == _baby.bid) {
+          _alert = AlertDialog(
+            actions: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  '知道了',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+            title: Text(
+              '默认宝宝不能被删除',
+              style: TextStyle(fontSize: 16),
             ),
-            FlatButton(
-              child: Text('确定'),
-              onPressed: () async {
-                setState(() {
-                  _babies.removeAt(index);
-                });
-                print(_baby);
-                await Http()
-                    .post('/baby/del', {"u_id": _baby.uid, "b_id": _baby.bid});
-                await Provider.of<UserModel>(context, listen: false)
-                    .fetchUserInfo(defaultBaby: true);
-                Navigator.of(context).popUntil(ModalRoute.withName('/baby'));
-              },
+          );
+        } else {
+          _alert = AlertDialog(
+            title: Text(
+              '是否删除宝宝:' + _baby.nickName + '?',
+              style: TextStyle(fontSize: 16),
             ),
-          ],
-        );
+            actions: <Widget>[
+              FlatButton(
+                child: Text('取消'),
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('确定'),
+                onPressed: () async {
+                  print(_baby);
+                  await Http().post(
+                      '/baby/del', {"u_id": _baby.uid, "b_id": _baby.bid});
+                  await Provider.of<UserModel>(context, listen: false)
+                      .setUserAttr('delBaby', index, notify: true);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        }
+        return _alert;
       },
     );
   }

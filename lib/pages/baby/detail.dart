@@ -169,7 +169,7 @@ class _BabyDetailPage extends State<BabyDetailPage> {
     ResultData res = await Http().post(path, params);
     if (res.data['code'] == 200) {
       Provider.of<UserModel>(context, listen: false)
-          .fetchUserInfo(defaultBaby: true);
+          .setUserAttr('addBaby', res.data['data'], notify: true);
       Navigator.of(context).pop(true);
       showToast('保存成功');
     } else {
