@@ -59,10 +59,11 @@ class _NewMemorabilia extends State<NewMemorabilia> {
                       showToast('保存成功,等待文件上传');
                       Provider.of<MemorabiliaModel>(context, listen: false)
                           .add(context, item);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()));
+                      Navigator.pop(context);
+//                      Navigator.pushReplacement(
+//                          context,
+//                          MaterialPageRoute(
+//                              builder: (BuildContext context) => HomePage()));
                     }
                   } else {
                     showDialog(

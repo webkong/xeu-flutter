@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:xeu/common/utils/memory.dart';
 import 'package:xeu/common/widget/ContentLoadStatus.dart';
+import 'package:xeu/main.dart';
 import 'package:xeu/models/group/memorabilia_state.dart';
 import 'package:xeu/common/utils/adapt.dart';
 import 'package:xeu/common/utils/tools.dart';
@@ -23,12 +24,14 @@ class _SubMemorabilia extends State<SubMemorabilia>
     with AutomaticKeepAliveClientMixin {
   List<Memorabilia> _memorabiliaList = <Memorabilia>[];
   Widget _contentLoad = ContentLoadStatus(
-    flag: 'noContent',
+    flag: 'loading',
   );
   bool _pullData = false;
   String bid;
+  String uid;
   _getList() async {
-    String uid = await Memory.get('u_id');
+    uid = await Memory.get('u_id');
+    bid = await Memory.get('b_id');
     var response =
         await Http().get('/memorabilia/list', {"u_id": uid, "b_id": bid});
     if (response == -1) {
@@ -61,45 +64,40 @@ class _SubMemorabilia extends State<SubMemorabilia>
   @override
   void initState() {
     super.initState();
-    if (bid != null) {
-      _getList();
-    }
+    _getList();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    Baby baby = Provider.of<UserModel>(context, listen: true).getDefaultBaby();
-    bid = baby.bid;
-    if (!_pullData) {
-      return _contentLoad;
-    } else {
-      return Column(
-        children: <Widget>[
-          Consumer<MemorabiliaModel>(
-            builder: (BuildContext context, MemorabiliaModel memorabiliaModel,
-                child) {
-              Widget prefixWidget;
-              Map queue = memorabiliaModel.get();
-              if (queue['tasks'].length > 0) {
-                prefixWidget = _buildUploadingWidget(queue['tasks']);
-              } else {
-                prefixWidget = Container();
-                if (memorabiliaModel.isDone() == 3) {
-                  print('拉取');
-                  memorabiliaModel.init();
-                  this._getList();
-                }
+
+    return Column(
+      children: <Widget>[
+        Consumer<MemorabiliaModel>(
+          builder:
+              (BuildContext context, MemorabiliaModel memorabiliaModel, child) {
+            Widget prefixWidget;
+            logger.info('刷新列表');
+            Map queue = memorabiliaModel.get();
+            if (queue['tasks'].length > 0) {
+              logger.info('刷新列表2');
+              prefixWidget = _buildUploadingWidget(queue['tasks']);
+            } else {
+              prefixWidget = Container();
+              if (memorabiliaModel.isDone() == 3) {
+                print('拉取');
+                memorabiliaModel.init();
+                this._getList();
               }
-              return prefixWidget;
-            },
-          ),
-          Expanded(
-            child: _buildMemorabiliaList(),
-          ),
-        ],
-      );
-    }
+            }
+            return prefixWidget;
+          },
+        ),
+        Expanded(
+          child: !_pullData ? _contentLoad : _buildMemorabiliaList(),
+        ),
+      ],
+    );
   }
 
   Widget _buildUploadingWidget(tasks) {
@@ -165,9 +163,8 @@ class _SubMemorabilia extends State<SubMemorabilia>
                               height: Adapt.px(300),
                               width: Adapt.px(450),
                               child: CachedNetworkImage(
-                                imageUrl: item.images.length > 0
-                                    ? item.images[0]['url']
-                                    : 'https://dummyimage.com/300x200/efefef',
+                                imageUrl: item.images[0]['url'] ??
+                                    'https://dummyimage.com/300x200/efefef',
                                 placeholder: (context, url) =>
                                     Image.memory(kTransparentImage),
                                 errorWidget: (context, url, error) =>

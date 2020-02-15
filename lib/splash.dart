@@ -20,9 +20,8 @@ class _SplashPageState extends State<SplashPage> {
     bool enable = await Global().check(); //查看登录信息是否过期
     if (enable) {
       logger.info('拉取用户信息');
-      bool back = await Provider.of<UserModel>(context, listen: false)
+      await Provider.of<UserModel>(context, listen: false)
           .fetchUserInfo(defaultBaby: true);
-      if (back) {}
     } else {
       await Navigator.pushReplacementNamed(context, '/login');
     }
@@ -72,7 +71,7 @@ class _SplashPageState extends State<SplashPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: Text(
-                          '落花有意随流水,流水无心恋落花',
+                          '十年树木，百年树人',
                           style: TextStyle(fontSize: 15.0, color: Colors.black),
                         ),
                       )

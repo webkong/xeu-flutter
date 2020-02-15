@@ -22,7 +22,7 @@ class _GroupPage extends State<GroupPage> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController =
-        new TabController(vsync: this, length: choices.length, initialIndex: 0);
+        new TabController(vsync: this, length: choices.length);
   }
 
   @override

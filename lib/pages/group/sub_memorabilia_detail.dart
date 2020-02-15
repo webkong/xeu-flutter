@@ -44,6 +44,7 @@ class _MemorabiliaDetail extends State<MemorabiliaDetail> {
                       ListTile(
                         title: Text('删除'),
                         onTap: () {
+                          Navigator.of(context).pop();
                           _deleteMemorabilia(context, _memorabilia);
                         },
                       ),
@@ -116,7 +117,6 @@ class _MemorabiliaDetail extends State<MemorabiliaDetail> {
               child: Text('取消'),
               onPressed: () async {
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
               },
             ),
             FlatButton(
@@ -127,8 +127,9 @@ class _MemorabiliaDetail extends State<MemorabiliaDetail> {
                   "b_id": memorabilia.bid,
                   "m_id": memorabilia.mid
                 });
-                Provider.of<MemorabiliaModel>(context, listen: false).del();
-                Navigator.of(context).popUntil(ModalRoute.withName('/home'));
+                await Provider.of<MemorabiliaModel>(context, listen: false).del();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -146,7 +147,7 @@ class _MemorabiliaDetail extends State<MemorabiliaDetail> {
             top: Adapt.px(10),
             bottom: Adapt.px(10)),
         child: CachedNetworkImage(
-          imageUrl: images[index]['url'],
+          imageUrl: images[index]['url']?? 'https://dummyimage.com/300x200/efefef',
           placeholder: (context, url) => Image.memory(kTransparentImage),
           errorWidget: (context, url, error) => Icon(Icons.error),
           fit: BoxFit.cover,

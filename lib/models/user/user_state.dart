@@ -40,15 +40,15 @@ class UserModel with ChangeNotifier {
       this.user.defaultBaby = value;
       this.setDefaultBaby(notify: true);
     }
-    if(key == 'delBaby'){
+    if (key == 'delBaby') {
       logger.info(this.user.babies);
       this.user.babies.removeAt(value);
       this.babies = this.user.babies;
       logger.info(this.user.babies);
     }
-    if(key == 'addBaby'){
+    if (key == 'addBaby') {
       this.user.babies.add(value);
-      if(this.user.babies.length <= 1){
+      if (this.user.babies.length <= 1) {
         this.user.defaultBaby = value['_id'];
         this.setDefaultBaby(notify: true);
       }
@@ -64,7 +64,7 @@ class UserModel with ChangeNotifier {
     return this.defaultBaby;
   }
 
-  setDefaultBaby({notify = true}) {
+  setDefaultBaby({notify = true}) async{
     print('setDefaultBaby ');
     List babies = this.getBabies();
     if (babies.length == 0) {
@@ -76,14 +76,17 @@ class UserModel with ChangeNotifier {
       User user = getUser();
       if (user.defaultBaby != null) {
         _index = babies.indexWhere((baby) => baby['_id'] == user.defaultBaby);
-        this.defaultBaby = Baby.fromJson(babies[_index]);
+        if (_index > -1) {
+          this.defaultBaby = Baby.fromJson(babies[_index]);
+        }
       }
     }
 
-    print(this.defaultBaby);
+    print(this.defaultBaby.toJson());
+    print(this.defaultBaby.bid);
     print(notify);
     //将默认baby放到内存
-    Memory.insert('b_id', this.defaultBaby.bid);
+    await Memory.insert('b_id', this.defaultBaby.bid);
     if (notify) {
       notifyListeners();
     }

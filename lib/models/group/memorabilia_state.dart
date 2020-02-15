@@ -26,9 +26,10 @@ class MemorabiliaModel with ChangeNotifier {
     return _taskStatus;
   }
 
-  void del() async {
+  del() async {
     _taskStatus = 3;
     notifyListeners();
+    return true;
   }
 
   void add(context, item) async {
@@ -39,8 +40,8 @@ class MemorabiliaModel with ChangeNotifier {
     _tasks.add(new Task(memorabilia: item, status: 0));
     //设置任务状态
     _taskStatus = 2;
-    await _upload();
     notifyListeners();
+    await _upload();
   }
 
   _upload() async {
@@ -53,7 +54,7 @@ class MemorabiliaModel with ChangeNotifier {
     int length = item.images.length;
     if (length > 0) {
       for (int i = 0; i < length; i++) {
-        files.add(convertAssetToHttp(item.images[i]));
+        files.add(convertAssetToHttp(item.images[i], item.uid));
       }
     } else {
       return null;
@@ -67,6 +68,7 @@ class MemorabiliaModel with ChangeNotifier {
       _succeedTasks.add(_tasks.removeAt(0));
       // 根据任务情况查看
       if (_tasks.length == 0) {
+        logger.info(('task status 3'));
         _taskStatus = 3;
         notifyListeners();
       } else {
@@ -94,7 +96,7 @@ class MemorabiliaModel with ChangeNotifier {
     });
   }
 
-  Future convertAssetToHttp(Asset asset) async {
+  Future convertAssetToHttp(Asset asset, String uid) async {
     String name = asset.name;
     String suffix = name.split('.').removeLast();
     logger.info(name);
@@ -123,7 +125,7 @@ class MemorabiliaModel with ChangeNotifier {
         "file": multipartFile,
       });
       print('upload file');
-      var res = await Http().file('/upload/file', formData);
+      var res = await Http().file('/upload/file?u_id=' + uid, formData);
       return res.data;
     } catch (e) {
       logger.warning(e);
