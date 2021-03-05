@@ -1,19 +1,9 @@
-# xeu
+# xeu baby
 
-A new Flutter application.
+备份照片，上传照片，实时浏览功能的APP。主要是为保存我儿子的照片弄的。数据保存在七牛的oos。
 
-## Getting Started
+服务端用node.js+nest.js+redis
 
-This project is a starting point for a Flutter application.
+如果对你有点用可以点个star。
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
->flutter packages pub run build_runner watch
-flutter build appbundle
+<img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120115_com.webkong.xeu.jpg" alt="Screenshot_20210305_120115_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120119_com.webkong.xeu.jpg" alt="Screenshot_20210305_120119_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120127_com.webkong.xeu.jpg" alt="Screenshot_20210305_120127_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120135_com.webkong.xeu.jpg" alt="Screenshot_20210305_120135_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120127_com.webkong.xeu.jpg" alt="Screenshot_20210305_120127_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120135_com.webkong.xeu.jpg" alt="Screenshot_20210305_120135_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120135_com.webkong.xeu.jpg" alt="Screenshot_20210305_120135_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120200_com.webkong.xeu.jpg" alt="Screenshot_20210305_120200_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120135_com.webkong.xeu.jpg" alt="Screenshot_20210305_120135_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120200_com.webkong.xeu.jpg" alt="Screenshot_20210305_120200_com.webkong.xeu" style="zoom:33%;" /><img src="https://cdn.jsdelivr.net/gh/webkong/typora-images/typora/Screenshot_20210305_120224_com.webkong.xeu.jpg" alt="Screenshot_20210305_120224_com.webkong.xeu" style="zoom:33%;" />
