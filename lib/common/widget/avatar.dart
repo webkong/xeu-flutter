@@ -102,69 +102,70 @@ class Avatars {
       _avatars = avatarBaby;
     }
     await showDialog(
-      context: context,
-      child: AlertDialog(
-        title: Text(
-          '选择头像',
-          style: TextStyle(
-            fontSize: 16,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        content: Container(
-          width: Adapt.px(600),
-          height: Adapt.px(640),
-          child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setStateLocal) {
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-                itemCount: 20,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    child: Container(
-                      margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: _selected == _avatars[index]
-                                ? Theme.of(context).accentColor
-                                : Colors.black12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image(
-                        image: AssetImage(_avatars[index]),
-                      ),
+        context: context,
+        builder: (BuildContext cx) {
+          return AlertDialog(
+            title: Text(
+              '选择头像',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            content: Container(
+              width: Adapt.px(600),
+              height: Adapt.px(640),
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setStateLocal) {
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
                     ),
-                    onTap: () {
-                      setStateLocal(() {
-                        _selected = _avatars[index];
-                      });
+                    itemCount: 20,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        child: Container(
+                          margin: EdgeInsets.all(8),
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: _selected == _avatars[index]
+                                    ? Theme.of(context).accentColor
+                                    : Colors.black12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Image(
+                            image: AssetImage(_avatars[index]),
+                          ),
+                        ),
+                        onTap: () {
+                          setStateLocal(() {
+                            _selected = _avatars[index];
+                          });
+                        },
+                      );
                     },
                   );
                 },
-              );
-            },
-          ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('取消'),
-            onPressed: () async {
-              _selected = null;
-              Navigator.of(context).pop();
-            },
-          ),
-          FlatButton(
-            child: Text('确定'),
-            onPressed: () async {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('取消'),
+                onPressed: () async {
+                  _selected = null;
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('确定'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
     return _selected;
   }
 }
